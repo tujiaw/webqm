@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Chat from './chat.js';
 import Contact from './contact.js';
 import About from './about.js';
+import Styles from '../style/main_tab.js';
 import {
   BrowserRouter as Router,
   Route,
@@ -22,15 +23,11 @@ const routes = [
 ]
 
 class MainTab extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
     return (
       <Router>
-        <div style={styles.main}>
-          <div style={styles.tab}>
+        <div style={Styles.main}>
+          <div style={Styles.tab}>
             {routes.map((route, index) => (
               <Route
                 key={index}
@@ -41,8 +38,8 @@ class MainTab extends Component {
             ))}
           </div>
 
-          <div style={styles.bottomPanel}>
-            <ul style={styles.bottomButtons}>
+          <div style={Styles.bottomPanel}>
+            <ul style={Styles.bottomButtons}>
               <li><Link to="/">contact</Link></li>
               <li><Link to="/chat">Chat</Link></li>
               <li><Link to="/about">About</Link></li>
@@ -60,31 +57,6 @@ class MainTab extends Component {
       </Router>
     )
   }
-}
-
-const styles = {};
-styles.main = {
-  display: 'flex',
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  height: '100vh'
-}
-
-styles.tab = {
-  display: 'flex',
-  flex: 1
-}
-
-styles.bottomPanel = {
-  background: '#eee'
-}
-
-styles.bottomButtons = {
-  display: 'flex',
-  listStyleType: 'none',
-  padding: 0,
-  justifyContent: 'space-around'
 }
 
 export default MainTab;

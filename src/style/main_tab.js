@@ -1,0 +1,26 @@
+const Styles = {};
+Styles.main = {
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: '100vh'
+}
+
+Styles.tab = {
+  display: 'flex',
+  flex: 1
+}
+
+Styles.bottomPanel = {
+  background: '#eee'
+}
+
+Styles.bottomButtons = {
+  display: 'flex',
+  listStyleType: 'none',
+  padding: 0,
+  justifyContent: 'space-around'
+}
+
+export default Styles;
