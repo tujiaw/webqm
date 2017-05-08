@@ -4,8 +4,8 @@ import Styles from '../style/login.js'
 import MainTab from './main_tab.js';
 
 class Login extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isLogin: false
     };
@@ -43,7 +43,7 @@ class Login extends Component {
             <span style={Styles.spanWidth}>密码 </span>
             <input ref="password" type="password" placeholder="密码" />
           </div>
-          <div style={Styles.rememberMeHLayout} ref="rememberMe" class="checkbox">
+          <div style={Styles.rememberMeHLayout} ref="rememberMe" className="checkbox">
             <input type="checkbox" value="remember-me"/>记住我
           </div>
         </div>

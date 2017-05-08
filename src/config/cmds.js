@@ -237,5 +237,3 @@ const cmds = {
     params: []
   }
 };
-
-export { cmds };

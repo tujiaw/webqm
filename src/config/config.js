@@ -1,11 +1,12 @@
 
 const BaseInfo = {
-  restful_host: 'http://localhost:4000/api/'
+  restful_host: 'http://localhost:4000/api/qm/'
 }
 
 const Config = {
   restful: {
-    login: BaseInfo.restful_host + 'qm/login'
+    login: BaseInfo.restful_host + 'login',
+    friend: BaseInfo.resetful + 'friend'
   }
 }
 

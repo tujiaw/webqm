@@ -12,10 +12,10 @@ import {
 const routes = [
   { path: '/',
     exact: true,
-    main: () => <Contact />
-  },
-  { path: '/chat',
     main: () => <Chat />
+  },
+  { path: '/contact',
+    main: () => <Contact />
   },
   { path: '/about',
     main: () => <About />
@@ -40,9 +40,9 @@ class MainTab extends Component {
 
           <div style={Styles.bottomPanel}>
             <ul style={Styles.bottomButtons}>
-              <li><Link to="/">contact</Link></li>
-              <li><Link to="/chat">Chat</Link></li>
-              <li><Link to="/about">About</Link></li>
+              <li><Link to="/">会话</Link></li>
+              <li><Link to="/contact">联系人</Link></li>
+              <li><Link to="/about">我</Link></li>
             </ul>
 
             {routes.map((route, index) => (

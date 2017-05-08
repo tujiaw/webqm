@@ -1,12 +1,11 @@
-import { cmds } from '../config/cmds.js'
 import $ from 'jquery';
 import md5 from 'md5';
 import Config from '../config/config.js'
+import Model from '../model/model.js'
 
-let s_auth = {};
 const RestfulApi = {
   isLogin: function() {
-    return !($.isEmptyObject(s_auth));
+    return !($.isEmptyObject(Model.auth));
   },
 
   /**
@@ -27,23 +26,22 @@ const RestfulApi = {
     };
     console.log('login:' + loginParams);
     return new Promise((resolve, reject) => {
-      resolve({code: 0});
       $.ajax({
         type: 'POST',
         url: Config.restful.login,
         dataType: 'JSON',
         data: { data: JSON.stringify(loginParams) },
         success: function(res) {
-          s_auth = {};
+          console.log('login:' + res);
+          Model.auth = {};
           if (res && res.code && res.code === 0) {
             if (res.body.result === 0) {
               if (res.body.token && res.body.userid) {
-                s_auth.token = res.body.token;
-                s_auth.userid = res.body.userid;
+                Model.auth.token = res.body.token;
+                Model.auth.userid = res.body.userid;
               }
             }
           }
-          console.log('auth:' + s_auth);
           resolve(res);
         },
         error: function(error) {
@@ -51,6 +49,36 @@ const RestfulApi = {
           reject(error);
         }
       });
+    });
+  },
+
+  getContacts: function() {
+    const isHit = (Model.rosterInfo.header.code === 0);
+    if (isHit) {
+      return new Promise((resolve, reject) => {
+        resolve({code: 0, error: ''});
+      })
+    } else {
+      return this.getContactsFromServer();
+    }
+  },
+
+  getContactsFromServer: function() {
+    const data = {
+      "userId": Model.auth.userid,
+      "version": 0
+    };
+    this.post(Config.restful.friend, data)
+    .then((res) => {
+      console.log('getContactsFromServer res:' + res);
+      if (res && res.code === 0) {
+        if (res.body && res.rosterInfo) {
+          Model.rosterInfo.setData(res.rosterInfo);
+        }
+      }
+    })
+    .catch((error) => {
+      console.error('getContactsFromServer error:' + error);
     });
   },
 
@@ -68,7 +96,7 @@ const RestfulApi = {
         type: 'POST',
         url: url,
         dataType: 'JSON',
-        data: { token: JSON.stringify(s_auth), data: data },
+        data: { token: JSON.stringify(Model.auth), data: data },
         success: function(res) {
           resolve(res);
         },
