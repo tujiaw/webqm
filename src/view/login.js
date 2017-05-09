@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import RestfulApi from '../controller/restful_api.js'
-import Styles from '../style/login.js'
+import UserController from '../controller/user_controller.js';
+import Styles from '../style/login.js';
 import MainTab from './main_tab.js';
 
 class Login extends Component {
@@ -12,20 +12,19 @@ class Login extends Component {
     this.onLogin = this.onLogin.bind(this);
   }
 
+  componentDidMount() {
+    this.refs.username.value = 'jiawei01';
+    this.refs.password.value = '123456';
+  }
+
   onLogin() {
     const {username, password} = this.refs;
     if (username.value.length && password.value.length) {
-      RestfulApi.login(username.value, password.value)
-      .then((res) => {
-        console.log(res);
+      const self = this;
+      UserController.login(username.value, password.value, function(res) {
         if (res.code === 0) {
-          this.setState({
-            isLogin: true
-          });
+          self.setState({ isLogin: true });
         }
-      })
-      .catch((error) => {
-        console.log(error);
       });
     }
   }
