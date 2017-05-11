@@ -1,5 +1,4 @@
 import React from 'react';
-import Reflux from 'reflux';
 import {
   BrowserRouter as Router,
   Route,
@@ -8,15 +7,13 @@ import {
 import Chat from './chat.js';
 import Contact from './contact.js';
 import About from './about.js';
-import Dialogue from './dialogue.js';
+import DialogueContainer from '../container/dialogue_container';
 import Styles from '../style/main_tab.js';
-import MainController from '../controller/main_controller.js';
 
-class MainTab extends Reflux.Component {
+class MainTab extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    this.store = MainController.store;
+    this.state = {isBottomPanelVisible:true};
   }
 
   componentDidMount() {
@@ -31,7 +28,7 @@ class MainTab extends Reflux.Component {
               <Route exact path="/" component={Chat}/>
               <Route path="/contact" component={Contact}/>
               <Route path="/about" component={About}/>
-              <Route path="/dialogue" component={Dialogue}/>
+              <Route path="/dialogue" component={DialogueContainer}/>
           </div>
 
           {this.state.isBottomPanelVisible 

@@ -1,66 +1,38 @@
 import React from 'react';
-import Reflux from 'reflux';
 import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
-import MainController from '../controller/main_controller';
 
 class Dialogue extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  onLeftButtonClick = () => {
-    this.props.history.goBack();
-  }
-
-  onRightButtonClick = () => {
-
-  }
-
-  componentWillMount() {
-    console.log('aaaaaaaaaaaaaaa');
-    MainController.action.setBottomPanelVisible(false);
-  }
-
-  componentWillUnmount() {
-    console.log('bbbbbbbbbbbbbbb');
-    MainController.action.setBottomPanelVisible(true);
-  }
-
-  componentDidMount() {
-
-  }
-
-  openFace = () => {
-
-  }
-
-  sendMessage = () => {
-    console.log('send message:' + this.refs.inputMessage.value);
+  onMessageSend = () => {
+    const msg = this.refs.inputMessage.value;
+    console.log(msg);
+    const addMessage = () => this.props.onAddMessage(msg);
+    addMessage();
+    this.refs.inputMessage.value = '';
+    this.refs.inputMessage.focus();
   }
 
   render() {
-    let id = this.props.location.state.id;
-    const title = id ? id + '' : '';
     return (
       <div style={Styles.main}>
         <DialogueNav 
-          onLeftButtonClick={this.onLeftButtonClick} 
-          onRightButtonClick={this.onRightButtonClick}
-          title={title}
         />
         <div style={Styles.messagePanel}>
-
+          {this.props.messages.map((msg, index) => {
+            return <div key={index}>{msg}</div>;
+          })}
         </div>
         <div style={Styles.inputPanel}>
-          <button style={Styles.buttonFace} onClick={this.openFace}>表情</button>
+          <button style={Styles.buttonFace} >表情</button>
           <input style={Styles.inputMessage} ref="inputMessage" type="text" />
-          <button style={Styles.buttonSend} onClick={this.sendMessage}>发送</button>
+          <button style={Styles.buttonSend} onClick={this.onMessageSend}>发送</button>
         </div>
       </div>
     )
   }
 }
 
-export default Dialogue;
+function DialogueView(props) {
+  return <Dialogue {...props} />
+}
+export default DialogueView;

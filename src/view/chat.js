@@ -1,15 +1,7 @@
 import React from 'react';
-import Reflux from 'reflux';
 import Styles from '../style/chat.js';
-import ChatController from '../controller/chat_controller.js';
 
-class Chat extends Reflux.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.store = ChatController.store;
-  }
-
+class Chat extends React.Component {
   componentWillMount() {
     //console.log('chat mount:' + this.state.chats);
   }
