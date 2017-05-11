@@ -10,22 +10,13 @@ import Contact from './contact.js';
 import About from './about.js';
 import Dialogue from './dialogue.js';
 import Styles from '../style/main_tab.js';
-import RefluxController from '../controller/reflux_controller.js';
-import SignalController from '../controller/signal_controller.js';
+import MainController from '../controller/main_controller.js';
 
 class MainTab extends Reflux.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.store = RefluxController.store;
-
-    this.onCurrentPathChanged = this.onCurrentPathChanged.bind(this);
-    SignalController.on('currentPathChanged', this.onCurrentPathChanged);
-  }
-
-  onCurrentPathChanged(data) {
-    console.log('onCurrentPathChanged:' + data);
-    //this.props.history.push('dialogue');
+    this.store = MainController.store;
   }
 
   componentDidMount() {
@@ -43,13 +34,16 @@ class MainTab extends Reflux.Component {
               <Route path="/dialogue" component={Dialogue}/>
           </div>
 
-          <div style={Styles.bottomPanel}>
-            <ul style={Styles.bottomButtons}>
-              <li><Link to="/">会话列表</Link></li>
-              <li><Link to="/contact">联系人</Link></li>
-              <li><Link to="/about">我</Link></li>
-            </ul>
-          </div>
+          {this.state.isBottomPanelVisible 
+          ? <div style={Styles.bottomPanel}>
+              <ul style={Styles.bottomButtons}>
+                <li><Link to="/">会话列表</Link></li>
+                <li><Link to="/contact">联系人</Link></li>
+                <li><Link to="/about">我</Link></li>
+              </ul>
+            </div> 
+          : ''}
+
         </div>
       </Router>
     )

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import './css/app.css';
 import {
   Router,
-  Route,
-  Link
+  Route
 } from 'react-router-dom';
 
 import Login from './view/login.js';

@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import UserController from '../controller/user_controller.js';
 import Styles from '../style/login.js';
-import MainTab from './main_tab.js';
-import { Router, Route } from 'react-router';
-import AuthController from '../controller/auth_controller.js';
 
 class Login extends Component {
   componentDidMount() {

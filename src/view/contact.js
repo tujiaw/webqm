@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import UserController from '../controller/user_controller.js';
 import ContactList from './component/contact-list.js';
 import Styles from '../style/contact.js';
-import RefluxController from '../controller/reflux_controller.js';
-import SignalController from '../controller/signal_controller.js';
+import ChatController from '../controller/chat_controller.js';
 
 class Contact extends Component {
   constructor(props) {
@@ -23,13 +22,10 @@ class Contact extends Component {
     })
   }
 
-  onLeft = () => {
-  }
-
   onItemClick = (data) => {
     console.log('on item click:' + data);
-    SignalController.emit('currentPathChanged', data);
-    this.props.history.push('dialogue');
+    this.props.history.push('dialogue', { id: data.rosterId });
+    ChatController.action.addChat(data.rosterId);
   }
 
   render() {
