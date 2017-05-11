@@ -2,35 +2,31 @@ import React, { Component } from 'react';
 import UserController from '../controller/user_controller.js';
 import Styles from '../style/login.js';
 import MainTab from './main_tab.js';
+import { Router, Route } from 'react-router';
+import AuthController from '../controller/auth_controller.js';
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLogin: false
-    };
-    this.onLogin = this.onLogin.bind(this);
-  }
-
   componentDidMount() {
     this.refs.username.value = 'jiawei01';
     this.refs.password.value = '123456';
   }
 
-  onLogin() {
+  onLogin = () => {
     const {username, password} = this.refs;
     if (username.value.length && password.value.length) {
       const self = this;
       UserController.login(username.value, password.value, function(res) {
+        console.log('on login: ' + res);
         if (res.code === 0) {
           self.setState({ isLogin: true });
+          self.props.history.push('main');
         }
       });
     }
   }
 
   render() {
-    const Login = (
+    return (
       <div style={Styles.main}>
         <h2>WEB QM 登录</h2>
         <div id="inputVLayout">
@@ -49,7 +45,6 @@ class Login extends Component {
         <input style={Styles.loginButton} type="button" value="登录" onClick={this.onLogin} />
       </div>
     )
-    return this.state.isLogin ? <MainTab /> : Login;
   }
 }
 

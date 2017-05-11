@@ -23,4 +23,8 @@ Styles.bottomButtons = {
   justifyContent: 'space-around'
 }
 
+Styles.hide = {
+  display: 'none'
+}
+
 export default Styles;

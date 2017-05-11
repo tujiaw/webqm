@@ -33,6 +33,7 @@ var WebClient = function(wspath) {
   this.caller = { sn: 0 };
 
   if (WebSocket) {
+    console.log('new web socket:' + wspath);
     const self = this;
     this.socket = new WebSocket(wspath);
     this.socket.onopen = function() {
@@ -49,7 +50,6 @@ var WebClient = function(wspath) {
         console.error('on message error');
         return;
       }    
-      console.log('on message:' + event.data);
       let res = event.data;
       if (res.length) {
         res = JSON.parse(res);

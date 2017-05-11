@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
 import './css/app.css';
+import {
+  Router,
+  Route,
+  Link
+} from 'react-router-dom';
+
 import Login from './view/login.js';
+import MainTab from './view/main_tab.js';
+
+import { createHashHistory } from 'history';
+const history = createHashHistory();
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Login />
-      </div>
-    );
+      <Router history={history}>
+        <div>
+          <Route path="/" exact component={Login} />
+          <Route path="/main" component={MainTab} />
+        </div>
+      </Router>
+    )
   }
 }
 

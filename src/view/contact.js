@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import UserController from '../controller/user_controller.js';
-import ContactList from './component/contact-list.js'
+import ContactList from './component/contact-list.js';
+import Styles from '../style/contact.js';
+import RefluxController from '../controller/reflux_controller.js';
+import SignalController from '../controller/signal_controller.js';
 
 class Contact extends Component {
   constructor(props) {
@@ -20,42 +23,21 @@ class Contact extends Component {
     })
   }
 
-  renderNav() {
-    return (
-      <div style={Styles.nav}>
-        <button style={Styles.navButton}>left</button>
-        <button style={Styles.navButton}>center</button>
-        <button style={Styles.navButton}>right</button>
-      </div>
-    )
+  onLeft = () => {
+  }
+
+  onItemClick = (data) => {
+    console.log('on item click:' + data);
+    SignalController.emit('currentPathChanged', data);
+    this.props.history.push('dialogue');
   }
 
   render() {
-    const self = this;
     return (
       <div style={Styles.main}>
-        { self.renderNav() }
-        <ContactList data={this.state.contacts} />
+        <ContactList data={this.state.contacts} onItemClick={this.onItemClick}/>
       </div>
     )
-  }
-}
-
-const Styles = {
-  main: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1
-  },
-  nav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '10px',
-    background: '#eee'
-  },
-  navButton: {
-    width: '50px',
-    height: '25px',
   }
 }
 

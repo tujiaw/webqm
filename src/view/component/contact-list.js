@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import Styles from '../../style/component/contact-list.js'
+import PropTypes from 'prop-types';
 
-const Status = {
+const ItemAction = {
   normal: 'normal',
   hover: 'hover',
   selected: 'selected'
@@ -10,37 +12,37 @@ class ContactItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: Status.normal
+      action: ItemAction.normal
     }
-    this.onMouseEnter = this.onMouseEnter.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
-    this.onClick = this.onClick.bind(this);
   }
 
-  onMouseEnter() {
+  onMouseEnter = () => {
     this.setState({
-      status: Status.hover
+      action: ItemAction.hover
     });
   }
 
-  onMouseLeave() {
+  onMouseLeave = () => {
     this.setState({
-      status: Status.normal
+      action: ItemAction.normal
     });
   }
 
-  onClick() {
+  onClick = () => {
     this.setState({
-      status: Status.selected
+      action: ItemAction.selected
     });
+    if (this.props.onItemClick) {
+      this.props.onItemClick(this.props.data);
+    }
   }
 
   render() {
     const self = this;
     function getItemStyle() {
-      if (self.state.status === Status.hover) {
+      if (self.state.action === ItemAction.hover) {
         return Styles.itemHover;
-      } else if (self.state.status === Status.selected) {
+      } else if (self.state.action === ItemAction.selected) {
         return Styles.itemSelected;
       } else {
         return Styles.item;
@@ -54,7 +56,7 @@ class ContactItem extends Component {
         onMouseLeave={this.onMouseLeave} 
         onClick={this.onClick}
       >
-        <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" />
+        <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
         <div style={Styles.content}>
           <div style={Styles.username}>{this.props.data.rosterId}</div>
           <div style={Styles.lastMsg}>{'这是最后一条消息的测试！'}</div>
@@ -64,64 +66,26 @@ class ContactItem extends Component {
   }
 }
 
+ContactItem.propTypes = {
+  data: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func
+}
+
 class ContactList extends Component {
   render() {
     return (
       <div style={Styles.list}>
         {this.props.data.map((item, index) => {
-          return <ContactItem key={index} data={item} />
+          return <ContactItem key={index} data={item} onItemClick={this.props.onItemClick}/>
         })}
       </div>
     )
   }
 }
 
-const Styles = {
-  list: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    overflowY: 'scroll',
-  },
-  avatar: {
-    width: '50px',
-    height: '50px'
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    paddingLeft: '15px',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    alignItems: 'space-between',
-  },
-  username: {
-    display: 'flex',
-    alignSelf: 'flex-start',
-  },
-  lastMsg: {
-    display: 'flex',
-    alignSelf: 'flex-start',
-  },
-}
-
-Styles.item = {
-  display: 'flex',
-  cursor: 'pointer',
-  minHeight: '60px',
-  alignItems: 'center',
-  paddingLeft: '10px',
-  paddingRight: '10px',
-}
-
-Styles.itemHover = {
-  ...Styles.item,
-  background: '#0E9496'
-}
-
-Styles.itemSelected = {
-  ...Styles.item
+ContactList.propTypes = {
+  data: PropTypes.array.isRequired,
+  onItemClick: PropTypes.func
 }
 
 export default ContactList;
