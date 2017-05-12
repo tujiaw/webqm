@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import UserController from '../controller/user_controller.js';
 import ContactList from './component/contact-list.js';
 import Styles from '../style/contact.js';
+import DialogueActions from '../actions/dialogue_actions';
 
 class Contact extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class Contact extends Component {
 
   onItemClick = (data) => {
     console.log('on item click:' + data);
+    DialogueActions.setCurrentId(data.rosterId);
     this.props.history.push('dialogue', { id: data.rosterId });
   }
 
