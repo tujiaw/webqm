@@ -2,19 +2,21 @@ import React from 'react';
 import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
 import DialogueActions from '../actions/dialogue_actions';
+import { Route, Redirect } from 'react-router-dom';
+import ghistory from '../ghistory';
+import MsgController from '../controller/msg_controller';
 
-import { createHashHistory } from 'history';
-const history = createHashHistory();
 class Dialogue extends React.Component {
   onMessageSend = () => {
     const msg = this.refs.inputMessage.value;
     this.refs.inputMessage.value = '';
     this.refs.inputMessage.focus();
     DialogueActions.addMessage(134, msg);
+    MsgController.sendMsg(this.props.currentId, msg);
   }
 
   onLeftButtonClick = () => {
-    history.goBack();
+    ghistory.goBack();
   }
 
   onRightButtonClick = () => {

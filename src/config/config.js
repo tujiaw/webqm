@@ -8,7 +8,8 @@ const Config = {
   websocket: 'ws://172.16.66.34:8090/api/websocket',
   restful: {
     login: BaseInfo.restful_host + 'login',
-    friend: BaseInfo.restful_host + 'friend'
+    friend: BaseInfo.restful_host + 'friend',
+    sendmsg: BaseInfo.restful_host + 'sendmsg',
   }
 }
 

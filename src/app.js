@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import './css/app.css';
+import Styles from './style/app.js';
 import {
   Router,
   Route
 } from 'react-router-dom';
 
 import Login from './view/login.js';
-import MainTab from './view/main_tab.js';
-
-import { createHashHistory } from 'history';
-const history = createHashHistory();
+import Tabs from './view/tabs.js';
+import DialogueContainer from './container/dialogue_container';
+import ghistory from './ghistory';
 
 class App extends Component {
   render() {
     return (
-      <Router history={history}>
-        <div>
+      <Router history={ghistory}>
+        <div style={Styles.app}>
           <Route path="/" exact component={Login} />
-          <Route path="/main" component={MainTab} />
+          <Route path="/main" component={Tabs} />
+          <Route path="/dialogue" component={DialogueContainer} />
         </div>
       </Router>
     )

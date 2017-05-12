@@ -84,7 +84,7 @@ class ContactList extends Component {
 }
 
 ContactList.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
   onItemClick: PropTypes.func
 }
 

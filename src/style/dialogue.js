@@ -2,14 +2,14 @@ const Styles = {
   main: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
     margin: '10px',
+    flex: 1,
   },
   messagePanel: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
     background: 'rgb(190, 190, 190)',
+    flex: 1
   },
   inputPanel: {
     display: 'flex',

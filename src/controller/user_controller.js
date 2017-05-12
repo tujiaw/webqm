@@ -2,6 +2,8 @@ import { WebClient } from './web_socket.js';
 import Config from '../config/config.js';
 import Model from '../model/model.js';
 import md5 from 'md5';
+import ContactActions from '../actions/contact_actions';
+import MsgController from './msg_controller';
 
 const UserController = {
   /**
@@ -27,6 +29,7 @@ const UserController = {
           userid: res.body.userid === undefined ? 0 : res.body.userid
         }
         Model.auth = authObj;
+        WebClient.init(authObj, MsgController.onMsgCallback);
         cb({code: 0, error: ''});
       } else {
         cb({code: res.result, error: res.error_desc});
@@ -53,7 +56,8 @@ const UserController = {
         return;
       }
       if (res.body.errorCode === 0 && res.body.rosterInfo) {
-        Model.rosterInfo.setData(res.body.rosterInfo);
+        //Model.rosterInfo.setData(res.body.rosterInfo);
+        ContactActions.initContact(res.body.rosterInfo);
         cb(Model.rosterInfo);
       } else {
         cb({code: res.body.errorCode, error: 'body error'});

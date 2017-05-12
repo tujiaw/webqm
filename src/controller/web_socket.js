@@ -30,6 +30,7 @@ var WebClient = function(wspath) {
   this.wspath = wspath;
   this.socket = null;
   this.auth = {};
+  this.onMessage = null;
   this.caller = { sn: 0 };
 
   if (WebSocket) {
@@ -49,9 +50,11 @@ var WebClient = function(wspath) {
       if (!event || !event.data) {
         console.error('on message error');
         return;
-      }    
+      }
+
       let res = event.data;
       if (res.length) {
+        console.log('on message type:' + res.type);
         res = JSON.parse(res);
         if (res.type === 'subscribe') {
 
@@ -61,6 +64,10 @@ var WebClient = function(wspath) {
             delete self.caller[res.sn];
           } else {
             console.error('onmessage sn error:' + res.sn);
+          }
+        } else if (res.type === 'publish') {
+          if (this.onMessage) {
+            this.onMessage(res);
           }
         }
       }
@@ -74,8 +81,9 @@ var WebClient = function(wspath) {
     return;
   }
 
-  this.init = function(auth) {
+  this.init = function(auth, onMessageCb) {
     this.auth = auth;
+    this.onMessage = onMessageCb;
   };
 
   // this.post = function(data, success_cb, error_cb) {
