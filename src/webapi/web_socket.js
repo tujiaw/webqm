@@ -1,5 +1,4 @@
 import Config from '../config/config.js';
-import Model from '../model/model.js';
 
 /**
  * 组装消息
@@ -19,7 +18,7 @@ function packMessage(sn, type, url, token, data) {
     sn: sn || 0,
     type: type || '',
     url: url || '',
-    token: JSON.stringify(Model.auth),
+    token: token,
     data: data || ''
   }
 
@@ -85,27 +84,6 @@ var WebClient = function(wspath) {
     this.auth = auth;
     this.onMessage = onMessageCb;
   };
-
-  // this.post = function(data, success_cb, error_cb) {
-  //   $.ajax({
-  //     type: 'POST',
-  //     url: url,
-  //     dataType: 'JSON',
-  //     data: { token: JSON.stringify(this.auth), data: data },
-  //     success: function(res) {
-  //       console.log(res);
-  //       if (success_cb) {
-  //         success_cb(res);
-  //       }
-  //     },
-  //     error: function(error) {
-  //       console.log(error.statusText + '(' + error.status + ')');
-  //       if (error_cb) {
-  //         error_cb(error);
-  //       }
-  //     }
-  //   });
-  // }
 
   this.request = function(url, data, cb) {
     const self = this;

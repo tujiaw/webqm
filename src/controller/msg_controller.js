@@ -1,7 +1,7 @@
-import { WebClient } from './web_socket.js';
+import { WebClient } from '../webapi/web_socket.js';
 import Config from '../config/config.js';
-import Model from '../model/model.js';
-import { QMMsgBuilder, QMMsgParser } from './qmmsg.js';
+import UserController from './user_controller';
+import { QMMsgBuilder } from '../utils/qmmsg.js';
 
 const MsgController = {
   onMsgCallback: function(msg) {
@@ -10,7 +10,7 @@ const MsgController = {
   sendMsg: function(id, msg) {
     const data = {
       "header": {
-        "from": Model.auth.userid,
+        "from": UserController.getAuth().userid,
         "sourceNo": 0,
         "serialNo": 0,
         "errorCode": 0

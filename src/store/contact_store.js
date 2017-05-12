@@ -26,4 +26,4 @@ class ContactStore extends ReduceStore {
   }
 }
 
-export default new ContactStore;
+export default new ContactStore();

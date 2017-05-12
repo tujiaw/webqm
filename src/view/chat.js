@@ -7,7 +7,7 @@ class Chat extends React.Component {
   }
 
   componentWillUnMount() {
-    console.log('chat unmount:' + this.state.chats);
+    //console.log('chat unmount:' + this.state.chats);
   }
 
   render() {

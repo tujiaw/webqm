@@ -1,21 +1,11 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect
-} from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import Chat from './chat.js';
 import About from './about.js';
 import ContactContainer from '../container/contact_container';
-import DialogueContainer from '../container/dialogue_container';
 import Styles from '../style/tabs.js';
 
 class MainTab extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     console.log('main tab did mount');
   }

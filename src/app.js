@@ -8,7 +8,7 @@ import {
 import Login from './view/login.js';
 import Tabs from './view/tabs.js';
 import DialogueContainer from './container/dialogue_container';
-import ghistory from './ghistory';
+import ghistory from './utils/ghistory';
 
 class App extends Component {
   render() {

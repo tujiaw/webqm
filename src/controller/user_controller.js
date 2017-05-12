@@ -1,11 +1,19 @@
-import { WebClient } from './web_socket.js';
+import { WebClient } from '../webapi/web_socket.js';
 import Config from '../config/config.js';
-import Model from '../model/model.js';
 import md5 from 'md5';
 import ContactActions from '../actions/contact_actions';
 import MsgController from './msg_controller';
 
 const UserController = {
+  auth: {},
+  setAuth: function(auth) {
+    this.auth = auth;
+  },
+  getAuth: function() {
+    return this.auth;
+  },
+  isFriendLoad: false,
+
   /**
    * 登录
    */
@@ -28,7 +36,7 @@ const UserController = {
           token: res.body.token === undefined ? '' : res.body.token,
           userid: res.body.userid === undefined ? 0 : res.body.userid
         }
-        Model.auth = authObj;
+        self.setAuth(authObj);
         WebClient.init(authObj, MsgController.onMsgCallback);
         cb({code: 0, error: ''});
       } else {
@@ -41,13 +49,13 @@ const UserController = {
    * 获取好友列表
    */
   friend: function(cb) {
-    if (Model.rosterInfo.header.code === 0) {
-      cb(Model.rosterInfo);
+    if (this.isFriendLoad) {
+      cb({code: 0, error: ''});
       return;
     }
 
     const data = {
-      userId: Model.auth.userid,
+      userId: this.getAuth().userid,
       version: 0
     };
     const self = this;
@@ -55,10 +63,10 @@ const UserController = {
       if (!self.checkResponse(res, cb)) {
         return;
       }
+      self.isFriendLoad = true;
       if (res.body.errorCode === 0 && res.body.rosterInfo) {
-        //Model.rosterInfo.setData(res.body.rosterInfo);
         ContactActions.initContact(res.body.rosterInfo);
-        cb(Model.rosterInfo);
+        cb({code: 0, error: ''});
       } else {
         cb({code: res.body.errorCode, error: 'body error'});
       }

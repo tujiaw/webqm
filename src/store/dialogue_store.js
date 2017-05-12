@@ -9,7 +9,7 @@ class DialogueMessagesStore extends ReduceStore {
   }
 
   getInitialState() {
-    return List([]);
+    return List();
   }
 
   reduce(state, action) {

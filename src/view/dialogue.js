@@ -2,8 +2,7 @@ import React from 'react';
 import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
 import DialogueActions from '../actions/dialogue_actions';
-import { Route, Redirect } from 'react-router-dom';
-import ghistory from '../ghistory';
+import ghistory from '../utils/ghistory';
 import MsgController from '../controller/msg_controller';
 
 class Dialogue extends React.Component {
