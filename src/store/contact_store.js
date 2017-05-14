@@ -17,7 +17,6 @@ class ContactStore extends ReduceStore {
       case ContactActionTypes.INIT_CONTACT:
         if (action.contacts) {
           state = List(action.contacts);
-          return state;
         }
         return state;
       default:

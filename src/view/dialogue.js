@@ -3,7 +3,8 @@ import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
 import DialogueActions from '../actions/dialogue_actions';
 import ghistory from '../utils/ghistory';
-import MsgController from '../controller/msg_controller';
+import MsgCreators from '../creators/msg_creators';
+import UserCreators from '../creators/user_creators';
 
 class Dialogue extends React.Component {
   onMessageSend = () => {
@@ -11,7 +12,13 @@ class Dialogue extends React.Component {
     this.refs.inputMessage.value = '';
     this.refs.inputMessage.focus();
     DialogueActions.addMessage(134, msg);
-    MsgController.sendMsg(this.props.currentId, msg);
+    MsgCreators.asyncSendMsg(this.props.currentId, msg)
+    .then((res) => {
+
+    })
+    .catch((code, error) => {
+
+    });
   }
 
   onLeftButtonClick = () => {
@@ -19,6 +26,7 @@ class Dialogue extends React.Component {
   }
 
   onRightButtonClick = () => {
+    console.log(UserCreators.getCurrentId());
   }
 
   render() {

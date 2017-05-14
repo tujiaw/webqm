@@ -1,24 +1,32 @@
 import React from 'react';
-import Styles from '../style/chat.js';
+import Styles from '../style/chat';
+import ChatList from './component/chat_list';
 
 class Chat extends React.Component {
   componentWillMount() {
-    //console.log('chat mount:' + this.state.chats);
+    console.log('componentWillMount, chats:' + this.props.chats);
   }
 
   componentWillUnMount() {
     //console.log('chat unmount:' + this.state.chats);
+    console.log('componentWillUnMount, chats:' + this.props.chats);
+  }
+
+  onItemClick = () => {
+
   }
 
   render() {
     return (
       <div style={Styles.main}>
-        <div>
-          <h1>Chat</h1>
-        </div>
+        <ChatList data={this.props.chats} onItemClick={this.onItemClick}/>
       </div>
     )
   }
 }
 
-export default Chat;
+function ChatView(props) {
+  return <Chat {...props} />;
+}
+
+export default ChatView;

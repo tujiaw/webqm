@@ -4,3 +4,5 @@ Styles.main = {
   flexDirection: 'column',
   flex: 1,
 }
+
+export default Styles;

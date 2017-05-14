@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Styles from '../../style/component/contact_list'
+import Styles from '../../style/component/chat_list'
 import PropTypes from 'prop-types';
 
 const ItemAction = {
@@ -8,7 +8,7 @@ const ItemAction = {
   selected: 'selected'
 };
 
-class ContactItem extends Component {
+class ChatItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,26 +66,26 @@ class ContactItem extends Component {
   }
 }
 
-ContactItem.propTypes = {
+ChatItem.propTypes = {
   data: PropTypes.object.isRequired,
   onItemClick: PropTypes.func
 }
 
-class ContactList extends Component {
+class ChatList extends Component {
   render() {
     return (
       <div style={Styles.list}>
         {this.props.data.map((item, index) => {
-          return <ContactItem key={index} data={item} onItemClick={this.props.onItemClick}/>
+          return <ChatItem key={index} data={item} onItemClick={this.props.onItemClick}/>
         })}
       </div>
     )
   }
 }
 
-ContactList.propTypes = {
+ChatList.propTypes = {
   data: PropTypes.object.isRequired,
   onItemClick: PropTypes.func
 }
 
-export default ContactList;
+export default ChatList;

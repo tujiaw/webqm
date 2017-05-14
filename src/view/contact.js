@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import UserController from '../controller/user_controller.js';
 import ContactList from './component/contact_list.js';
 import Styles from '../style/contact.js';
-import DialogueActions from '../actions/dialogue_actions';
+import UserCreators from '../creators/user_creators';
 import ghistory from '../utils/ghistory';
 
 class Contact extends Component {
   componentWillMount() {
-    UserController.friend((data) => {
-      console.log('contact friend:' + data);
+    UserCreators.asyncGetFriends()
+    .catch((code, error) => {
+      console.log(`code:${code}, error:${error}`);
     })
   }
 
   onItemClick = (data) => {
     console.log('on item click:' + data);
-    DialogueActions.setCurrentId(data.rosterId);
+    UserCreators.setCurrentId(data.rosterId);
+    UserCreators.addChat(data.rosterId);
     ghistory.push('/dialogue');
   }
 

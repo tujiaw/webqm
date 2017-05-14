@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
-import Chat from './chat.js';
 import About from './about.js';
+import ChatContainer from '../container/chat_container';
 import ContactContainer from '../container/contact_container';
 import Styles from '../style/tabs.js';
 
@@ -15,7 +15,7 @@ class MainTab extends React.Component {
     return (
         <div style={Styles.main}>
           <div style={Styles.tab}>
-              <Route exact path={`${url}`} component={Chat}/>
+              <Route exact path={`${url}`} component={ChatContainer}/>
               <Route path={`${url}/contact`} component={ContactContainer}/>
               <Route path={`${url}/about`} component={About}/>
           </div>

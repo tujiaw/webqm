@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UserController from '../controller/user_controller.js';
+import UserCreators from '../creators/user_creators';
 import Styles from '../style/login.js';
 
 class Login extends Component {
@@ -12,12 +12,16 @@ class Login extends Component {
     const {username, password} = this.refs;
     if (username.value.length && password.value.length) {
       const self = this;
-      UserController.login(username.value, password.value, function(res) {
+      UserCreators.asyncLogin(username.value, password.value)
+      .then((res) => {
         console.log('on login: ' + res);
         if (res.code === 0) {
           self.setState({ isLogin: true });
           self.props.history.push('main');
         }
+      })
+      .catch((code, error) => {
+        console.log(`code:${code}, error:${error}`);
       });
     }
   }
