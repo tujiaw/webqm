@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Styles from '../../style/component/contact_list'
 import PropTypes from 'prop-types';
+import GroupCreators from '../../creators/group_creators';
 
 const ItemAction = {
   normal: 'normal',
@@ -76,8 +77,7 @@ class GroupItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPressed: false,
-      isExpand: false,
+      isPressed: false
     }
   }
 
@@ -88,35 +88,38 @@ class GroupItem extends Component {
   }
 
   onMouseUp = () => {
-    const isExpand = !this.state.isExpand;
     this.setState({
       isPressed: false,
-      isExpand: isExpand
     })
+    const groupid = this.props.group.ID;
+    const isExpand = !GroupCreators.isGroupExpand(groupid);
+    GroupCreators.setGroupExpand(groupid, isExpand);
   }
 
   render() {
+    const {group} = this.props;
+    const isExpand = GroupCreators.isGroupExpand(group.ID);
     const groupStyle = (this.state.isPressed ? Styles.groupPressed : Styles.group);
     const groupArrow = (this.state.isExpand ? "/imgs/temp_down.png" : "/imgs/temp_up.png");
-    const count = this.props.users ? this.props.users.length : 0;
+    const count = group.users ? group.users.length : 0;
     return (
       <div style={Styles.groupItem}>
       <div style={groupStyle} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
         <div style={Styles.groupLeft}>
-          <div style={Styles.groupName}>{this.props.groupName}</div>
+          <div style={Styles.groupName}>{group.name}</div>
           <div style={Styles.memberCount}>{count}</div>
         </div>
         <div style={Styles.groupRight}>
           <img style={Styles.arrow} src={groupArrow} alt='arrow'/>
         </div>
       </div>
-      {this.state.isExpand && count
-        ? <div style={Styles.userList}>
-            {this.props.users.map((item, index) => {
-              return <UserItem key={index} userid={item} onItemClick={this.props.onItemClick}/>
-            })}
-          </div>
-        : ''}
+        { isExpand && count
+          ? <div style={Styles.userList}>
+              {group.users.map((item, index) => {
+                return <UserItem key={index} userid={item} onItemClick={this.props.onItemClick}/>
+              })}
+            </div>
+          : ''}
       </div>
     )
   }
@@ -128,7 +131,7 @@ class ContactList extends Component {
       <div style={Styles.main}>
         {this.props.data.map((group, index) => {
           if (group.name) {
-            return <GroupItem key={index} groupName={group.name} users={group.users} onItemClick={this.props.onItemClick} />
+            return <GroupItem key={index} group={group} onItemClick={this.props.onItemClick} />
           }
         })}
       </div>

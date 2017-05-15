@@ -18,10 +18,21 @@ class ContactStore extends ReduceStore {
         if (action.contacts) {
           state = List(action.contacts);
         }
-        return state;
+        break;
+      case ContactActionTypes.SET_GROUP_EXPAND:
+        if (action.groupid !== undefined && action.isExpand !== undefined) {
+          const index = state.findIndex(group => group.ID === action.groupid);
+          state = state.update(index, group => {
+              group.isExpand = action.isExpand;
+              return group;
+          });
+          console.log(JSON.stringify(state));
+        }
+        break;
       default:
-        return state;
+        break;
     }
+    return state;
   }
 }
 
