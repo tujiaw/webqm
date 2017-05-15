@@ -4,7 +4,7 @@ import MsgActionTypes from '../actions/msg_action_types';
 import MsgDispatcher from '../dispatcher/msg_dispatcher';
 import Util from '../utils/util';
 
-class ChatStore extends ReduceStore {
+class MsgStore extends ReduceStore {
   constructor() {
     super(MsgDispatcher);
   }
@@ -14,7 +14,7 @@ class ChatStore extends ReduceStore {
   }
 
   reduce(state, action) {
-    console.log('msg store: ' + action);
+    console.log('msg store: ' + JSON.stringify(action));
     switch(action.type) {
       case MsgActionTypes.ADD_MSG:
         const msg = action.msg;

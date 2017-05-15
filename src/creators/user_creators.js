@@ -11,7 +11,11 @@ import Util from '../utils/util';
 const UserCreators = {
     myId: 0,
     setCurrentId: function (id) {
-        DialogueActions.setCurrentId(id);
+        if (this.getCurrentId() !== id) {
+            DialogueActions.setCurrentId(id);
+            const msgs = MsgCreators.getMsg(id);
+            DialogueActions.initMsgs(msgs);
+        }
     },
     getCurrentId: function () {
         return DialogueCurrentIdStore.getState();

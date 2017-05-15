@@ -2,6 +2,7 @@ import WebApi from '../web/web_api';
 import ActionCommon from './action_common';
 import UserCreators from './user_creators';
 import MsgActions from '../actions/msg_actions';
+import MsgStore from '../store/msg_store';
 import DialogueActions from '../actions/dialogue_actions';
 import Util from '../utils/util';
 
@@ -59,6 +60,10 @@ const MsgCreators = {
             }
         }
         MsgActions.addMsg(msg);
+    },
+    getMsg: function(chatId) {
+        const chatMsgs = MsgStore.getState();
+        return chatMsgs.get(chatId);
     }
 }
 

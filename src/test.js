@@ -1,14 +1,6 @@
 const { Map, List } = require('immutable');
 
-const Hello = {
-  name: 'tujiaw',
-  handle: function() {
-    console.log('name:' + this.name);
-  }
-}
-
-function add(cb) {
-  cb();
-}
-
-add(Hello.handle.bind(Hello));
+let list = List([1, 2, 3]);
+let list2 = List([7, 8, 9]);
+list = [];
+console.log(list);
