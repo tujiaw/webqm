@@ -1,8 +1,7 @@
 const Styles = {
-  list: {
+  main: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
     overflowY: 'scroll',
   },
   avatar: {
@@ -31,7 +30,7 @@ const Styles = {
 Styles.item = {
   display: 'flex',
   cursor: 'pointer',
-  minHeight: '60px',
+  height: '60px',
   alignItems: 'center',
   paddingLeft: '10px',
   paddingRight: '10px',
@@ -47,4 +46,45 @@ Styles.itemSelected = {
   background: '#0E9496'
 }
 
+/**
+ * 分组样式
+ */
+Styles.groupItem = {
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 0,
+  }
+
+Styles.userList = {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  },
+
+Styles.group = {
+  display: 'flex',
+  height: '30px',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  cursor: 'pointer',
+  flexShrink: 0,
+}
+Styles.groupPressed = {
+  ...Styles.group,
+  background: '#eee',
+}
+Styles.groupLeft = {
+  display: 'flex',
+  marginLeft: '20px'
+}
+Styles.groupRight = {
+  display: 'flex',
+  marginRight: '20px'
+}
+Styles.groupName = {
+  
+}
+Styles.memberCount = {
+  marginLeft: '10px',
+}
 export default Styles;

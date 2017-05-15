@@ -34,6 +34,14 @@ const WebApi = {
     WebClient.request(Config.restful.friend, data, cb);
   },
 
+  usergroup: function(auth, cb) {
+    const data = {
+      userId: auth.userid,
+      version: 0
+    };
+    WebClient.request(Config.restful.usergroup, data, cb);
+  },
+
   sendMsg: function(auth, id, msg, cb) {
     const data = {
       "header": {

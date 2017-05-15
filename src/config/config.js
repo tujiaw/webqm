@@ -11,6 +11,7 @@ const Config = {
     login: BaseInfo.restful_host + 'login',
     friend: BaseInfo.restful_host + 'friend',
     sendmsg: BaseInfo.restful_host + 'sendmsg',
+    usergroup: BaseInfo.restful_host + 'usergroup',
   }
 }
 

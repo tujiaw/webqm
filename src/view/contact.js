@@ -6,16 +6,16 @@ import ghistory from '../utils/ghistory';
 
 class Contact extends Component {
   componentWillMount() {
-    UserCreators.asyncGetFriends()
+    UserCreators.asyncGetUserGroup()
     .catch((code, error) => {
       console.log(`code:${code}, error:${error}`);
     })
   }
 
-  onItemClick = (data) => {
-    console.log('on item click:' + data);
-    UserCreators.setCurrentId(data.rosterId);
-    UserCreators.addChat(data.rosterId);
+  onItemClick = (userid) => {
+    console.log('on item click:' + userid);
+    UserCreators.setCurrentId(userid);
+    UserCreators.addChat(userid);
     ghistory.push('/dialogue');
   }
 

@@ -63,6 +63,23 @@ const UserCreators = {
             })
         })
     },
+    asyncGetUserGroup: function() {
+        return new Promise((resolve, reject) => {
+            const usergroup = ContactStore.getState();
+            if (usergroup.size > 0) {
+                return resolve(usergroup);
+            }
+            
+            WebApi.usergroup(ActionCommon.auth, (res) => {
+                const resHeader = ActionCommon.checkResCommonHeader(res);
+                if (resHeader.code === 0) {
+                    ContactActions.initContact(res.body.groupInfo);
+                    return resolve(res.body.groupInfo);
+                }
+                return reject(resHeader.code);
+            })
+        })
+    }
 }
 
 export default UserCreators;

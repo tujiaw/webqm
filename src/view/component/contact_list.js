@@ -8,7 +8,10 @@ const ItemAction = {
   selected: 'selected'
 };
 
-class ContactItem extends Component {
+/**
+ * 用户
+ */
+class UserItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +36,7 @@ class ContactItem extends Component {
       action: ItemAction.selected
     });
     if (this.props.onItemClick) {
-      this.props.onItemClick(this.props.data);
+      this.props.onItemClick(this.props.userid);
     }
   }
 
@@ -58,7 +61,7 @@ class ContactItem extends Component {
       >
         <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
         <div style={Styles.content}>
-          <div style={Styles.username}>{this.props.data.rosterId}</div>
+          <div style={Styles.username}>{this.props.userid}</div>
           <div style={Styles.company}>{'森浦'}</div>
         </div>
       </div>
@@ -66,17 +69,67 @@ class ContactItem extends Component {
   }
 }
 
-ContactItem.propTypes = {
-  data: PropTypes.object.isRequired,
-  onItemClick: PropTypes.func
+/**
+ * 分组
+ */
+class GroupItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isPressed: false,
+      isExpand: false,
+    }
+  }
+
+  onMouseDown = () => {
+    this.setState({
+      isPressed: true
+    })  
+  }
+
+  onMouseUp = () => {
+    const isExpand = !this.state.isExpand;
+    this.setState({
+      isPressed: false,
+      isExpand: isExpand
+    })
+  }
+
+  render() {
+    const groupStyle = (this.state.isPressed ? Styles.groupPressed : Styles.group);
+    const groupArrow = (this.state.isExpand ? "/imgs/temp_down.png" : "/imgs/temp_up.png");
+    const count = this.props.users ? this.props.users.length : 0;
+    return (
+      <div style={Styles.groupItem}>
+      <div style={groupStyle} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
+        <div style={Styles.groupLeft}>
+          <div style={Styles.groupName}>{this.props.groupName}</div>
+          <div style={Styles.memberCount}>{count}</div>
+        </div>
+        <div style={Styles.groupRight}>
+          <img style={Styles.arrow} src={groupArrow} alt='arrow'/>
+        </div>
+      </div>
+      {this.state.isExpand && count
+        ? <div style={Styles.userList}>
+            {this.props.users.map((item, index) => {
+              return <UserItem key={index} userid={item} onItemClick={this.props.onItemClick}/>
+            })}
+          </div>
+        : ''}
+      </div>
+    )
+  }
 }
 
 class ContactList extends Component {
   render() {
     return (
-      <div style={Styles.list}>
-        {this.props.data.map((item, index) => {
-          return <ContactItem key={index} data={item} onItemClick={this.props.onItemClick}/>
+      <div style={Styles.main}>
+        {this.props.data.map((group, index) => {
+          if (group.name) {
+            return <GroupItem key={index} groupName={group.name} users={group.users} onItemClick={this.props.onItemClick} />
+          }
         })}
       </div>
     )
