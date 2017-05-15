@@ -13,12 +13,9 @@ class Login extends Component {
     if (username.value.length && password.value.length) {
       const self = this;
       UserCreators.asyncLogin(username.value, password.value)
-      .then((res) => {
-        console.log('on login: ' + res);
-        if (res.code === 0) {
-          self.setState({ isLogin: true });
-          self.props.history.push('main');
-        }
+      .then(() => {
+        self.setState({ isLogin: true });
+        self.props.history.push('main');
       })
       .catch((code, error) => {
         console.log(`code:${code}, error:${error}`);

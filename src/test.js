@@ -1,10 +1,14 @@
-const { List } = require('immutable');
+const { Map, List } = require('immutable');
 
-let list = List([1, 2, 30, 4, 5]);
+const Hello = {
+  name: 'tujiaw',
+  handle: function() {
+    console.log('name:' + this.name);
+  }
+}
 
-list = list.push(6);
+function add(cb) {
+  cb();
+}
 
-list = list.filterNot(item => {
-  return item === 1
-});
-console.log(list);
+add(Hello.handle.bind(Hello));

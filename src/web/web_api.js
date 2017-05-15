@@ -2,6 +2,7 @@ import { WebClient } from './web_socket.js';
 import Config from '../config/config.js';
 import md5 from 'md5';
 import { QMMsgBuilder } from '../utils/qmmsg.js';
+import Util from '../utils/util';
 
 const WebApi = {
   /**
@@ -18,8 +19,8 @@ const WebApi = {
     WebClient.request(Config.restful.login, data, cb);
   },
 
-  regMessageCallback:function(auth, onMessageFunc) {
-    WebClient.init(auth, onMessageFunc);
+  regMessageCallback:function(auth, onMessageFunc, cb) {
+    WebClient.init(auth, onMessageFunc, cb);
   },
 
   /**
@@ -54,7 +55,36 @@ const WebApi = {
 
     const builder = new QMMsgBuilder();
     data.body = JSON.stringify(builder.pushText(msg).getMsg());
-    WebClient.request(Config.restful.sendmsg, data, cb);
+    const resMsg = {
+      id: 0,
+      to: [],
+      body: data.body,
+      res: 'RES_PC',
+      time: 0,
+      keyServer: 0,
+      newMsgId: 0,
+      type: 'MSG_TYPE_CHAT',
+      deleted: false,
+      keyId: 0,
+      header: {
+        from: 0
+      }
+    }
+    WebClient.request(Config.restful.sendmsg, data, (res) => {
+      console.log('send msg responase:' + JSON.stringify(res))
+      if (res.code === 0) {
+        if (res.body.toUserMsgInfo) {
+          const toUserMsgInfo = res.body.toUserMsgInfo;
+          resMsg.id = toUserMsgInfo[0].msgid;
+          resMsg.to.push(toUserMsgInfo[0].user);
+          resMsg.time = toUserMsgInfo.time;
+          resMsg.newMsgId = resMsg.id;
+          resMsg.header.from = Util.myid;
+        }
+      }
+      res.resMsg = resMsg;
+      cb(res);
+    });
   }
 }
 

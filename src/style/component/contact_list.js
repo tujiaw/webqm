@@ -22,7 +22,7 @@ const Styles = {
     display: 'flex',
     alignSelf: 'flex-start',
   },
-  lastMsg: {
+  company: {
     display: 'flex',
     alignSelf: 'flex-start',
   },

@@ -5,8 +5,8 @@ const DialogueActions = {
   setCurrentId(id) {
     DialogueDispatcher.dispatch({ type: DialogueActionTypes.SET_CURRENT_ID, id });
   },
-  addMessage(id, msg) {
-    DialogueDispatcher.dispatch({ type: DialogueActionTypes.ADD_MESSAGE, id, msg });
+  addMessage(msg) {
+    DialogueDispatcher.dispatch({ type: DialogueActionTypes.ADD_MESSAGE, msg });
   },
 };
 

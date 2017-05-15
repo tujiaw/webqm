@@ -189,13 +189,9 @@ const QMMsgParser = function(msg) {
     this.notify = msg.notify || 0;
     this.isQQMsg = msg.isQQMsg || false;
 
+    const self = this;
     msg.bodyList.forEach(function(messageBody) {
-        if (!messageBody.type || !messageBody.msg) {
-            return;
-        }
-
-        console.log(messageBody.msg);
-        this.bodyList.push(messageBody);
+        self.bodyList.push(messageBody);
     })
 
     this.getMsg = function() {
@@ -210,4 +206,4 @@ const QMMsgParser = function(msg) {
     }
 }
 
-export { QMMsgBuilder, QMMsgParser };
+export { EMessageBodyType, MessageBodyListType, EmotionType, QMMsgBuilder, QMMsgParser };

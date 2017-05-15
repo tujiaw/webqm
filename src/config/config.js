@@ -6,6 +6,7 @@ const BaseInfo = {
 
 const Config = {
   websocket: 'ws://172.16.66.34:8090/api/websocket',
+  //websocket: 'ws://172.16.16.91:8080/api/websocket',
   restful: {
     login: BaseInfo.restful_host + 'login',
     friend: BaseInfo.restful_host + 'friend',

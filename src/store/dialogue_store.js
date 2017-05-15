@@ -16,7 +16,7 @@ class DialogueMessagesStore extends ReduceStore {
     console.log('dialogue store:' + JSON.stringify(action));
     switch(action.type) {
       case DialogueActionTypes.ADD_MESSAGE:
-        if (!action.id || !action.msg) {
+        if (!action.msg) {
           return state;
         }
         return state.push(action.msg);

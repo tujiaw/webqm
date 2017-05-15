@@ -59,7 +59,7 @@ class ContactItem extends Component {
         <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
         <div style={Styles.content}>
           <div style={Styles.username}>{this.props.data.rosterId}</div>
-          <div style={Styles.lastMsg}>{'这是最后一条消息的测试！'}</div>
+          <div style={Styles.company}>{'森浦'}</div>
         </div>
       </div>
       )

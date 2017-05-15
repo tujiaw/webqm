@@ -11,18 +11,13 @@ const ActionCommon = {
         code: 2,
         error: 'res body is null'
       };
-    } else if (!res.code) {
-      return {
-        code: 3,
-        error: 'res code is null'
-      };
     } else {
       return {
         code: res.code,
         error: res.error
       };
     }
-  }
+  },
 }
 
 export default ActionCommon;
