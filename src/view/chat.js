@@ -19,7 +19,7 @@ class Chat extends React.Component {
   render() {
     return (
       <div style={Styles.main}>
-        <ChatList data={this.props.chats} onItemClick={this.onItemClick}/>
+        <ChatList {...this.props} onItemClick={this.onItemClick}/>
       </div>
     )
   }

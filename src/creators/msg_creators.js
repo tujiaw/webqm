@@ -59,6 +59,7 @@ const MsgCreators = {
             }
         }
         Actions.msg.add(msg);
+        Actions.chat.addMsg(msg)
     },
     getMsg: function(chatId) {
         const chatMsgs = MsgStore.getState();

@@ -6,11 +6,20 @@ const Actions = {
     init: function(chats) {
       Dispatcher.dispatch({ type: ActionTypes.CHAT_INIT, chats });
     },
-    add: function(chat) {
-      Dispatcher.dispatch({ type: ActionTypes.CHAT_ADD, chat });
+    add: function(chatid) {
+      Dispatcher.dispatch({ type: ActionTypes.CHAT_ADD, chatid });
     },
-    remove: function(chat) {
-      Dispatcher.dispatch({ type: ActionTypes.CHAT_REMOVE, chat });
+    addMsg: function(msg) {
+      Dispatcher.dispatch({ type: ActionTypes.CHAT_ADD_MSG, msg });
+    },
+    increaseUnreadMsg: function(chatid, lastMsg) {
+      Dispatcher.dispatch({ type: ActionTypes.CHAT_INCREASE_UNREAD_MSG, chatid, lastMsg });
+    },
+    updateLastMsg: function(chatid, lastMsg) {
+      Dispatcher.dispatch({ type: ActionTypes.CHAT_UPDATE_LAST_MSG, chatid, lastMsg });
+    },
+    remove: function(chatid) {
+      Dispatcher.dispatch({ type: ActionTypes.CHAT_REMOVE, chatid });
     }
   },
   company: {

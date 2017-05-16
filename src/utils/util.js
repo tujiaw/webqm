@@ -1,3 +1,4 @@
+import {EMessageBodyType, MessageBodyListType, EmotionType, QMMsgBuilder, QMMsgParser} from './qmmsg';
 
 const ID_RANGE = {
   ID_RANGE_START: 10000000,
@@ -83,6 +84,26 @@ const Util = {
       }
     }
     return '/avatar/default.png';
+  },
+  isEmptyObject(obj) {
+    for (let i in obj) {
+      return !1;
+    }
+    return !0;
+  },
+  getLastMsgContent(msg) {
+    if (this.isEmptyObject(msg)) {
+      return '  ';
+    }
+    const msgObj = (new QMMsgParser(msg.body)).getMsg();
+    let msgContent = '';
+    for (let i = 0, bodyCount = msgObj.bodyList.length; i < bodyCount; i++) {
+      const body = msgObj.bodyList[i];
+      if (body.type === EMessageBodyType.MSG_Body_Type_EnhancedTEXT) {
+        msgContent += body.msg.content;
+      }
+    }
+    return msgContent.length ? msgContent : '  ';
   }
 }
 

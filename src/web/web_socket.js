@@ -87,6 +87,7 @@ var WebClient = function(wspath) {
   };
 
   this.request = function(url, data, cb) {
+    console.log('111111 request:' + url);
     const self = this;
     this.callerExec(function(sn) {
       const msg = packMessage(sn, 'request', url, JSON.stringify(self.auth), data);

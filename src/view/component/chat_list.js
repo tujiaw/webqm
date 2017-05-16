@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Styles from '../../style/component/chat_list'
 import PropTypes from 'prop-types';
+import Util from '../../utils/util';
 
 const ItemAction = {
   normal: 'normal',
@@ -39,6 +40,8 @@ class ChatItem extends Component {
 
   render() {
     const self = this;
+    const {chat, users} = this.props;
+    const userInfo = users.get(chat.chatid);
     function getItemStyle() {
       if (self.state.action === ItemAction.hover) {
         return Styles.itemHover;
@@ -58,34 +61,29 @@ class ChatItem extends Component {
       >
         <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
         <div style={Styles.content}>
-          <div style={Styles.username}>{this.props.data.rosterId}</div>
-          <div style={Styles.lastMsg}>{'这是最后一条消息的测试！'}</div>
+          <div style={Styles.username}>{userInfo.name || ''}</div>
+          <div style={Styles.lastMsg}>{Util.getLastMsgContent(userInfo.lastMsg)}</div>
         </div>
       </div>
       )
   }
 }
 
-ChatItem.propTypes = {
-  data: PropTypes.object.isRequired,
-  onItemClick: PropTypes.func
-}
-
 class ChatList extends Component {
   render() {
     return (
       <div style={Styles.list}>
-        {this.props.data.map((item, index) => {
-          return <ChatItem key={index} data={item} onItemClick={this.props.onItemClick}/>
+        {this.props.chats.map((chat, index) => {
+          return <ChatItem key={index} chat={chat} {...this.props} />
         })}
       </div>
     )
   }
 }
 
-ChatList.propTypes = {
-  data: PropTypes.object.isRequired,
-  onItemClick: PropTypes.func
-}
+// ChatList.propTypes = {
+//   data: PropTypes.object.isRequired,
+//   onItemClick: PropTypes.func
+// }
 
 export default ChatList;

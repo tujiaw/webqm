@@ -21,8 +21,8 @@ const UserCreators = {
     getCurrentId: function () {
         return DialogueCurrentIdStore.getState();
     },
-    addChat: function(chat) {
-        Actions.chat.add(chat);
+    addChat: function(chatid) {
+        Actions.chat.add(chatid);
     },
     asyncLogin: function (username, password) {
         const isEmpty = !(username.length && password.length);
