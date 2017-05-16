@@ -42,6 +42,33 @@ const WebApi = {
     WebClient.request(Config.restful.usergroup, data, cb);
   },
 
+  baseusers: function(auth, usersId, cb) {
+    const data = {
+      userId: [],
+      version: [],
+      reqDetail: false,
+      ownerId: 0,
+      removeAvatar: true
+    }
+    for (let i = 0, count = usersId.length; i < count; i++) {
+      if (usersId[i]) {
+        data.userId.push(usersId[i]);
+        data.version.push(0);
+      }
+    }
+    WebClient.request(Config.restful.baseusers, data, cb);
+  },
+
+  companies: function(auth, companiesId, cb) {
+    if (companiesId.length) {
+      const data = {
+        companyId: []
+      }
+      data.companyId = data.companyId.concat(companiesId);
+      WebClient.request(Config.restful.company, data, cb);
+    }
+  },
+
   sendMsg: function(auth, id, msg, cb) {
     const data = {
       "header": {

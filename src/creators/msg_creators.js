@@ -1,10 +1,9 @@
 import WebApi from '../web/web_api';
-import ActionCommon from './action_common';
 import UserCreators from './user_creators';
-import MsgActions from '../actions/msg_actions';
 import MsgStore from '../store/msg_store';
-import DialogueActions from '../actions/dialogue_actions';
 import Util from '../utils/util';
+import Actions from '../actions/actions';
+import ActionCommon from '../actions/action_common';
 
 const MsgCreators = {
     onMessageCallback: function (msg) {
@@ -56,10 +55,10 @@ const MsgCreators = {
         const chatId = Util.getMsgChatId(msg);
         if (chatId) {
             if (chatId === UserCreators.getCurrentId()) {
-                DialogueActions.addMessage(msg);
+                Actions.dialogue.addMsg(msg);
             }
         }
-        MsgActions.addMsg(msg);
+        Actions.msg.add(msg);
     },
     getMsg: function(chatId) {
         const chatMsgs = MsgStore.getState();

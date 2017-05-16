@@ -1,4 +1,4 @@
-import ContactActions from '../actions/contact_actions';
+import Actions from '../actions/actions';
 import ContactStore from '../store/contact_store';
 
 const GroupCreators = {
@@ -13,7 +13,7 @@ const GroupCreators = {
     return false;
   },
   setGroupExpand: function(groupid, isExpand) {
-    ContactActions.setGroupExpand(groupid, isExpand);
+    Actions.contact.setGroupExpand(groupid, isExpand);
   }
 }
 

@@ -1,11 +1,11 @@
 import { ReduceStore } from 'flux/utils';
-import DialogueActionTypes from '../actions/dialogue_action_types';
-import DialogueDispatcher from '../dispatcher/dialogue_dispatcher';
+import ActionTypes from '../actions/action_types';
+import Dispatcher from '../dispatcher/dispatcher';
 import { List } from 'immutable';
 
 class DialogueMessagesStore extends ReduceStore {
   constructor() {
-    super(DialogueDispatcher);
+    super(Dispatcher);
   }
 
   getInitialState() {
@@ -15,10 +15,10 @@ class DialogueMessagesStore extends ReduceStore {
   reduce(state, action) {
     console.log('dialogue store:' + JSON.stringify(action));
     switch(action.type) {
-      case DialogueActionTypes.INIT_MSGS:
+      case ActionTypes.DIALOGUE_INIT_MSGS:
         state = (action.msgs === undefined ? List() : action.msgs);
         return state;
-      case DialogueActionTypes.ADD_MESSAGE:
+      case ActionTypes.DIALOGUE_ADD_MESSAGE:
         if (!action.msg) {
           return state;
         }
@@ -31,7 +31,7 @@ class DialogueMessagesStore extends ReduceStore {
 
 class DialogueCurrentIdStore extends ReduceStore {
   constructor() {
-    super(DialogueDispatcher);
+    super(Dispatcher);
   }
 
   getInitialState() {
@@ -40,8 +40,9 @@ class DialogueCurrentIdStore extends ReduceStore {
 
   reduce(state, action) {
     switch(action.type) {
-      case DialogueActionTypes.SET_CURRENT_ID:
-        return action.id;
+      case ActionTypes.DIALOGUE_SET_CURRENT_ID:
+        state = action.id || 0;
+        return state;
       default:
         return state;
     }

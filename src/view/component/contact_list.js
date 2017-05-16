@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Styles from '../../style/component/contact_list'
 import PropTypes from 'prop-types';
 import GroupCreators from '../../creators/group_creators';
+import Util from '../../utils/util';
 
 const ItemAction = {
   normal: 'normal',
@@ -43,7 +44,8 @@ class UserItem extends Component {
 
   render() {
     const self = this;
-    function getItemStyle() {
+    const {username, companyname, avatarpath} = this.props;
+    const itemStyle = (function getItemStyle() {
       if (self.state.action === ItemAction.hover) {
         return Styles.itemHover;
       } else if (self.state.action === ItemAction.selected) {
@@ -51,22 +53,20 @@ class UserItem extends Component {
       } else {
         return Styles.item;
       }
-    }
+    })();
 
     return (
-      <div 
-        style={getItemStyle()}
+      <div style={itemStyle}
         onMouseEnter={this.onMouseEnter} 
         onMouseLeave={this.onMouseLeave} 
-        onClick={this.onClick}
-      >
-        <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
+        onClick={this.onClick} >
+        <img style={Styles.avatar} src={avatarpath} alt='avatar'/>
         <div style={Styles.content}>
-          <div style={Styles.username}>{this.props.userid}</div>
-          <div style={Styles.company}>{'森浦'}</div>
+          <div style={Styles.username}>{username || ''}</div>
+          <div style={Styles.company}>{companyname || ''}</div>
         </div>
       </div>
-      )
+    )
   }
 }
 
@@ -97,7 +97,7 @@ class GroupItem extends Component {
   }
 
   render() {
-    const {group} = this.props;
+    const {group, userMap, onItemClick, companyMap} = this.props;
     const isExpand = GroupCreators.isGroupExpand(group.ID);
     const groupStyle = (this.state.isPressed ? Styles.groupPressed : Styles.group);
     const groupArrow = (this.state.isExpand ? "/imgs/temp_down.png" : "/imgs/temp_up.png");
@@ -115,8 +115,26 @@ class GroupItem extends Component {
       </div>
         { isExpand && count
           ? <div style={Styles.userList}>
-              {group.users.map((item, index) => {
-                return <UserItem key={index} userid={item} onItemClick={this.props.onItemClick}/>
+              {group.users.map((userid, index) => {
+                let userName = '', companyName = '', avatarPath = '';
+                if (userMap.get(userid)) {
+                  const userInfo = userMap.get(userid);
+                  if (userInfo && userInfo.name) {
+                    userName = userInfo.name;
+                  }
+                  const companyInfo = companyMap.get(userInfo.companyId);
+                  if (companyInfo && companyInfo.companyShortName) {
+                    companyName = companyInfo.companyShortName;
+                  }
+                  avatarPath = Util.getAvatarPath(userInfo.avatarId);
+                }
+                return <UserItem key={index} 
+                  userid={userid} 
+                  username={userName} 
+                  companyname={companyName} 
+                  avatarpath={avatarPath}
+                  onItemClick={onItemClick}
+                />
               })}
             </div>
           : ''}
@@ -129,9 +147,13 @@ class ContactList extends Component {
   render() {
     return (
       <div style={Styles.main}>
-        {this.props.data.map((group, index) => {
+        {this.props.contacts.map((group, index) => {
           if (group.name) {
-            return <GroupItem key={index} group={group} onItemClick={this.props.onItemClick} />
+            return <GroupItem key={index} 
+              group={group} 
+              userMap={this.props.users} 
+              companyMap={this.props.companies} 
+              onItemClick={this.props.onItemClick} />
           }
         })}
       </div>
@@ -140,7 +162,7 @@ class ContactList extends Component {
 }
 
 ContactList.propTypes = {
-  data: PropTypes.object.isRequired,
+  contacts: PropTypes.object.isRequired,
   onItemClick: PropTypes.func
 }
 

@@ -1,10 +1,12 @@
 import Dialogue from '../view/dialogue';
 import {Container} from 'flux/utils';
 import {DialogueCurrentIdStore, DialogueMessagesStore} from '../store/dialogue_store';
-import DialogueActions from '../actions/dialogue_actions';
+import Actions from '../actions/actions';
+import UsersStore from '../store/users_store';
 
 function getStores() {
   return [
+    UsersStore,
     DialogueCurrentIdStore,
     DialogueMessagesStore,
   ];
@@ -14,8 +16,9 @@ function getState() {
   return {
     currentId: DialogueCurrentIdStore.getState(),
     messages: DialogueMessagesStore.getState(),
+    users: UsersStore.getState(),
 
-    onAddMessage: DialogueActions.addMessage,
+    onAddMessage: Actions.dialogue.addMsg,
   };
 }
 

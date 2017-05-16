@@ -1,9 +1,8 @@
 import React from 'react';
 import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
-import DialogueActions from '../actions/dialogue_actions';
 import ghistory from '../utils/ghistory';
-import {EMessageBodyType, MessageBodyListType, QMMsgParser} from '../utils/qmmsg';
+import {EMessageBodyType, QMMsgParser} from '../utils/qmmsg';
 import MsgCreators from '../creators/msg_creators';
 import UserCreators from '../creators/user_creators';
 
@@ -43,13 +42,17 @@ class Dialogue extends React.Component {
   }
 
   render() {
-    const {messages} = this.props;
+    const {currentId, messages, users} = this.props;
+    const info = users.get(currentId);
+    const showName = (info !== undefined ? info.name : 'unkown');
+
     return (
       <div style={Styles.main}>
         <DialogueNav 
           onLeftButtonClick={this.onLeftButtonClick}
           onRightButtonClick={this.onRightButtonClick}
-          id={this.props.currentId}
+          id={currentId}
+          title={showName}
         />
         <div style={Styles.messagePanel}>
           { messages.map((msg, index) => {

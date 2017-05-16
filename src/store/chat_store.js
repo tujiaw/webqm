@@ -1,11 +1,11 @@
 import {ReduceStore} from 'flux/utils';
 import {List} from 'immutable';
-import ChatActionTypes from '../actions/chat_action_types';
-import ChatDispatcher from '../dispatcher/chat_dispatcher';
+import ActionTypes from '../actions/action_types';
+import Dispatcher from '../dispatcher/dispatcher';
 
 class ChatStore extends ReduceStore {
   constructor() {
-    super(ChatDispatcher);
+    super(Dispatcher);
   }
 
   getInitialState() {
@@ -13,19 +13,18 @@ class ChatStore extends ReduceStore {
   }
 
   reduce(state, action) {
-    console.log('chat store: ' + action);
     switch(action.type) {
-      case ChatActionTypes.INIT_CHATS:
+      case ActionTypes.CHAT_INIT:
         if (action.chats) {
           state = List(action.chats);
         }
         return state;
-      case ChatActionTypes.ADD_CHAT:
+      case ActionTypes.CHAT_ADD:
         if (action.chat) {
           return state.push(action.chat);
         }
         return state;
-      case ChatActionTypes.REMOVE_CHAT:
+      case ActionTypes.CHAT_REMOVE:
         if (action.chat) {
           return state.filterNot(chat => { return chat === action.chat });
         }

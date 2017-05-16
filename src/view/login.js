@@ -13,6 +13,7 @@ class Login extends Component {
     if (username.value.length && password.value.length) {
       const self = this;
       UserCreators.asyncLogin(username.value, password.value)
+      .then(UserCreators.initUIData)
       .then(() => {
         self.setState({ isLogin: true });
         self.props.history.push('main');

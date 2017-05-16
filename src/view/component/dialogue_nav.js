@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 class DialogueNav extends Component {
   render() {
-    const title = this.props.id + ''; 
+    const {userid, title} = this.props;
     return (
       <div style={Styles.main}>
         <button style={Styles.navButton} onClick={this.props.onLeftButtonClick}>返回</button>

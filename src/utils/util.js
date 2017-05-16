@@ -66,6 +66,23 @@ const Util = {
   },
   isTopicClientRoomMsg(id) {
     return TOPIC_CLIENT_ROOM_MSG === id;
+  },
+  padZero(str, count) {
+    return new Array(count - str.length + 1).join('0') + str;
+  },
+  getAvatarPath(avatarId) {
+    if (avatarId !== undefined && avatarId >= 1 && avatarId <= 35) {
+      const IMAGES_MAIN_COUNT = 15;
+      const womanNumber = avatarId - IMAGES_MAIN_COUNT;
+      if (womanNumber > 0) {
+        const temp = this.padZero(womanNumber + '', 2);
+        return `/avatar/images_woman_${temp}.png`;
+      } else {
+        const temp = this.padZero(avatarId + '', 2);
+        return `/avatar/images_man_${temp}.png`;
+      }
+    }
+    return '/avatar/default.png';
   }
 }
 

@@ -6,10 +6,7 @@ import ghistory from '../utils/ghistory';
 
 class Contact extends Component {
   componentWillMount() {
-    UserCreators.asyncGetUserGroup()
-    .catch((code, error) => {
-      console.log(`code:${code}, error:${error}`);
-    })
+
   }
 
   onItemClick = (userid) => {
@@ -22,7 +19,7 @@ class Contact extends Component {
   render() {
     return (
       <div style={Styles.main}>
-        <ContactList data={this.props.contacts} onItemClick={this.onItemClick}/>
+        <ContactList {...this.props} onItemClick={this.onItemClick}/>
       </div>
     )
   }

@@ -1,12 +1,12 @@
 import {ReduceStore} from 'flux/utils';
 import {Map, List} from 'immutable';
-import MsgActionTypes from '../actions/msg_action_types';
-import MsgDispatcher from '../dispatcher/msg_dispatcher';
+import ActionTypes from '../actions/action_types';
+import Dispatcher from '../dispatcher/dispatcher';
 import Util from '../utils/util';
 
 class MsgStore extends ReduceStore {
   constructor() {
-    super(MsgDispatcher);
+    super(Dispatcher);
   }
 
   getInitialState() {
@@ -16,7 +16,7 @@ class MsgStore extends ReduceStore {
   reduce(state, action) {
     console.log('msg store: ' + JSON.stringify(action));
     switch(action.type) {
-      case MsgActionTypes.ADD_MSG:
+      case ActionTypes.MSG_ADD:
         const msg = action.msg;
         if (msg && msg.to.length) {
           const chatId = Util.getChatId(msg.header.from, msg.to[0]);
@@ -27,7 +27,7 @@ class MsgStore extends ReduceStore {
           }
         }
         return state;
-      case MsgActionTypes.REMOVE_MSG:
+      case ActionTypes.MSG_REMOVE:
         if (action.chatId && action.msgId) {
           
         }
