@@ -97,23 +97,23 @@ class GroupItem extends Component {
     const {group} = this.props;
     const groupid = group.ID;
     const isExpand = !GroupCreators.isGroupExpand(groupid);
+    GroupCreators.setGroupExpand(groupid, isExpand);
     if (isExpand) {
       const self = this;
+      // 应该主动刷新 fixme
       UserCreators.asyncUpdateUsersAvatar(group.users).then((useridList) => {
         if (useridList && useridList.length) {
           self.setState({avatarUpdate: true})
         }
       }).catch(() => {});
     }
-    GroupCreators.setGroupExpand(groupid, isExpand);
   }
 
   render() {
-    console.log('11111111111111111111111111111111111111');
     const {group, userMap, onItemClick, companyMap} = this.props;
     const isExpand = GroupCreators.isGroupExpand(group.ID);
     const groupStyle = (this.state.isPressed ? Styles.groupPressed : Styles.group);
-    const groupArrow = (this.state.isExpand ? "/imgs/temp_down.png" : "/imgs/temp_up.png");
+    const groupArrow = (isExpand ? "/imgs/temp_down.png" : "/imgs/temp_up.png");
     const count = group.users ? group.users.length : 0;
     return (
       <div style={Styles.groupItem}>

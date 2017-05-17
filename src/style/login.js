@@ -1,9 +1,32 @@
+import {orange500} from 'material-ui/styles/colors';
+
 const Styles = {
   main: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
+    backgroundImage: "url('./imgs/bg_login_body.png')",
+    backgroundColor: '#0C868F',
+    paddingBottom: '100px',
+  },
+  title: {
+    color: '#333'
+  },
+  vLayout: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  underlineStyle: {
+    borderColor: orange500
+  },
+  snackbarBody: {
+    background: '#CCCCCC',
+  },
+
+  checkbox: {
+    color: '#9E9E9E',
   },
   spanWidth: {
     display: 'flex',

@@ -41,6 +41,10 @@ class Dialogue extends React.Component {
     console.log(UserCreators.getCurrentId());
   }
 
+  componentDidMount() {
+    this.refs.inputMessage.focus();
+  }
+
   render() {
     const {currentId, messages, users} = this.props;
     const info = users.get(currentId);

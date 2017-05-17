@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Microsoft YaHei';
+  font-size: 12px;
+  color: #ffffff;
+  background: #0F0F10;
+}
+
+/*滚动条*/
+::-webkit-scrollbar {width: 8px;height: 8px;}
+::-webkit-scrollbar-button:vertical{background-color:#414147;}
+::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment{display:none;}
+::-webkit-scrollbar-button:vertical:start:increment,::-webkit-scrollbar-button:vertical:end:decrement{display:none;}
+::-webkit-scrollbar-button:vertical:increment{display:none;}
+::-webkit-scrollbar-button:vertical:decrement{display:none;}
+::-webkit-scrollbar-track:vertical{/*外层轨道*/
+	background-color:#141415;
+}
+/*#414147*/
+::-webkit-scrollbar-track-piece{background-color:#141415;}
+::-webkit-scrollbar-thumb:vertical{
+	/*滚动条 *00000010 */
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	background-color:#414147;
+}
+::-webkit-scrollbar-thumb:vertical:hover{
+	/*滚动条 *00000011 */
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	background-color:#505056;
+}
+::-webkit-scrollbar-thumb:vertical:active{
+	/*滚动条 *00000012 */
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	background-color:#028789;
+}
+::-webkit-scrollbar-corner:vertical{background-color:black;}
+::-webkit-scrollbar-resizer:vertical{background-color:gray;}

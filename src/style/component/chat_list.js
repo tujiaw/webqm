@@ -7,7 +7,8 @@ const Styles = {
   },
   avatar: {
     width: '50px',
-    height: '50px'
+    height: '50px',
+    borderRadius: '25px',
   },
   content: {
     display: 'flex',
@@ -21,10 +22,15 @@ const Styles = {
   username: {
     display: 'flex',
     alignSelf: 'flex-start',
+    color: '#ffe9c8',
+    fontSize: '14px',
+    fontWeight: 'bold',
   },
   lastMsg: {
     display: 'flex',
     alignSelf: 'flex-start',
+    color: '#c5c5c5',
+    fontSize: '12px',
   },
 }
 
@@ -39,12 +45,12 @@ Styles.item = {
 
 Styles.itemHover = {
   ...Styles.item,
-  background: '#B0C4DE'
+  background: '#141415'
 }
 
 Styles.itemSelected = {
   ...Styles.item,
-  background: '#0E9496'
+  background: '#141415'
 }
 
 export default Styles;

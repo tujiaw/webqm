@@ -6,7 +6,8 @@ const Styles = {
   },
   avatar: {
     width: '50px',
-    height: '50px'
+    height: '50px',
+    borderRadius: '25px',
   },
   content: {
     display: 'flex',
@@ -20,10 +21,15 @@ const Styles = {
   username: {
     display: 'flex',
     alignSelf: 'flex-start',
+    color: '#ffe9c8',
+    fontSize: '14px',
+    fontWeight: 'bold',
   },
   company: {
     display: 'flex',
     alignSelf: 'flex-start',
+    color: '#c5c5c5',
+    fontSize: '12px',
   },
 }
 
@@ -34,11 +40,13 @@ Styles.item = {
   alignItems: 'center',
   paddingLeft: '10px',
   paddingRight: '10px',
+  background: '#141415',
+  borderBottom: '1px solid #28282C',
 }
 
 Styles.itemHover = {
   ...Styles.item,
-  background: '#B0C4DE'
+  background: '#0E9496'
 }
 
 Styles.itemSelected = {
@@ -53,6 +61,8 @@ Styles.groupItem = {
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
+    background: '#19191B',
+    borderBottom: '1px solid #28282C',
   }
 
 Styles.userList = {
@@ -71,7 +81,7 @@ Styles.group = {
 }
 Styles.groupPressed = {
   ...Styles.group,
-  background: '#eee',
+  background: '#141415',
 }
 Styles.groupLeft = {
   display: 'flex',
@@ -82,9 +92,10 @@ Styles.groupRight = {
   marginRight: '20px'
 }
 Styles.groupName = {
-  
+  color: '#ffffff',
 }
 Styles.memberCount = {
   marginLeft: '10px',
+  color: '#848484',
 }
 export default Styles;

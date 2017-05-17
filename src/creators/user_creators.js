@@ -28,20 +28,24 @@ const UserCreators = {
         const isEmpty = !(username.length && password.length);
         return new Promise((resolve, reject) => {
             if (isEmpty) {
-                return reject(1, '用户名或密码为空!');
+                return reject({code: 1, error: '用户名或密码为空!'});
             }
             WebApi.login(username, password, (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
                 if (resHeader.code === 0) {
-                    ActionCommon.auth.token = (res.body.token === undefined) ? '' : res.body.token;
-                    ActionCommon.auth.userid = (res.body.userid === undefined) ? 0 : res.body.userid;
-                    Util.myid = ActionCommon.auth.userid;
-                    WebApi.regMessageCallback(ActionCommon.auth, MsgCreators.onMessageCallback.bind(MsgCreators), (res) => {
-                        console.log('subscribe res:' + res);
-                    });
-                    return resolve();
+                    if (res.body.result === 0) {
+                        ActionCommon.auth.token = (res.body.token === undefined) ? '' : res.body.token;
+                        ActionCommon.auth.userid = (res.body.userid === undefined) ? 0 : res.body.userid;
+                        Util.myid = ActionCommon.auth.userid;
+                        WebApi.regMessageCallback(ActionCommon.auth, MsgCreators.onMessageCallback.bind(MsgCreators), (res) => {
+                            console.log('subscribe res:' + res);
+                        });
+                        return resolve();
+                    } else {
+                        return reject({code: res.body.result, error: res.body.error_desc});
+                    }
                 }
-                return reject(resHeader.code);
+                return reject({code: resHeader.code});
             })
         })
     },

@@ -3,6 +3,7 @@ import Styles from '../../style/component/chat_list'
 import PropTypes from 'prop-types';
 import Util from '../../utils/util';
 import ghistory from '../../utils/ghistory';
+import UserCreators from '../../creators/user_creators';
 
 const ItemAction = {
   normal: 'normal',
@@ -58,7 +59,7 @@ class ChatItem extends Component {
         onMouseLeave={this.onMouseLeave} 
         onClick={this.onClick}
       >
-        <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
+        <img style={Styles.avatar} src={this.props.avatar} alt='avatar'/>
         <div style={Styles.content}>
           <div style={Styles.username}>{this.props.name}</div>
           <div style={Styles.lastMsg}>{this.props.lastMsg}</div>
@@ -82,7 +83,7 @@ class ChatList extends Component {
   }
 
   onItemClick = (chatid) => {
-    console.log('111111111111111111:' + chatid);
+    UserCreators.setCurrentId(chatid);
     ghistory.push('/dialogue');
   }
 
@@ -96,11 +97,13 @@ class ChatList extends Component {
           if (chat && chat.chatid) {
             const userInfo = users.get(chat.chatid);
             if (userInfo) {
+              const avatar = Util.getUserAvatar(userInfo);
               const name = Util.getShowName(userInfo);
               const unreadCount = chat.unreadCount;
               const lastMsg = self.getLastMsg(chat.chatid);
               return <ChatItem key={index} 
                         chatid={chat.chatid} 
+                        avatar={avatar}
                         name={name} 
                         unreadCount={unreadCount} 
                         lastMsg={lastMsg} 

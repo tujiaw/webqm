@@ -13,6 +13,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.1.1",
+    "react-tap-event-plugin": "^2.0.1",
     "react-web": "git+https://github.com/taobaofed/react-web.git"
   },
   "devDependencies": {
