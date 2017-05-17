@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Styles from '../../style/component/chat_list'
 import PropTypes from 'prop-types';
 import Util from '../../utils/util';
+import ghistory from '../../utils/ghistory';
 
 const ItemAction = {
   normal: 'normal',
@@ -34,14 +35,12 @@ class ChatItem extends Component {
       action: ItemAction.selected
     });
     if (this.props.onItemClick) {
-      this.props.onItemClick(this.props.data);
+      this.props.onItemClick(this.props.chatid);
     }
   }
 
   render() {
     const self = this;
-    const {chat, users} = this.props;
-    const userInfo = users.get(chat.chatid);
     function getItemStyle() {
       if (self.state.action === ItemAction.hover) {
         return Styles.itemHover;
@@ -61,8 +60,8 @@ class ChatItem extends Component {
       >
         <img style={Styles.avatar} src="https://t.alipayobjects.com/images/rmsweb/T16xRhXkxbXXXXXXXX.svg" alt='avatar'/>
         <div style={Styles.content}>
-          <div style={Styles.username}>{userInfo.name || ''}</div>
-          <div style={Styles.lastMsg}>{Util.getLastMsgContent(userInfo.lastMsg)}</div>
+          <div style={Styles.username}>{this.props.name}</div>
+          <div style={Styles.lastMsg}>{this.props.lastMsg}</div>
         </div>
       </div>
       )
@@ -70,11 +69,46 @@ class ChatItem extends Component {
 }
 
 class ChatList extends Component {
+  getLastMsg = (chatid) => {
+    const {msgs} = this.props;
+    const chatMsgs = msgs.get(chatid);
+    if (chatMsgs) {
+      const lastMsg = chatMsgs.last();
+      if (lastMsg) {
+        return Util.getLastMsgContent(lastMsg);
+      }
+    }
+    return '';
+  }
+
+  onItemClick = (chatid) => {
+    console.log('111111111111111111:' + chatid);
+    ghistory.push('/dialogue');
+  }
+
   render() {
+    const self = this;
+    const {chats, users} = this.props;
+
     return (
       <div style={Styles.list}>
-        {this.props.chats.map((chat, index) => {
-          return <ChatItem key={index} chat={chat} {...this.props} />
+        {chats.map((chat, index) => {
+          if (chat && chat.chatid) {
+            const userInfo = users.get(chat.chatid);
+            if (userInfo) {
+              const name = Util.getShowName(userInfo);
+              const unreadCount = chat.unreadCount;
+              const lastMsg = self.getLastMsg(chat.chatid);
+              return <ChatItem key={index} 
+                        chatid={chat.chatid} 
+                        name={name} 
+                        unreadCount={unreadCount} 
+                        lastMsg={lastMsg} 
+                        onItemClick={this.onItemClick}
+                      />
+            }
+          }
+          return '';
         })}
       </div>
     )

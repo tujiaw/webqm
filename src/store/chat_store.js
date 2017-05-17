@@ -7,7 +7,6 @@ import Util from '../utils/util';
 // const record = {
 //   chatid: 0,
 //   unreadCount: 0,
-//   lastMsg: {}
 // }
 
 class ChatStore extends ReduceStore {
@@ -28,16 +27,7 @@ class ChatStore extends ReduceStore {
         return state;
       case ActionTypes.CHAT_ADD:
         return this.add(state, action);
-      case ActionTypes.CHAT_ADD_MSG:
-        return this.addMsg(state, action);
       case ActionTypes.CHAT_INCREASE_UNREAD_MSG:
-        return state;
-      case ActionTypes.CHAT_UPDATE_LAST_MSG:
-        state = state.update(item => {
-          if (item.chatid === action.chatid) {
-            item.lastMsg = action.lastMsg;
-          }
-        })
         return state;
       case ActionTypes.CHAT_REMOVE:
         if (action.chatid) {
@@ -57,24 +47,6 @@ class ChatStore extends ReduceStore {
           chatid: action.chatid,
           unreadCount: 0,
           lastMsg: {}
-        }
-        state = state.push(record);
-      }
-    }
-    return state;
-  }
-
-  addMsg(state, action) {
-    if (action.msg) {
-      const chatid = Util.getMsgChatId(action.msg);
-      const index = state.findIndex(item => item.chatid === chatid);
-      if (index >= 0) {
-        state = state.update(index, item => item.lastMsg = action.msg);
-      } else {
-        const record = {
-          chatid: chatid,
-          unreadCount: 1,
-          lastMsg: action.msg
         }
         state = state.push(record);
       }

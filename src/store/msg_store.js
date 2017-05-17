@@ -14,7 +14,6 @@ class MsgStore extends ReduceStore {
   }
 
   reduce(state, action) {
-    console.log('msg store: ' + JSON.stringify(action));
     switch(action.type) {
       case ActionTypes.MSG_ADD:
         const msg = action.msg;

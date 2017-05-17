@@ -30,6 +30,8 @@ const APPID = 0x00B;
 const TOPIC_CLIENT_MSG = ((APPID<<20) | 0x00002);
 const TOPIC_CLIENT_ROOM_MSG = ((APPID<<20) | 0x00004);
 
+const SYS_AVATAR_COUNT = 35; // 系统头像数目
+
 const Util = {
   myid: 0,
   isQmUserId: function(id) {
@@ -62,6 +64,17 @@ const Util = {
     }
     return 0;
   },
+  getShowName(userInfo) {
+    if (userInfo) {
+      if (userInfo.name && userInfo.name.length) {
+        return userInfo.name;
+      }
+      if (userInfo.loginName && userInfo.loginName.length) {
+        return userInfo.loginName;
+      }
+    }
+    return '';
+  },
   isTopicClientMsg(id) {
     return TOPIC_CLIENT_MSG === id;
   },
@@ -71,8 +84,15 @@ const Util = {
   padZero(str, count) {
     return new Array(count - str.length + 1).join('0') + str;
   },
-  getAvatarPath(avatarId) {
-    if (avatarId !== undefined && avatarId >= 1 && avatarId <= 35) {
+  isSysAvatar(avatarId) {
+    return avatarId && avatarId >= 0 && avatarId <= SYS_AVATAR_COUNT;
+  },
+  getUserAvatar(userInfo) {
+    const avatarId = userInfo.avatarId;
+    if (avatarId === 0) {
+      return '/avatar/default.png';
+    }
+    if (this.isSysAvatar(avatarId)) {
       const IMAGES_MAIN_COUNT = 15;
       const womanNumber = avatarId - IMAGES_MAIN_COUNT;
       if (womanNumber > 0) {
@@ -82,8 +102,11 @@ const Util = {
         const temp = this.padZero(avatarId + '', 2);
         return `/avatar/images_man_${temp}.png`;
       }
+    } else if (userInfo.avatar && userInfo.avatar.length) {
+      return 'data:image/png;base64,' + userInfo.avatar;
+    } else {
+      return '/avatar/default.png';
     }
-    return '/avatar/default.png';
   },
   isEmptyObject(obj) {
     for (let i in obj) {

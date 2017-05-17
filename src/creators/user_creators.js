@@ -50,7 +50,7 @@ const UserCreators = {
         .then(() => {
             let usersId = [];
             const groups = ContactStore.getState();
-            groups.map((group) => {
+            groups.forEach((group) => {
                 usersId = usersId.concat(group.users);
             })
             return Promise.resolve(usersId);
@@ -61,7 +61,7 @@ const UserCreators = {
         .then(() => {
             let companiesId = Set();
             const users = UsersStore.getState();
-            users.map((user) => {
+            users.forEach((user) => {
                 if (user.companyId && user.companyId !== undefined) {
                     companiesId = companiesId.add(user.companyId);
                 }
@@ -122,7 +122,7 @@ const UserCreators = {
         }
         return new Promise((resolve, reject) => {
             if (requestUsers.length) {
-                WebApi.baseusers(ActionCommon.auth, requestUsers, (res) => {
+                WebApi.baseusers(requestUsers, (res) => {
                     const resHeader = ActionCommon.checkResCommonHeader(res);
                     if (resHeader.code === 0) {
                         for (let i = 0, count = res.body.userInfo.length; i < count; i++) {
@@ -156,7 +156,7 @@ const UserCreators = {
         }
         return new Promise((resolve, reject) => {
             if (requestCompaniesId.length) {
-                WebApi.companies(ActionCommon.auth, requestCompaniesId, (res) => {
+                WebApi.companies(requestCompaniesId, (res) => {
                     const resHeader = ActionCommon.checkResCommonHeader(res);
                     if (resHeader.code === 0) {
                         if (res.body.retcode === 0) {
@@ -173,6 +173,48 @@ const UserCreators = {
                 })
             } else {
                 return resolve(result);
+            }
+        })
+    },
+    asyncUpdateUsersAvatar: function(usersId) {
+        const users = UsersStore.getState();
+        if (users.isEmpty()) {
+            return Promise.resolve();
+        }
+        
+        let requestUsersId = [];
+        for (let i = 0, count = usersId.length; i < count; i++) {
+            const userid = usersId[i];
+            const userInfo = users.get(userid);
+            if (userInfo) {
+                if (Util.isSysAvatar(userInfo.avatarId)) {
+                    continue;
+                } else if (userInfo.avatar && userInfo.avatar.length) {
+                    continue;
+                }
+                requestUsersId.push(userid);
+            }
+        }
+        
+        return new Promise((resolve, reject) => {
+            if (requestUsersId.length) {
+                WebApi.useravatar(requestUsersId, (res) => {
+                    const resHeader = ActionCommon.checkResCommonHeader(res);
+                    if (resHeader.code !== 0) {
+                        console.error('user avatar code:' + resHeader.code);
+                    }
+                    if (res.body.errorCode === 0) {
+                        if (res.body.changeUserIdList && res.body.avatarDataList && res.body.avatarIdList) {
+                            Actions.users.updateAvatarList(res.body.changeUserIdList, res.body.avatarIdList, res.body.avatarDataList);
+                            return resolve(res.body.changeUserIdList);
+                        }
+                    } else {
+                        console.error('user avatar errorcode:' + res.body.errorCode);
+                    }
+                    return resolve();
+                })
+            } else {
+                return resolve();
             }
         })
     }

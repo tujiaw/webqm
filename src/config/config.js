@@ -14,6 +14,7 @@ const Config = {
     usergroup: BaseInfo.restful_host + 'usergroup',
     baseusers: BaseInfo.restful_host + 'user',
     company: BaseInfo.restful_host + 'company',
+    useravatar: BaseInfo.restful_host + 'useravatar',
   }
 }
 

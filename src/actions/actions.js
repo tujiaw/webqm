@@ -9,14 +9,8 @@ const Actions = {
     add: function(chatid) {
       Dispatcher.dispatch({ type: ActionTypes.CHAT_ADD, chatid });
     },
-    addMsg: function(msg) {
-      Dispatcher.dispatch({ type: ActionTypes.CHAT_ADD_MSG, msg });
-    },
     increaseUnreadMsg: function(chatid, lastMsg) {
       Dispatcher.dispatch({ type: ActionTypes.CHAT_INCREASE_UNREAD_MSG, chatid, lastMsg });
-    },
-    updateLastMsg: function(chatid, lastMsg) {
-      Dispatcher.dispatch({ type: ActionTypes.CHAT_UPDATE_LAST_MSG, chatid, lastMsg });
     },
     remove: function(chatid) {
       Dispatcher.dispatch({ type: ActionTypes.CHAT_REMOVE, chatid });
@@ -57,6 +51,9 @@ const Actions = {
   users: {
     add: function(user) {
       Dispatcher.dispatch({ type: ActionTypes.USERS_ADD, user });
+    },
+    updateAvatarList: function(userIdList, avatarIdList, avatarList) {
+      Dispatcher.dispatch({ type: ActionTypes.USERS_UPDATE_AVATAR_LIST, userIdList, avatarIdList, avatarList });
     }
   }
 }

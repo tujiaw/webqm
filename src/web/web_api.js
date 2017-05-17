@@ -42,7 +42,7 @@ const WebApi = {
     WebClient.request(Config.restful.usergroup, data, cb);
   },
 
-  baseusers: function(auth, usersId, cb) {
+  baseusers: function(usersId, cb) {
     const data = {
       userId: [],
       version: [],
@@ -59,16 +59,25 @@ const WebApi = {
     WebClient.request(Config.restful.baseusers, data, cb);
   },
 
-  companies: function(auth, companiesId, cb) {
-    if (companiesId.length) {
-      const data = {
-        companyId: []
-      }
-      data.companyId = data.companyId.concat(companiesId);
-      WebClient.request(Config.restful.company, data, cb);
+  companies: function(companiesId, cb) {
+    const data = {
+      companyId: []
     }
+    data.companyId = data.companyId.concat(companiesId);
+    WebClient.request(Config.restful.company, data, cb);
   },
 
+  useravatar: function(usersId, cb) {
+    const data = {
+      userIdList: [],
+      avatarIdList: []
+    }
+    for (let i = 0, count = usersId.length; i < count; i++) {
+      data.userIdList.push(usersId[i]);
+      data.avatarIdList.push(0);
+    }
+    WebClient.request(Config.restful.useravatar, data, cb);
+  },
   sendMsg: function(auth, id, msg, cb) {
     const data = {
       "header": {
