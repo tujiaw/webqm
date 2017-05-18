@@ -5,6 +5,7 @@ import ghistory from '../utils/ghistory';
 import {EMessageBodyType, QMMsgParser} from '../utils/qmmsg';
 import MsgCreators from '../creators/msg_creators';
 import UserCreators from '../creators/user_creators';
+import TopBar from './component/top_bar';
 
 class Dialogue extends React.Component {
   onMessageSend = () => {
@@ -29,7 +30,6 @@ class Dialogue extends React.Component {
       }
     })
     .catch((code, error) => {
-
     });
   }
 
@@ -52,12 +52,7 @@ class Dialogue extends React.Component {
 
     return (
       <div style={Styles.main}>
-        <DialogueNav 
-          onLeftButtonClick={this.onLeftButtonClick}
-          onRightButtonClick={this.onRightButtonClick}
-          id={currentId}
-          title={showName}
-        />
+        <TopBar pageName='dialogue' title={showName}/>
         <div style={Styles.messagePanel}>
           { messages.map((msg, index) => {
             const msgObj = (new QMMsgParser(msg.body)).getMsg();

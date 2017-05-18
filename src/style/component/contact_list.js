@@ -1,3 +1,5 @@
+import Color from '../color';
+
 const Styles = {
   main: {
     display: 'flex',
@@ -40,8 +42,8 @@ Styles.item = {
   alignItems: 'center',
   paddingLeft: '10px',
   paddingRight: '10px',
-  background: '#141415',
-  borderBottom: '1px solid #28282C',
+  background: Color.itemBackground,
+  borderBottom: Color.itemUnderline,
 }
 
 Styles.itemHover = {
@@ -62,7 +64,7 @@ Styles.groupItem = {
     flexDirection: 'column',
     flexShrink: 0,
     background: '#19191B',
-    borderBottom: '1px solid #28282C',
+    borderBottom: Color.itemUnderline,
   }
 
 Styles.userList = {

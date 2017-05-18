@@ -8,69 +8,52 @@ import FontIcon from 'material-ui/FontIcon';
 import Toggle from 'material-ui/Toggle';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import Styles from '../../style/component/top_bar';
+import ghistory from '../../utils/ghistory';
 
-const Styles = {
-  appbar: {
-    height: '50px',
-  },
-  title: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
-  backButton: {
-  },
-  backButtonIcon: {
-    color: '#303030',
-  },
-  backLabel: {
-    margin: '0px',
-    padding: '0px',
-    color: '#303030',
-  },
-  moreButton: {
-    margin: '0px',
-    padding: '0px',
-  },
-  moreButtonIcon: {
-    marginBottom: '10px',
+class LeftElement extends Component {
+  onBackClick = () => {
+    ghistory.goBack();
   }
-}
-class Login extends Component {
-  static muiName = 'FlatButton';
 
   render() {
+    const {pageName} = this.props;
     return (
-      <FlatButton {...this.props} label="Login" />
-    );
+      pageName === 'dialogue'
+      ? <FlatButton 
+          label="返回"
+          icon={<FontIcon style={Styles.backButtonIcon} className="material-icons">keyboard_arrow_left</FontIcon>}
+          style={Styles.backButton}
+          labelStyle={Styles.backLabel}
+          onClick={this.onBackClick}
+        />
+      : <span></span>
+      )
   }
 }
 
-const Logged = (props) => (
-  <IconMenu
-    {...props}
-    iconButtonElement={
-      <IconButton style={Styles.moreButton} iconStyle={Styles.moreButtonIcon}><MoreVertIcon /></IconButton>
+class RightElement extends Component {
+  render() {
+    return (
+        <IconMenu
+          iconButtonElement={
+            <IconButton style={Styles.moreButton} iconStyle={Styles.moreButtonIcon}><MoreVertIcon /></IconButton>
+          }
+          targetOrigin={{horizontal: 'right', vertical: 'top'}}
+          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        >
+          <MenuItem primaryText="Refresh" />
+          <MenuItem primaryText="Help" />
+          <MenuItem primaryText="Sign out" />
+        </IconMenu>
+      )
     }
-    targetOrigin={{horizontal: 'right', vertical: 'top'}}
-    anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-  >
-    <MenuItem primaryText="Refresh" />
-    <MenuItem primaryText="Help" />
-    <MenuItem primaryText="Sign out" />
-  </IconMenu>
-);
+}
 
-Logged.muiName = 'IconMenu';
-
-/**
- * This example is taking advantage of the composability of the `AppBar`
- * to render different components depending on the application state.
- */
 class TopBar extends Component {
-  state = {
-    selectIndex: 0
-  };
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -78,16 +61,9 @@ class TopBar extends Component {
         <AppBar
           style={Styles.appbar}
           titleStyle={Styles.title}
-          title="Title"
-          iconElementLeft={
-            <FlatButton 
-              label="返回"
-              icon={<FontIcon style={Styles.backButtonIcon} className="material-icons">keyboard_arrow_left</FontIcon>}
-              style={Styles.backButton}
-              labelStyle={Styles.backLabel}
-            />
-          }
-          iconElementRight={this.state.selectIndex === 0 ? <Logged /> : <Login />}
+          title={this.props.title}
+          iconElementLeft={<LeftElement {...this.props}/>}
+          iconElementRight={<RightElement {...this.props}/>}
         />
       </div>
     );

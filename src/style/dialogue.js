@@ -2,7 +2,6 @@ const Styles = {
   main: {
     display: 'flex',
     flexDirection: 'column',
-    margin: '10px',
     flex: 1,
   },
   messagePanel: {

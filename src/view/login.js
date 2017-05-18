@@ -78,9 +78,9 @@ class Login extends Component {
             onChange={this.onPasswordInput}
           />
           <Checkbox label="记住密码" style={Styles.checkbox}/>
+          <br/>
+          <RaisedButton label="登录" primary={true} onClick={this.onLogin} fullWidth={true}/>
         </div>
-        <br/>
-        <RaisedButton label="登录" primary={true} onClick={this.onLogin} />
         <Snackbar
           open={this.state.showTip}
           message={this.state.tipMsg}

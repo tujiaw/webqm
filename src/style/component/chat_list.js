@@ -1,3 +1,5 @@
+import Color from '../color';
+
 const Styles = {
   list: {
     display: 'flex',
@@ -41,16 +43,18 @@ Styles.item = {
   alignItems: 'center',
   paddingLeft: '10px',
   paddingRight: '10px',
+  background: Color.itemBackground,
+  borderBottom: Color.itemUnderline,
 }
 
 Styles.itemHover = {
   ...Styles.item,
-  background: '#141415'
+  background: Color.itemHover
 }
 
 Styles.itemSelected = {
   ...Styles.item,
-  background: '#141415'
+  background: Color.itemHover
 }
 
 export default Styles;
