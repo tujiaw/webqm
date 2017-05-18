@@ -64,7 +64,7 @@ class MainTab extends React.Component {
     return (
         <div style={Styles.main}>
           <TopBar title={curPage.label} pageName={curPage.pageName}/>
-          <div style={Styles.tab}>
+          <div style={Styles.pageList}>
               <Route exact path={`${url}`} component={ChatContainer}/>
               <Route path={`${url}/contact`} component={ContactContainer}/>
               <Route path={`${url}/about`} component={About}/>
@@ -76,6 +76,8 @@ class MainTab extends React.Component {
                 icon={<FontIcon className="material-icons">{page.iconName}</FontIcon>}
                 label={page.label}
                 value={index}
+                style={Styles.tab}
+                buttonStyle={Styles.tabButton}
               />
             })}
           </Tabs>

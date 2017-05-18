@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class Login extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class Login extends Component {
       tipMsg: '登录失败！',
       username: 'jiawei01',
       password: '123456',
+      loadding: false,
     }
   }
 
@@ -23,16 +25,18 @@ class Login extends Component {
     console.log('login, username:' + username + ', password:' + password);
     if (username.length && password.length) {
       const self = this;
+      self.setState({loadding: true});
       UserCreators.asyncLogin(username, password)
       .then(UserCreators.initUIData)
       .then(() => {
-        self.setState({ isLogin: true });
+        self.setState({ isLogin: true, loadding: false });
         self.props.history.push('main');
       })
       .catch((res) => {
         self.setState({
           showTip: true,
-          tipMsg: res.error || '登录失败，用户名或密码错误！' 
+          tipMsg: res.error || '登录失败，用户名或密码错误！',
+          loadding: false
         })
       });
     } else {
@@ -80,6 +84,9 @@ class Login extends Component {
           <Checkbox label="记住密码" style={Styles.checkbox}/>
           <br/>
           <RaisedButton label="登录" primary={true} onClick={this.onLogin} fullWidth={true}/>
+        </div>
+        <div style={this.state.loadding ? Styles.progressVisible : Styles.progressHidden}>
+          <CircularProgress color="#e80052" />
         </div>
         <Snackbar
           open={this.state.showTip}
