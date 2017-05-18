@@ -4,7 +4,8 @@ Styles.main = {
   flex: 1,
   flexDirection: 'column',
   justifyContent: 'space-between',
-  height: '100vh'
+  height: '100vh',
+  overflow: 'hidden',
 }
 
 Styles.tab = {

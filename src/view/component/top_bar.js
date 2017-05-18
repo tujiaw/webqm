@@ -23,7 +23,6 @@ class LeftElement extends Component {
       ? <FlatButton 
           label="返回"
           icon={<FontIcon style={Styles.backButtonIcon} className="material-icons">keyboard_arrow_left</FontIcon>}
-          style={Styles.backButton}
           labelStyle={Styles.backLabel}
           onClick={this.onBackClick}
         />
@@ -42,9 +41,8 @@ class RightElement extends Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText="Refresh" />
-          <MenuItem primaryText="Help" />
-          <MenuItem primaryText="Sign out" />
+          <MenuItem primaryText="删除" />
+          <MenuItem primaryText="退出" />
         </IconMenu>
       )
     }
@@ -64,6 +62,7 @@ class TopBar extends Component {
           title={this.props.title}
           iconElementLeft={<LeftElement {...this.props}/>}
           iconElementRight={<RightElement {...this.props}/>}
+          iconStyleLeft={{marginLeft: '-30px'}}
         />
       </div>
     );

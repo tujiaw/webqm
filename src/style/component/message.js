@@ -6,8 +6,8 @@ const Styles = {
     flexShrink: 0,
     paddingLeft: '16px',
     paddingRight: '6px',
-    paddingTop: '5px',
-    paddingBottom: '5px',
+    paddingTop: '4px',
+    paddingBottom: '4px',
   },
   date: {
     display: 'flex',
@@ -21,8 +21,8 @@ const Styles = {
   sendName: {
     fontSize: '13px',
     color: '#b8b3af',
-    marginTop: '4px',
-    marginBottom: '12px',
+    paddingTop: '6px',
+    paddingBottom: '12px',
   },
   receiveName: {
     color: '#ba9d76',

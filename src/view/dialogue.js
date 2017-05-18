@@ -11,6 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 import Message from './component/message';
+import moment from 'moment';
 
 class Dialogue extends React.Component {
   constructor(props) {
@@ -79,6 +80,7 @@ class Dialogue extends React.Component {
     const {currentId, messages, users} = this.props;
     const info = users.get(currentId);
     const showName = (info !== undefined ? info.name : 'unkown');
+    let prevDate = '', showDate = '';
 
     return (
       <div style={Styles.main}>
@@ -88,6 +90,7 @@ class Dialogue extends React.Component {
           {messages.map((msg, index) => {
             let isShowName = false, isShowDate = false;
             if (index > 0) {
+              // 是否显示消息中的用户名
               const prevMsg = messages.get(index - 1);
               if (prevMsg.header.from !== msg.header.from) {
                 isShowName = true;
@@ -96,14 +99,22 @@ class Dialogue extends React.Component {
               }
             } else {
               isShowName = true;
-              isShowDate = true;
             }
-             return <Message key={index} msg={msg} users={users} isShowName={isShowName} isShowDate={isShowDate}/>
+
+            // 是否显示日期
+            const currentDate = moment(msg.time).format('MM月DD日 dddd');
+            if (prevDate !== currentDate) {
+              prevDate = currentDate;
+              showDate = currentDate;
+            } else {
+              showDate = '';
+            }
+            return <Message key={index} msg={msg} users={users} isShowName={isShowName} showDate={showDate}/>
           })}
         </div>
         <div style={Styles.inputPanel}>
           <Divider />
-          <IconButton tooltip="表情" tooltipPosition="top-right" iconClassName="material-icons" style={Styles.faceButton}>face</IconButton>
+          <IconButton tooltip="表情" tooltipPosition="top-right" iconClassName="material-icons" style={Styles.faceButton}>insert_emoticon</IconButton>
             <textarea 
               style={Styles.inputMessage}
               rows="3" 

@@ -7,15 +7,12 @@ const Styles = {
     justifyContent: 'center',
     alignSelf: 'center',
   },
-  backButton: {
-  },
   backButtonIcon: {
-    color: '#303030',
+    color: '#fff',
   },
   backLabel: {
     margin: '0px',
     padding: '0px',
-    color: '#303030',
   },
   moreButton: {
     margin: '0px',

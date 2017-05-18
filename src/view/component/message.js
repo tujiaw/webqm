@@ -6,10 +6,9 @@ const moment = require('moment');
 
 class Message extends Component {
   render() {
-    const {msg, users, isShowName, isShowDate} = this.props;
+    const {msg, users, isShowName, showDate} = this.props;
     const fromId = msg.header.from;
     const isSend = (fromId === Util.myid);
-    const date = moment(msg.time).format('MM月DD日 dddd')
     const time = moment(msg.time).format('HH:mm:ss');
     const userInfo = users.get(fromId);
     let name = Util.getShowName(userInfo);
@@ -25,7 +24,7 @@ class Message extends Component {
 
     return (
       <div style={isSend ? Styles.sendMsg : Styles.receiveMsg}>
-        {isShowDate && <div><span style={Styles.date}>{date}</span></div>}
+        {showDate && showDate.length && <div><span style={Styles.date}>{showDate}</span></div>}
         {isShowName && <div><span style={isSend ? Styles.sendName : Styles.receiveName}>{name + ':'}</span></div>}
         <div style={Styles.contentBox}>
           <div style={isSend ? Styles.sendContent : Styles.receiveContent}>{msgContent}</div>
