@@ -8,9 +8,18 @@ Styles.main = {
   overflow: 'hidden',
 }
 
-Styles.tab = {
+Styles.pageList = {
   display: 'flex',
   flex: 1
+}
+
+Styles.tab = {
+  fontSize: '10px',
+  height: '60px'
+}
+
+Styles.tabButton = {
+  height: '60px'
 }
 
 Styles.bottomPanel = {

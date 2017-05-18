@@ -108,6 +108,9 @@ const UserCreators = {
         })
     },
     asyncGetBaseUsersInfo: function(usersId) {
+        if (typeof usersId === 'number') {
+            usersId = [usersId];
+        }
         let result = {};
         let requestUsers = [];
         const users = UsersStore.getState();
@@ -117,7 +120,7 @@ const UserCreators = {
             for (let i = 0, count = usersId.length; i < count; i++) {
                 const userid = usersId[i];
                 if (users.has(userid)) {
-                    result.userid = users.get(userid);
+                    result[userid] = users.get(userid);
                 } else {
                     requestUsers.push(userid);
                 }
@@ -127,7 +130,7 @@ const UserCreators = {
             if (requestUsers.length) {
                 WebApi.baseusers(requestUsers, (res) => {
                     const resHeader = ActionCommon.checkResCommonHeader(res);
-                    if (resHeader.code === 0) {
+                    if (resHeader.code === 0 && res.body.errorCode === 0) {
                         for (let i = 0, count = res.body.userInfo.length; i < count; i++) {
                             const item = res.body.userInfo[i];
                             result[item.userInfo.userID]= item.userInfo;

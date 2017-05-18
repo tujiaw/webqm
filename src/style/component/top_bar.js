@@ -6,6 +6,9 @@ const Styles = {
     display: 'flex',
     justifyContent: 'center',
     alignSelf: 'center',
+    fontSize: '16px',
+    color: '#fff',
+    fontFamily: 'Microsoft YaHei'
   },
   backButtonIcon: {
     color: '#fff',

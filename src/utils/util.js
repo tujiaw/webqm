@@ -1,4 +1,4 @@
-import {EMessageBodyType, MessageBodyListType, EmotionType, QMMsgBuilder, QMMsgParser} from './qmmsg';
+import {EMessageBodyType, QMMsgParser} from './qmmsg';
 
 const ID_RANGE = {
   ID_RANGE_START: 10000000,

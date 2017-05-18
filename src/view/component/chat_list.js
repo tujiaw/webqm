@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Styles from '../../style/component/chat_list'
-import PropTypes from 'prop-types';
 import Util from '../../utils/util';
 import ghistory from '../../utils/ghistory';
 import UserCreators from '../../creators/user_creators';

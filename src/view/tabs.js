@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import About from './about.js';
 import ChatContainer from '../container/chat_container';
 import ContactContainer from '../container/contact_container';
@@ -8,7 +8,6 @@ import Styles from '../style/tabs.js';
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
-import MapsPersonPin from 'material-ui/svg-icons/maps/person-pin';
 import ghistory from '../utils/ghistory';
 
 const Pages = [

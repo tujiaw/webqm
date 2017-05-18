@@ -1,14 +1,11 @@
 import React from 'react';
-import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
 import ghistory from '../utils/ghistory';
 import MsgCreators from '../creators/msg_creators';
 import UserCreators from '../creators/user_creators';
 import TopBar from './component/top_bar';
 import Divider from 'material-ui/Divider';
-import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 import Message from './component/message';
 import moment from 'moment';
@@ -88,7 +85,7 @@ class Dialogue extends React.Component {
         <div style={Styles.messagePanel}
              ref={(div) => {this.messagePanel = div;}}>
           {messages.map((msg, index) => {
-            let isShowName = false, isShowDate = false;
+            let isShowName = false;
             if (index > 0) {
               // 是否显示消息中的用户名
               const prevMsg = messages.get(index - 1);

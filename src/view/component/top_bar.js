@@ -5,9 +5,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
-import Toggle from 'material-ui/Toggle';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import Styles from '../../style/component/top_bar';
 import ghistory from '../../utils/ghistory';
 
@@ -41,6 +39,7 @@ class RightElement extends Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
+          <MenuItem primaryText="资料" />
           <MenuItem primaryText="删除" />
           <MenuItem primaryText="退出" />
         </IconMenu>
@@ -49,10 +48,6 @@ class RightElement extends Component {
 }
 
 class TopBar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>

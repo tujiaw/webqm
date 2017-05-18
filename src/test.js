@@ -1,8 +1,7 @@
 const { Map, List } = require('immutable');
 
-const moment = require('moment');
-
-let xx = undefined;
-const x = moment(xx).format('HH:mm:ss');
+let x = 3;
+x = [x]
 console.log(x);
+
 

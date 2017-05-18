@@ -17,9 +17,7 @@ const Styles = {
     flexDirection: 'column',
     flex: 1,
     paddingLeft: '15px',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    alignItems: 'space-between',
+    paddingRight: '15px',
   },
   username: {
     display: 'flex',
@@ -33,6 +31,10 @@ const Styles = {
     alignSelf: 'flex-start',
     color: '#c5c5c5',
     fontSize: '12px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    marginRight: '20px',
   },
 }
 

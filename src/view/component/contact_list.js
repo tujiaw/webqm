@@ -60,8 +60,7 @@ class UserItem extends Component {
       <div style={itemStyle}
         onMouseEnter={this.onMouseEnter} 
         onMouseLeave={this.onMouseLeave} 
-        onClick={this.onClick} 
-      >
+        onClick={this.onClick} >
         <img style={Styles.avatar} src={avatar} alt='avatar'/>
         <div style={Styles.content}>
           <div style={Styles.username}>{username || ''}</div>
@@ -166,6 +165,8 @@ class ContactList extends Component {
               userMap={this.props.users} 
               companyMap={this.props.companies} 
               onItemClick={this.props.onItemClick} />
+          } else {
+            return <span></span>
           }
         })}
       </div>

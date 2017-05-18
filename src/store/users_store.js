@@ -1,5 +1,5 @@
 import {ReduceStore} from 'flux/utils';
-import {Map, List} from 'immutable';
+import {Map} from 'immutable';
 import ActionTypes from '../actions/action_types';
 import Dispatcher from '../dispatcher/dispatcher';
 

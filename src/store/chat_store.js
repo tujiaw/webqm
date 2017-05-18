@@ -2,7 +2,6 @@ import {ReduceStore} from 'flux/utils';
 import {List} from 'immutable';
 import ActionTypes from '../actions/action_types';
 import Dispatcher from '../dispatcher/dispatcher';
-import Util from '../utils/util';
 
 // const record = {
 //   chatid: 0,

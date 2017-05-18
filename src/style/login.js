@@ -53,7 +53,22 @@ const Styles = {
     width: '100px',
     height: '30px',
     alignSelf: 'center',
+  },
+  progress: {
+    margin: '20px',
+    alignSelf: 'center',
+    height: '60px',
   }
+}
+
+Styles.progressVisible = {
+    ...Styles.progress,
+    visibility: 'visible'
+}
+
+Styles.progressHidden = {
+  ...Styles.progress,
+  visibility: 'hidden'
 }
 
 export default Styles;
