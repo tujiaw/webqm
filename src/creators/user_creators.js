@@ -10,7 +10,6 @@ import Util from '../utils/util';
 import { Set } from 'immutable';
 
 const UserCreators = {
-    myId: 0,
     setCurrentId: function (id) {
         if (this.getCurrentId() !== id) {
             Actions.dialogue.setCurrentId(id);
@@ -52,7 +51,7 @@ const UserCreators = {
     initUIData: function() {
         return UserCreators.asyncGetUserGroup()
         .then(() => {
-            let usersId = [];
+            let usersId = [Util.myid];
             const groups = ContactStore.getState();
             groups.forEach((group) => {
                 usersId = usersId.concat(group.users);

@@ -2,26 +2,49 @@ import React from 'react';
 import DialogueNav from './component/dialogue_nav.js';
 import Styles from '../style/dialogue.js';
 import ghistory from '../utils/ghistory';
-import {EMessageBodyType, QMMsgParser} from '../utils/qmmsg';
 import MsgCreators from '../creators/msg_creators';
 import UserCreators from '../creators/user_creators';
 import TopBar from './component/top_bar';
+import Divider from 'material-ui/Divider';
+import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import RaisedButton from 'material-ui/RaisedButton';
+import Message from './component/message';
 
 class Dialogue extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputValue: ''
+    }
+  }
+
+  componentDidMount() {
+    this.refs.inputMessage.focus();
+  }
+
   onMessageSend = () => {
     this.sendMsg();
     this.refs.inputMessage.focus();
   }
 
   onInputKeyDown = (event) => {
-    if (event.keyCode !== 13) {
-      return;
+    if (event.keyCode === 13) {
+      if (event.ctrlKey) {
+        this.refs.inputMessage.value += '\n';
+      } else {
+        this.sendMsg();
+      }
+      event.preventDefault();
     }
-    this.sendMsg();
   }
 
   sendMsg = () => {
-    const msg = this.refs.inputMessage.value;
+    const msg = this.refs.inputMessage.value.trim();
+    if (msg.length === 0) {
+      return;
+    }
     this.refs.inputMessage.value = '';
     MsgCreators.asyncSendMsg(this.props.currentId, msg)
     .then((res) => {
@@ -41,8 +64,15 @@ class Dialogue extends React.Component {
     console.log(UserCreators.getCurrentId());
   }
 
-  componentDidMount() {
-    this.refs.inputMessage.focus();
+  scrollToBottom() {
+    const scrollHeight = this.messagePanel.scrollHeight;
+    const height = this.messagePanel.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+    this.messagePanel.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
   }
 
   render() {
@@ -53,23 +83,38 @@ class Dialogue extends React.Component {
     return (
       <div style={Styles.main}>
         <TopBar pageName='dialogue' title={showName}/>
-        <div style={Styles.messagePanel}>
-          { messages.map((msg, index) => {
-            const msgObj = (new QMMsgParser(msg.body)).getMsg();
-            let msgContent = '';
-            for (let i = 0, bodyCount = msgObj.bodyList.length; i < bodyCount; i++) {
-              const body = msgObj.bodyList[i];
-              if (body.type === EMessageBodyType.MSG_Body_Type_EnhancedTEXT) {
-                msgContent += body.msg.content;
+        <div style={Styles.messagePanel}
+             ref={(div) => {this.messagePanel = div;}}>
+          {messages.map((msg, index) => {
+            let isShowName = false, isShowDate = false;
+            if (index > 0) {
+              const prevMsg = messages.get(index - 1);
+              if (prevMsg.header.from !== msg.header.from) {
+                isShowName = true;
+              } else if (prevMsg.time && msg.time && msg.time - prevMsg.time > 60 * 1000) {
+                isShowName = true;
               }
+            } else {
+              isShowName = true;
+              isShowDate = true;
             }
-            return <div key={index}>{msgContent}</div>
+             return <Message key={index} msg={msg} users={users} isShowName={isShowName} isShowDate={isShowDate}/>
           })}
         </div>
         <div style={Styles.inputPanel}>
-          <button style={Styles.buttonFace} >表情</button>
-          <input style={Styles.inputMessage} ref="inputMessage" type="text" onKeyDown={this.onInputKeyDown}/>
-          <button style={Styles.buttonSend} onClick={this.onMessageSend}>发送</button>
+          <Divider />
+          <IconButton tooltip="表情" tooltipPosition="top-right" iconClassName="material-icons" style={Styles.faceButton}>face</IconButton>
+            <textarea 
+              style={Styles.inputMessage}
+              rows="3" 
+              onKeyDown={this.onInputKeyDown}
+              ref="inputMessage"
+            />
+
+          <div style={Styles.sendButtonBox}>
+              <span style={Styles.newlineSpan}>按下Ctrl+Enter换行</span>
+              <RaisedButton label="发送" primary={true} onClick={this.onMessageSend} style={Styles.sendButton}/>
+          </div>
         </div>
       </div>
     )

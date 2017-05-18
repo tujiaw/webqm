@@ -72,6 +72,7 @@ class MainTab extends React.Component {
           <Tabs onChange={this.onChange} initialSelectedIndex={this.state.selectIndex}>
             {Pages.map((page, index) => {
               return <Tab
+                key={index}
                 icon={<FontIcon className="material-icons">{page.iconName}</FontIcon>}
                 label={page.label}
                 value={index}
