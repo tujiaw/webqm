@@ -22,6 +22,10 @@ const WebApi = {
     WebClient.init(auth, onMessageFunc, cb);
   },
 
+  connectStatus: function() {
+    return WebClient.connectStatus();
+  },
+
   /**
    * 获取好友列表
    */
@@ -90,18 +94,44 @@ const WebApi = {
   },
 
   /**
-   * 用户配置
+   * 设置自定义配置
    */
-  userconfig: function(userid, cb) {
+  setcustomconfig: function(auth, keyList, valueList, cb) {
     const data = {
-      "header": {
-        "from": userid,
-        "sourceNo": 0,
-        "serialNo": 0,
-        "errorCode": 0
-      }
+      "userId": auth.userid,
+      "key": [],
+      "value": []
     }
-    WebClient.request(Config.resetful.userconfig, data, cb);
+    const count = Math.min(keyList.length, valueList.length);
+    if (count === 0) {
+      cb({code: 1, error: '参数错误'});
+      return;
+    }
+    for (let i = 0; i < count; i++) {
+      data['key'].push(keyList[i]);
+      data['value'].push(valueList[i]);
+    }
+    WebClient.request(Config.restful.setcustomconfig, data, cb);
+  },
+
+  /**
+   * 获取自定义配置
+   */
+  customconfig: function(auth, keyList, cb) {
+    const data = {
+      "userId": auth.userid,
+      "key": [],
+      "version": []
+    }
+    if (!keyList.length) {
+      cb({code: 1, error: '参数错误'});
+      return;
+    }
+    for (let i = 0, count = keyList.length; i < count; i++) {
+      data['key'].push(keyList[i]);
+      data['version'].push(0);
+    }
+    WebClient.request(Config.restful.customconfig, data, cb);
   },
 
   /**

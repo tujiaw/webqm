@@ -3,10 +3,11 @@ import {List} from 'immutable';
 import ActionTypes from '../actions/action_types';
 import Dispatcher from '../dispatcher/dispatcher';
 
-// const record = {
-//   chatid: 0,
-//   unreadCount: 0,
-// }
+const record = {
+  chatid: 0,
+  unreadCount: 0,
+  lastMsg: {}
+}
 
 class ChatStore extends ReduceStore {
   constructor() {
@@ -15,6 +16,14 @@ class ChatStore extends ReduceStore {
 
   getInitialState() {
     return List();
+  }
+
+  createRecord(chatid, unreadCount, lastMsg) {
+    return {
+      chatid: chatid,
+      unreadCount: unreadCount || 0,
+      lastMsg: lastMsg || {}
+    }
   }
 
   reduce(state, action) {

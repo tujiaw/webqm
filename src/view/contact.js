@@ -11,8 +11,6 @@ class Contact extends Component {
 
   onItemClick = (userid) => {
     console.log('on item click:' + userid);
-    UserCreators.setCurrentId(userid);
-    UserCreators.addChat(userid);
     ghistory.push('/user', {userid: userid});
   }
 

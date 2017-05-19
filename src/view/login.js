@@ -11,6 +11,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      timer: 0,
       showTip: false,
       tipMsg: '登录失败！',
       username: 'jiawei01',
@@ -19,13 +20,28 @@ class Login extends Component {
     }
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.state.timer);
+  }
+
   onLogin = () => {
     const username = this.state.username;
     const password = this.state.password;
     console.log('login, username:' + username + ', password:' + password);
     if (username.length && password.length) {
       const self = this;
-      self.setState({loadding: true});
+      const timer = setTimeout(() => {
+        const connectStatus = UserCreators.getConnectStatus();
+        if (connectStatus.code === 3 && self.state.loadding) {
+          self.setState({
+            showTip: true,
+            tipMsg: connectStatus.desc,
+            loadding: false
+          })
+        }
+      }, 1000);
+
+      self.setState({ timer: timer, loadding: true});
       UserCreators.asyncLogin(username, password)
       .then(UserCreators.initUIData)
       .then(() => {
@@ -33,9 +49,17 @@ class Login extends Component {
         self.props.history.push('main');
       })
       .catch((res) => {
+        let tipMsg = '未知错误';
+        if (res) {
+          if (res.error) {
+            tipMsg = res.error;
+          } else if (res.message) {
+            tipMsg = res.message;
+          }
+        }
         self.setState({
           showTip: true,
-          tipMsg: res.error || '登录失败，用户名或密码错误！',
+          tipMsg: tipMsg,
           loadding: false
         })
       });

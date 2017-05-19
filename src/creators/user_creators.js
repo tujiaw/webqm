@@ -3,12 +3,14 @@ import ContactStore from '../store/contact_store';
 import UsersStore from '../store/users_store';
 import CompanyStore from '../store/company_store';
 import ConfigStore from '../store/config_store';
+import ChatStore from '../store/chat_store';
 import Actions from '../actions/actions';
 import ActionCommon from '../actions/action_common';
 import WebApi from '../web/web_api';
 import MsgCreators from './msg_creators';
 import Util from '../utils/util';
 import { Set } from 'immutable';
+import { Base64 } from 'js-base64';
 
 const UserCreators = {
     setCurrentId: function (id) {
@@ -22,7 +24,24 @@ const UserCreators = {
         return DialogueCurrentIdStore.getState();
     },
     addChat: function(chatid) {
+        const prevList = ChatStore.getState();
         Actions.chat.add(chatid);
+        const lastList = ChatStore.getState();
+        UserCreators.syncChatList(UserCreators.getUpdateChatList(prevList, lastList));
+    },
+    getConnectStatus: function() {
+        const status = WebApi.connectStatus();
+        const desc = {
+            0: '正在连接',
+            1: '已连接',
+            2: '连接断开中',
+            3: '连接已断开'
+        }
+        const statusDesc = desc[status] ? desc[status] : '连接未初始化';
+        return {
+            code: status,
+            desc: statusDesc
+        }
     },
     asyncLogin: function (username, password) {
         const isEmpty = !(username.length && password.length);
@@ -60,7 +79,13 @@ const UserCreators = {
             return Promise.resolve(usersId);
         })
         .then((usersId) => {
-            return UserCreators.asyncGetDetailUsersInfo(usersId)
+            return UserCreators.asyncGetDetailUsersInfo(usersId);
+        })
+        .then(() => {
+            return UserCreators.asyncGetChatList();
+        })
+        .then((usersId) => {
+            return UserCreators.asyncGetDetailUsersInfo(usersId);
         })
         .then(() => {
             let companiesId = Set();
@@ -72,6 +97,28 @@ const UserCreators = {
             })
             return UserCreators.asyncGetCompaniesInfo(companiesId.toArray());
         })
+    },
+    asyncGetChatList: function() {
+        return new Promise((resolve, reject) => {
+            WebApi.customconfig(ActionCommon.auth, ['webqmconfig'], (res) => {
+                const resHeader = ActionCommon.checkResCommonHeader(res);
+                if (resHeader.code !== 0 || res.body.retcode !== 0) {
+                    console.error('get chat list failed, ' + JSON.stringify(res));
+                } else {
+                    if (res.body.value.length) {
+                        let config = Base64.decode(res.body.value[0]);
+                        if (config.length) {
+                            config = JSON.parse(config);
+                            for (let i = 0, count = config.chatlist.length; i < count; i++) {
+                                Actions.chat.add(config.chatlist[i]);
+                            }
+                            return resolve(config.chatlist);
+                        }
+                    }
+                }
+                return resolve();
+            })
+        })    
     },
     asyncGetFriends: function () {
         return new Promise((resolve, reject) => {
@@ -109,6 +156,10 @@ const UserCreators = {
         })
     },
     asyncGetDetailUsersInfo: function(usersId) {
+        if (usersId === undefined) {
+            return Promise.resolve();
+        }
+
         if (typeof usersId === 'number') {
             usersId = [usersId];
         }
@@ -185,18 +236,18 @@ const UserCreators = {
     },
     asyncUpdateUsersAvatar: function(usersId) {
         const users = UsersStore.getState();
-        if (users.isEmpty()) {
+        if (usersId === undefined || users.isEmpty()) {
             return Promise.resolve();
         }
         
         let requestUsersId = [];
         for (let i = 0, count = usersId.length; i < count; i++) {
             const userid = usersId[i];
-            const userInfo = users.get(userid);
-            if (userInfo) {
-                if (Util.isSysAvatar(userInfo.avatarId)) {
+            const user = users.get(userid);
+            if (user) {
+                if (Util.isSysAvatar(user.userInfo.avatarId)) {
                     continue;
-                } else if (userInfo.avatar && userInfo.avatar.length) {
+                } else if (user.userInfo.avatar !== undefined) {
                     continue;
                 }
                 requestUsersId.push(userid);
@@ -225,27 +276,36 @@ const UserCreators = {
             }
         })
     },
-    asyncGetUserConfig: function(key) {
-        const config = ConfigStore.getState();
-        if (config) {
-            if (key && key.length) {
-                const value = config.get(key);
-                if (value) {
-                    return Promise.resolve(value);
-                }
-            } else {
-                return Promise(config);
-            }
+    getUpdateChatList: function(prevChatList, lastChatList) {
+        let res = [];
+        if (!prevChatList.equals(lastChatList)) {
+            lastChatList.forEach(chat => {
+                res.push(chat.chatid);
+            })
+        }
+        return res;
+    },
+    syncChatList: function(chatList) {
+        if (typeof chatList === 'number') {
+            chatList = [chatList];
+        }
+        if (!chatList.length) {
+            return;
         }
 
-        return new Promise((resolve, reject) => {
-            WebApi.userconfig((res) => {
-                    const resHeader = ActionCommon.checkResCommonHeader(res);
-                    if (resHeader.code !== 0) {
-                    }
-            })
+        const webqmconfig = {
+            chatlist: chatList
+        }
+        WebApi.setcustomconfig(ActionCommon.auth, ['webqmconfig'], [JSON.stringify(webqmconfig)], (res) => {
+            const resHeader = ActionCommon.checkResCommonHeader(res);
+            if (resHeader.code !== 0) {
+                console.error('sync chat list failed, ' + resHeader.error);
+            }
+            if (resHeader.body && resHeader.retcode !== 0) {
+                console.error('sync chat list failed, retcode:' + resHeader.retcode);
+            }
         })
-    }
+    },
 }
 
 export default UserCreators;

@@ -85,7 +85,7 @@ const Util = {
     return new Array(count - str.length + 1).join('0') + str;
   },
   isSysAvatar(avatarId) {
-    return avatarId && avatarId >= 0 && avatarId <= SYS_AVATAR_COUNT;
+    return avatarId !== undefined && avatarId >= 0 && avatarId <= SYS_AVATAR_COUNT;
   },
   getUserAvatar(userInfo) {
     const avatarId = userInfo.avatarId;

@@ -40,7 +40,7 @@ var WebClient = function(wspath) {
       console.log('on open');
     };
 
-    this.socket.onclose = function() {
+    this.socket.onclose = function(event) {
       console.log('on close');
     };
 
@@ -78,6 +78,14 @@ var WebClient = function(wspath) {
     console.error('not support web socket!!!');
     return;
   }
+
+  this.connectStatus = function() {
+    if (this.socket) {
+      return this.socket.readyState;
+    } else {
+      return -1;
+    }
+  };
 
   this.init = function(auth, onMessageCb, cb) {
     this.auth = auth;

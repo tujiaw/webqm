@@ -19,6 +19,7 @@ class UserInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userid: 0,
       avatar: '',
       name: '',
       englishName: '',
@@ -32,8 +33,10 @@ class UserInfo extends React.Component {
   }
 
   componentDidMount() {
+    const self = this;
     const {location} = this.props;
     const userid = location.state.userid;
+    this.setState({userid: userid});
     UserCreators.asyncGetDetailUsersInfo(userid).then((result) => {
       let companyId = '';
       if (result[userid]) {
@@ -44,7 +47,7 @@ class UserInfo extends React.Component {
           if (user.userInfo.englishNameFirst || user.userInfo.englishNameLast) {
             englishName = user.userInfo.englishNameFirst + ' ' + user.userInfo.englishNameLast;
           }
-          this.setState({
+          self.setState({
             name: user.userInfo.name,
             englishName: englishName,
             avatar: Util.getUserAvatar(user.userInfo),
@@ -63,7 +66,7 @@ class UserInfo extends React.Component {
           if (res[companyId]) {
             const companyName = res[companyId].companyShortName;
             if (companyName.length) {
-              this.setState({
+              self.setState({
                 company: companyName
               })
             }
@@ -76,11 +79,11 @@ class UserInfo extends React.Component {
   }
 
   onSendMsg = () => {
-    ghistory.push('/dialogue');
-  }
-
-  onTopContacts = () => {
-
+    const {location} = this.props;
+    const userid = location.state.userid;
+    UserCreators.setCurrentId(userid);
+    UserCreators.addChat(userid);
+    ghistory.push('/dialogue', {userid: userid});
   }
 
   render() {
@@ -123,7 +126,7 @@ class UserInfo extends React.Component {
       <div style={Styles.footer}>
         <RaisedButton label="发消息" primary={true} onTouchTap={this.onSendMsg}/>
         <br/>
-        <RaisedButton label="设为常用联系人" onTouchTop={this.onTopContacts}/>
+        <RaisedButton label="设为常用联系人"/>
       </div>
       </div>
     )

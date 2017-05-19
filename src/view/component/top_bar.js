@@ -11,7 +11,11 @@ import ghistory from '../../utils/ghistory';
 
 class LeftElement extends Component {
   onBackClick = () => {
-    ghistory.goBack();
+    if (this.props.pageName === 'dialogue') {
+      ghistory.push('/main');
+    } else {
+      ghistory.goBack();
+    }
   }
 
   render() {

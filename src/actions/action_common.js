@@ -17,7 +17,7 @@ const ActionCommon = {
         error: res.error
       };
     }
-  },
+  }, 
 }
 
 export default ActionCommon;

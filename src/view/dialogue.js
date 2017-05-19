@@ -76,12 +76,12 @@ class Dialogue extends React.Component {
   render() {
     const {currentId, messages, users} = this.props;
     const info = users.get(currentId);
-    const showName = (info !== undefined ? info.name : 'unkown');
+    const showName = (info !== undefined ? info.userInfo.name : 'unkown');
     let prevDate = '', showDate = '';
 
     return (
       <div style={Styles.main}>
-        <TopBar pageName='dialogue' title={showName}/>
+        <TopBar pageName='dialogue' title={showName} userid={currentId}/>
         <div style={Styles.messagePanel}
              ref={(div) => {this.messagePanel = div;}}>
           {messages.map((msg, index) => {
