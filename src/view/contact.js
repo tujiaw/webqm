@@ -13,7 +13,7 @@ class Contact extends Component {
     console.log('on item click:' + userid);
     UserCreators.setCurrentId(userid);
     UserCreators.addChat(userid);
-    ghistory.push('/dialogue');
+    ghistory.push('/user', {userid: userid});
   }
 
   render() {

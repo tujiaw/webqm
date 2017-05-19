@@ -16,8 +16,9 @@ class LeftElement extends Component {
 
   render() {
     const {pageName} = this.props;
+    const hasBackButton = (pageName === 'dialogue' || pageName === 'user');
     return (
-      pageName === 'dialogue'
+      hasBackButton
       ? <FlatButton 
           label="返回"
           icon={<FontIcon style={Styles.backButtonIcon} className="material-icons">keyboard_arrow_left</FontIcon>}
@@ -39,7 +40,7 @@ class RightElement extends Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText="资料" />
+          <MenuItem primaryText="详细资料" />
           <MenuItem primaryText="删除" />
           <MenuItem primaryText="退出" />
         </IconMenu>

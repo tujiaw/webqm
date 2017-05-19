@@ -10,10 +10,12 @@ import {
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
 import UserCreators from '../creators/user_creators';
+import TopBar from './component/top_bar';
 import Util from '../utils/util';
-import Styles from '../style/about';
+import Styles from '../style/user_info';
+import ghistory from '../utils/ghistory';
 
-class About extends React.Component {
+class UserInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,15 +32,21 @@ class About extends React.Component {
   }
 
   componentDidMount() {
-    UserCreators.asyncGetDetailUsersInfo(Util.myid).then((result) => {
+    const {location} = this.props;
+    const userid = location.state.userid;
+    UserCreators.asyncGetDetailUsersInfo(userid).then((result) => {
       let companyId = '';
-      if (result[Util.myid]) {
-        const user = result[Util.myid];
+      if (result[userid]) {
+        const user = result[userid];
         if (user) {
           companyId = user.userInfo.companyId;
+          let englishName = '';
+          if (user.userInfo.englishNameFirst || user.userInfo.englishNameLast) {
+            englishName = user.userInfo.englishNameFirst + ' ' + user.userInfo.englishNameLast;
+          }
           this.setState({
             name: user.userInfo.name,
-            englishName: user.userInfo.englishNameFirst + ' ' + user.userInfo.englishNameLast,
+            englishName: englishName,
             avatar: Util.getUserAvatar(user.userInfo),
             signature: user.status,
             mobile: user.userInfo.mobile,
@@ -67,9 +75,18 @@ class About extends React.Component {
     });
   }
 
+  onSendMsg = () => {
+    ghistory.push('/dialogue');
+  }
+
+  onTopContacts = () => {
+
+  }
+
   render() {
     return (
       <div>
+        <TopBar pageName='user' title='详细资料'/>
         <Card>
           <CardHeader
             titleStyle={Styles.cardHeaderTitle}
@@ -103,9 +120,14 @@ class About extends React.Component {
           </TableRow>
         </TableBody>
       </Table>
+      <div style={Styles.footer}>
+        <RaisedButton label="发消息" primary={true} onTouchTap={this.onSendMsg}/>
+        <br/>
+        <RaisedButton label="设为常用联系人" onTouchTop={this.onTopContacts}/>
+      </div>
       </div>
     )
   }
 }
 
-export default About;
+export default UserInfo;

@@ -54,11 +54,21 @@ const MsgCreators = {
     addMsg: function(msg) {
         const chatId = Util.getMsgChatId(msg);
         if (chatId) {
+            UserCreators.asyncGetDetailUsersInfo([chatId]).then((res) => {
+                if (res && res[chatId]) {
+                    Actions.chat.add(chatId);
+                }
+            }).catch(() => {
+                console.error('get detail user info failed, userid:' + chatId);
+            });
+
             if (chatId === UserCreators.getCurrentId()) {
                 Actions.dialogue.addMsg(msg);
             }
+            Actions.msg.add(msg);
+        } else {
+            console.error('chat id is error!');
         }
-        Actions.msg.add(msg);
     },
     getMsg: function(chatId) {
         const chatMsgs = MsgStore.getState();

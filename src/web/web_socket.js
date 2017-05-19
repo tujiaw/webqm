@@ -53,7 +53,6 @@ var WebClient = function(wspath) {
 
       let res = event.data;
       if (res.length) {
-        console.log('on message:' + res);
         res = JSON.parse(res);
         if (res.type === 'subscribe') {
 
