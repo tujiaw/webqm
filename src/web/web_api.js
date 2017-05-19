@@ -2,7 +2,6 @@ import { WebClient } from './web_socket.js';
 import Config from '../config/config.js';
 import md5 from 'md5';
 import { QMMsgBuilder } from '../utils/qmmsg.js';
-import Util from '../utils/util';
 
 const WebApi = {
   /**
@@ -34,6 +33,9 @@ const WebApi = {
     WebClient.request(Config.restful.friend, data, cb);
   },
 
+  /**
+   * 获取用户组
+   */
   usergroup: function(auth, cb) {
     const data = {
       userId: auth.userid,
@@ -42,13 +44,15 @@ const WebApi = {
     WebClient.request(Config.restful.usergroup, data, cb);
   },
 
-  baseusers: function(usersId, cb) {
+  /**
+   * 用户基本信息
+   */
+  userdetail: function(auth, usersId, cb) {
     const data = {
-      userId: [],
-      version: [],
-      reqDetail: false,
-      ownerId: 0,
-      removeAvatar: true
+      "ownerId": auth.userid,
+      "userId": [],
+      "version": [],
+      "detail": true
     }
     for (let i = 0, count = usersId.length; i < count; i++) {
       if (usersId[i]) {
@@ -56,9 +60,12 @@ const WebApi = {
         data.version.push(0);
       }
     }
-    WebClient.request(Config.restful.baseusers, data, cb);
+    WebClient.request(Config.restful.userdetail, data, cb);
   },
 
+  /**
+   * 公司信息
+   */
   companies: function(companiesId, cb) {
     const data = {
       companyId: []
@@ -67,6 +74,9 @@ const WebApi = {
     WebClient.request(Config.restful.company, data, cb);
   },
 
+  /**
+   * 用户头像
+   */
   useravatar: function(usersId, cb) {
     const data = {
       userIdList: [],
@@ -78,6 +88,25 @@ const WebApi = {
     }
     WebClient.request(Config.restful.useravatar, data, cb);
   },
+
+  /**
+   * 用户配置
+   */
+  userconfig: function(userid, cb) {
+    const data = {
+      "header": {
+        "from": userid,
+        "sourceNo": 0,
+        "serialNo": 0,
+        "errorCode": 0
+      }
+    }
+    WebClient.request(Config.resetful.userconfig, data, cb);
+  },
+
+  /**
+   * 发送消息
+   */
   sendMsg: function(auth, id, msg, cb) {
     const data = {
       "header": {
@@ -114,6 +143,7 @@ const WebApi = {
         from: 0
       }
     }
+
     WebClient.request(Config.restful.sendmsg, data, (res) => {
       console.log('send msg responase:' + JSON.stringify(res))
       if (res.code === 0) {
@@ -123,7 +153,7 @@ const WebApi = {
           resMsg.to.push(toUserMsgInfo[0].user);
           resMsg.time = toUserMsgInfo.time;
           resMsg.newMsgId = resMsg.id;
-          resMsg.header.from = Util.myid;
+          resMsg.header.from = auth.userid;
         }
       }
       res.resMsg = resMsg;

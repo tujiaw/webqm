@@ -24,6 +24,9 @@ const Actions = {
   // users
   USERS_ADD: 'USERS_ADD',
   USERS_UPDATE_AVATAR_LIST: 'USERS_UPDATE_AVATAR_LIST',
+
+  // config
+  CONFIG_SET: 'CONFIG_SET',
 }
 
 export default Actions;

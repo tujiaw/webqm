@@ -130,14 +130,14 @@ class GroupItem extends Component {
               {
                 group.users.map((userid, index) => {
                 let userName = '', companyName = '', avatar = '';
-                const userInfo = userMap.get(userid);
-                if (userInfo) {
-                  userName = Util.getShowName(userInfo);
-                  const companyInfo = companyMap.get(userInfo.companyId);
+                const user = userMap.get(userid);
+                if (user) {
+                  userName = Util.getShowName(user.userInfo);
+                  const companyInfo = companyMap.get(user.userInfo.companyId);
                   if (companyInfo && companyInfo.companyShortName) {
                     companyName = companyInfo.companyShortName;
                   }
-                  avatar = Util.getUserAvatar(userInfo);
+                  avatar = Util.getUserAvatar(user.userInfo);
                 }
                 return <UserItem key={index} 
                   userid={userid} 

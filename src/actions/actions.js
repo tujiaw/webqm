@@ -55,6 +55,11 @@ const Actions = {
     updateAvatarList: function(userIdList, avatarIdList, avatarList) {
       Dispatcher.dispatch({ type: ActionTypes.USERS_UPDATE_AVATAR_LIST, userIdList, avatarIdList, avatarList });
     }
+  },
+  config: {
+    set: function(key, value) {
+      Dispatcher.dispatch({ type: ActionTypes.CONFIG_SET, key, value });
+    }
   }
 }
 

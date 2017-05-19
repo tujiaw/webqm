@@ -10,8 +10,11 @@ class Message extends Component {
     const fromId = msg.header.from;
     const isSend = (fromId === Util.myid);
     const time = moment(msg.time).format('HH:mm:ss');
-    const userInfo = users.get(fromId);
-    let name = Util.getShowName(userInfo);
+    const user = users.get(fromId);
+    let name = '';
+    if (user) {
+      name = Util.getShowName(user.userInfo);
+    }
 
     const msgObj = (new QMMsgParser(msg.body)).getMsg();
     let msgContent = '';

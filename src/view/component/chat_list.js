@@ -94,10 +94,10 @@ class ChatList extends Component {
       <div style={Styles.list}>
         {chats.map((chat, index) => {
           if (chat && chat.chatid) {
-            const userInfo = users.get(chat.chatid);
-            if (userInfo) {
-              const avatar = Util.getUserAvatar(userInfo);
-              const name = Util.getShowName(userInfo);
+            const user = users.get(chat.chatid);
+            if (user) {
+              const avatar = Util.getUserAvatar(user.userInfo);
+              const name = Util.getShowName(user.userInfo);
               const unreadCount = chat.unreadCount;
               const lastMsg = self.getLastMsg(chat.chatid);
               return <ChatItem key={index} 

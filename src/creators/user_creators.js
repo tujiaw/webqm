@@ -2,6 +2,7 @@ import {DialogueCurrentIdStore} from '../store/dialogue_store';
 import ContactStore from '../store/contact_store';
 import UsersStore from '../store/users_store';
 import CompanyStore from '../store/company_store';
+import ConfigStore from '../store/config_store';
 import Actions from '../actions/actions';
 import ActionCommon from '../actions/action_common';
 import WebApi from '../web/web_api';
@@ -59,7 +60,7 @@ const UserCreators = {
             return Promise.resolve(usersId);
         })
         .then((usersId) => {
-            return UserCreators.asyncGetBaseUsersInfo(usersId)
+            return UserCreators.asyncGetDetailUsersInfo(usersId)
         })
         .then(() => {
             let companiesId = Set();
@@ -107,7 +108,7 @@ const UserCreators = {
             })
         })
     },
-    asyncGetBaseUsersInfo: function(usersId) {
+    asyncGetDetailUsersInfo: function(usersId) {
         if (typeof usersId === 'number') {
             usersId = [usersId];
         }
@@ -128,13 +129,13 @@ const UserCreators = {
         }
         return new Promise((resolve, reject) => {
             if (requestUsers.length) {
-                WebApi.baseusers(requestUsers, (res) => {
+                WebApi.userdetail(ActionCommon.auth, requestUsers, (res) => {
                     const resHeader = ActionCommon.checkResCommonHeader(res);
-                    if (resHeader.code === 0 && res.body.errorCode === 0) {
+                    if (resHeader.code === 0 && res.body.retcode === 0) {
                         for (let i = 0, count = res.body.userInfo.length; i < count; i++) {
                             const item = res.body.userInfo[i];
-                            result[item.userInfo.userID]= item.userInfo;
-                            Actions.users.add(item.userInfo);
+                            result[item.userInfo.userID]= item;
+                            Actions.users.add(item);
                         }
                     }
                     return resolve(result);
@@ -154,7 +155,7 @@ const UserCreators = {
             for (let i = 0, count = companiesId.length; i < count; i++) {
                 const companyId = companiesId[i];
                 if (companies.has(companyId)) {
-                    result.companyId = companies.get(companyId);
+                    result[companyId] = companies.get(companyId);
                 } else {
                     requestCompaniesId.push(companyId);
                 }
@@ -222,6 +223,27 @@ const UserCreators = {
             } else {
                 return resolve();
             }
+        })
+    },
+    asyncGetUserConfig: function(key) {
+        const config = ConfigStore.getState();
+        if (config) {
+            if (key && key.length) {
+                const value = config.get(key);
+                if (value) {
+                    return Promise.resolve(value);
+                }
+            } else {
+                return Promise(config);
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            WebApi.userconfig((res) => {
+                    const resHeader = ActionCommon.checkResCommonHeader(res);
+                    if (resHeader.code !== 0) {
+                    }
+            })
         })
     }
 }
