@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<library>
+	<faces width="28" height="28" columns="8" describe="默认">
+		<face name=":/qqsys/0.png" pathname="0.png" shortcut="/wx" order="1" describe="微笑" />
+		<face name=":/qqsys/1.png" pathname="1.png" shortcut="/pz" order="2" describe="撇嘴" />
+		<face name=":/qqsys/2.png" pathname="2.png" shortcut="/se" order="3" describe="色" />
+		<face name=":/qqsys/3.png" pathname="3.png" shortcut="/fd" order="4" describe="发呆" />
+		<face name=":/qqsys/4.png" pathname="4.png" shortcut="/dy" order="5" describe="得意" />
+		<face name=":/qqsys/5.png" pathname="5.png" shortcut="/ll" order="6" describe="流泪" />
+		<face name=":/qqsys/6.png" pathname="6.png" shortcut="/hx" order="7" describe="害羞" />
+		<face name=":/qqsys/7.png" pathname="7.png" shortcut="/bz" order="8" describe="闭嘴" />
+		<face name=":/qqsys/8.png" pathname="8.png" shortcut="/shui" order="9" describe="睡" />
+		<face name=":/qqsys/9.png" pathname="9.png" shortcut="/dk" order="10" describe="大哭" />
+		<face name=":/qqsys/10.png" pathname="10.png" shortcut="/gg" order="11" describe="尴尬" />
+		<face name=":/qqsys/11.png" pathname="11.png" shortcut="/fn" order="12" describe="发怒" />
+		<face name=":/qqsys/12.png" pathname="12.png" shortcut="/tp" order="13" describe="调皮" />
+		<face name=":/qqsys/13.png" pathname="13.png" shortcut="/cy" order="14" describe="呲牙" />
+		
+		<face name=":/qqsys/14.png" pathname="14.png" shortcut="/jy" order="15" describe="惊讶" />
+		<face name=":/qqsys/15.png" pathname="15.png" shortcut="/ng" order="16" describe="难过" />
+		<face name=":/qqsys/16.png" pathname="16.png" shortcut="/kuk" order="17" describe="酷" />
+		<face name=":/qqsys/17.png" pathname="17.png" shortcut="/lengh" order="18" describe="冷汗" />
+		<face name=":/qqsys/18.png" pathname="18.png" shortcut="/zk" order="19" describe="抓狂" />
+		<face name=":/qqsys/19.png" pathname="19.png" shortcut="/tuu" order="20" describe="吐" />
+		<face name=":/qqsys/20.png" pathname="20.png" shortcut="/tx" order="21" describe="偷笑" />
+		<face name=":/qqsys/21.png" pathname="21.png" shortcut="/ka" order="22" describe="可爱" />
+		<face name=":/qqsys/22.png" pathname="22.png" shortcut="/baiy" order="23" describe="白眼" />
+		<face name=":/qqsys/23.png" pathname="23.png" shortcut="/am" order="24" describe="傲慢" />
+		<face name=":/qqsys/24.png" pathname="24.png" shortcut="/jie" order="25" describe="饥饿" />
+		<face name=":/qqsys/25.png" pathname="25.png" shortcut="/kun" order="26" describe="困" />
+		<face name=":/qqsys/26.png" pathname="26.png" shortcut="/jk" order="27" describe="惊恐" />
+		<face name=":/qqsys/27.png" pathname="27.png" shortcut="/lh" order="28" describe="流汗" />
+		
+		<face name=":/qqsys/28.png" pathname="28.png" shortcut="/hanx" order="29" describe="憨笑" />
+		<face name=":/qqsys/29.png" pathname="29.png" shortcut="/db" order="30" describe="大兵" />
+		<face name=":/qqsys/30.png" pathname="30.png" shortcut="/fendou" order="31" describe="奋斗" />
+		<face name=":/qqsys/31.png" pathname="31.png" shortcut="/zhm" order="32" describe="咒骂" />
+		<face name=":/qqsys/32.png" pathname="32.png" shortcut="/yiw" order="33" describe="疑问" />
+		<face name=":/qqsys/33.png" pathname="33.png" shortcut="/xu" order="34" describe="嘘..." />
+		<face name=":/qqsys/34.png" pathname="34.png" shortcut="/yun" order="35" describe="晕" />
+		<face name=":/qqsys/35.png" pathname="35.png" shortcut="/zhem" order="36" describe="折磨" />
+		<face name=":/qqsys/36.png" pathname="36.png" shortcut="/shuai" order="37" describe="衰" />
+		<face name=":/qqsys/37.png" pathname="37.png" shortcut="/kl" order="38" describe="骷髅" />
+		<face name=":/qqsys/38.png" pathname="38.png" shortcut="/qiao" order="39" describe="敲打" />
+		<face name=":/qqsys/39.png" pathname="39.png" shortcut="/zj" order="40" describe="再见" />
+		<face name=":/qqsys/40.png" pathname="40.png" shortcut="/ch" order="41" describe="擦汗" />
+		<face name=":/qqsys/41.png" pathname="41.png" shortcut="/kb" order="42" describe="抠鼻" />
+		
+		<face name=":/qqsys/42.png" pathname="42.png" shortcut="/gz" order="43" describe="鼓掌" />
+		<face name=":/qqsys/43.png" pathname="43.png" shortcut="/qd" order="44" describe="糗大了" />
+		<face name=":/qqsys/44.png" pathname="44.png" shortcut="/huaix" order="45" describe="坏笑" />
+		<face name=":/qqsys/45.png" pathname="45.png" shortcut="/zhh" order="46" describe="左哼哼" />
+		<face name=":/qqsys/46.png" pathname="46.png" shortcut="/yhh" order="47" describe="右哼哼" />
+		<face name=":/qqsys/47.png" pathname="47.png" shortcut="/hq" order="48" describe="哈欠" />
+		<face name=":/qqsys/48.png" pathname="48.png" shortcut="/bs" order="49" describe="鄙视" />
+		<face name=":/qqsys/49.png" pathname="49.png" shortcut="/wq" order="50" describe="委屈" />
+		<face name=":/qqsys/50.png" pathname="50.png" shortcut="/kk" order="51" describe="快哭了" />
+		<face name=":/qqsys/51.png" pathname="51.png" shortcut="/yx" order="52" describe="阴险" />
+		<face name=":/qqsys/52.png" pathname="52.png" shortcut="/qq" order="53" describe="亲亲" />
+		<face name=":/qqsys/53.png" pathname="53.png" shortcut="/xia" order="54" describe="吓" />
+		<face name=":/qqsys/54.png" pathname="54.png" shortcut="/kel" order="55" describe="可怜" />
+		<face name=":/qqsys/55.png" pathname="55.png" shortcut="/cd" order="56" describe="菜刀" />
+		
+		<face name=":/qqsys/56.png" pathname="56.png" shortcut="/xig" order="57" describe="西瓜" />
+		<face name=":/qqsys/57.png" pathname="57.png" shortcut="/pj" order="58" describe="啤酒" />
+		<face name=":/qqsys/58.png" pathname="58.png" shortcut="/lq" order="59" describe="篮球" />
+		<face name=":/qqsys/59.png" pathname="59.png" shortcut="/pp" order="60" describe="乒乓" />
+		<face name=":/qqsys/60.png" pathname="60.png" shortcut="/kf" order="61" describe="咖啡" />
+		<face name=":/qqsys/61.png" pathname="61.png" shortcut="/fan" order="62" describe="饭" />
+		<face name=":/qqsys/62.png" pathname="62.png" shortcut="/zt" order="63" describe="猪头" />
+		<face name=":/qqsys/63.png" pathname="63.png" shortcut="/mg" order="64" describe="玫瑰" />
+		<face name=":/qqsys/64.png" pathname="64.png" shortcut="/dx" order="65" describe="凋谢" />
+		<face name=":/qqsys/65.png" pathname="65.png" shortcut="/sa" order="66" describe="示爱" />
+		<face name=":/qqsys/66.png" pathname="66.png" shortcut="/xin" order="67" describe="爱心" />
+		<face name=":/qqsys/67.png" pathname="67.png" shortcut="/xs" order="68" describe="心碎" />
+		<face name=":/qqsys/68.png" pathname="68.png" shortcut="/dg" order="69" describe="蛋糕" />
+		<face name=":/qqsys/69.png" pathname="69.png" shortcut="/shd" order="70" describe="闪电" />
+		
+		<face name=":/qqsys/70.png" pathname="70.png" shortcut="/zhd" order="71" describe="炸弹" />
+		<face name=":/qqsys/71.png" pathname="71.png" shortcut="/dao" order="72" describe="刀" />
+		<face name=":/qqsys/72.png" pathname="72.png" shortcut="/zq" order="73" describe="足球" />
+		<face name=":/qqsys/73.png" pathname="73.png" shortcut="/pch" order="74" describe="瓢虫" />
+		<face name=":/qqsys/74.png" pathname="74.png" shortcut="/bb" order="75" describe="便便" />
+		<face name=":/qqsys/75.png" pathname="75.png" shortcut="/yl" order="76" describe="月亮" />
+		<face name=":/qqsys/76.png" pathname="76.png" shortcut="/ty" order="77" describe="太阳" />
+		<face name=":/qqsys/77.png" pathname="77.png" shortcut="/lw" order="78" describe="礼物" />
+		<face name=":/qqsys/78.png" pathname="78.png" shortcut="/yb" order="79" describe="拥抱" />
+		<face name=":/qqsys/79.png" pathname="79.png" shortcut="/qiang" order="80" describe="强" />
+		<face name=":/qqsys/80.png" pathname="80.png" shortcut="/ruo" order="81" describe="弱" />
+		<face name=":/qqsys/81.png" pathname="81.png" shortcut="/ws" order="82" describe="握手" />
+		<face name=":/qqsys/82.png" pathname="82.png" shortcut="/shl" order="83" describe="胜利" />
+		<face name=":/qqsys/83.png" pathname="83.png" shortcut="/bq" order="84" describe="抱拳" />
+		
+		<face name=":/qqsys/84.png" pathname="84.png" shortcut="/gy" order="85" describe="勾引" />
+		<face name=":/qqsys/85.png" pathname="85.png" shortcut="/qt" order="86" describe="拳头" />
+		<face name=":/qqsys/86.png" pathname="86.png" shortcut="/cj" order="87" describe="差劲" />
+		<face name=":/qqsys/87.png" pathname="87.png" shortcut="/aini" order="88" describe="爱你" />
+		<face name=":/qqsys/88.png" pathname="88.png" shortcut="/bu" order="89" describe="NO" />
+		<face name=":/qqsys/89.png" pathname="89.png" shortcut="/hd" order="90" describe="OK" />
+		<face name=":/qqsys/90.png" pathname="90.png" shortcut="/aiq" order="91" describe="爱情" />
+		<face name=":/qqsys/91.png" pathname="91.png" shortcut="/fw" order="92" describe="飞吻" />
+		<face name=":/qqsys/92.png" pathname="92.png" shortcut="/tiao" order="93" describe="跳跳" />
+		<face name=":/qqsys/93.png" pathname="93.png" shortcut="/fad" order="94" describe="发抖" />
+		<face name=":/qqsys/94.png" pathname="94.png" shortcut="/oh" order="95" describe="怄火" />
+		<face name=":/qqsys/95.png" pathname="95.png" shortcut="/zhq" order="96" describe="转圈" />
+		<face name=":/qqsys/96.png" pathname="96.png" shortcut="/kt" order="97" describe="磕头" />
+		<face name=":/qqsys/97.png" pathname="97.png" shortcut="/ht" order="98" describe="回头" />
+		
+		<face name=":/qqsys/98.png" pathname="98.png" shortcut="/tsh" order="99" describe="跳绳" />
+		<face name=":/qqsys/99.png" pathname="99.png" shortcut="/hsh" order="100" describe="挥手" />
+		<face name=":/qqsys/100.png" pathname="100.png" shortcut="/jd" order="101" describe="激动" />
+		<face name=":/qqsys/101.png" pathname="101.png" shortcut="/jw" order="102" describe="街舞" />
+		<face name=":/qqsys/102.png" pathname="102.png" shortcut="/xw" order="103" describe="献吻" />
+		<face name=":/qqsys/103.png" pathname="103.png" shortcut="/zuotj" order="104" describe="左太极" />
+		<face name=":/qqsys/104.png" pathname="104.png" shortcut="/youtj" order="105" describe="右太极" />
+		<face name=":/qqsys/105.png" pathname="105.png" shortcut="/shx" order="106" describe="双喜" />
+		<face name=":/qqsys/106.png" pathname="106.png" shortcut="/bp" order="107" describe="鞭炮" />
+		<face name=":/qqsys/107.png" pathname="107.png" shortcut="/dl" order="108" describe="灯笼" />
+		<face name=":/qqsys/108.png" pathname="108.png" shortcut="/facai" order="109" describe="发财" />
+		<face name=":/qqsys/109.png" pathname="109.png" shortcut="/kg" order="110" describe="K歌" />
+		<face name=":/qqsys/110.png" pathname="110.png" shortcut="/gw" order="111" describe="购物" />
+		<face name=":/qqsys/111.png" pathname="111.png" shortcut="/yj" order="112" describe="邮件" />
+		
+		<face name=":/qqsys/112.png" pathname="112.png" shortcut="/sq" order="113" describe="帅" />
+		<face name=":/qqsys/113.png" pathname="113.png" shortcut="/hc" order="114" describe="喝彩" />
+		<face name=":/qqsys/114.png" pathname="114.png" shortcut="/qidao" order="115" describe="祈祷" />
+		<face name=":/qqsys/115.png" pathname="115.png" shortcut="/baojin" order="116" describe="爆筋" />
+		<face name=":/qqsys/116.png" pathname="116.png" shortcut="/bangbangt" order="117" describe="棒棒糖" />
+		<face name=":/qqsys/117.png" pathname="117.png" shortcut="/hn" order="118" describe="喝奶" />
+		<face name=":/qqsys/118.png" pathname="118.png" shortcut="/xmian" order="119" describe="下面" />
+		<face name=":/qqsys/119.png" pathname="119.png" shortcut="/xj" order="120" describe="香蕉" />
+		<face name=":/qqsys/120.png" pathname="120.png" shortcut="/fj" order="121" describe="飞机" />
+		<face name=":/qqsys/121.png" pathname="121.png" shortcut="/kch" order="122" describe="开车" />
+		<face name=":/qqsys/122.png" pathname="122.png" shortcut="/gtl" order="123" describe="高铁左车头" />
+		<face name=":/qqsys/123.png" pathname="123.png" shortcut="/chx" order="124" describe="车厢" />
+		<face name=":/qqsys/124.png" pathname="124.png" shortcut="/gtr" order="125" describe="高铁右车头" />
+		<face name=":/qqsys/125.png" pathname="125.png" shortcut="/duoyun" order="126" describe="多云" />
+		
+		<face name=":/qqsys/126.png" pathname="126.png" shortcut="/xiayu" order="127" describe="下雨" />
+		<face name=":/qqsys/127.png" pathname="127.png" shortcut="/cp" order="128" describe="钞票" />
+		<face name=":/qqsys/128.png" pathname="128.png" shortcut="/xmao" order="129" describe="熊猫" />
+		<face name=":/qqsys/129.png" pathname="129.png" shortcut="/dengpao" order="130" describe="灯泡" />
+		<face name=":/qqsys/130.png" pathname="130.png" shortcut="/fch" order="131" describe="风车" />
+		<face name=":/qqsys/131.png" pathname="131.png" shortcut="/nzh" order="132" describe="闹钟" />
+		<face name=":/qqsys/132.png" pathname="132.png" shortcut="/dasan" order="133" describe="打伞" />
+		<face name=":/qqsys/133.png" pathname="133.png" shortcut="/cq" order="134" describe="彩球" />
+		<face name=":/qqsys/134.png" pathname="134.png" shortcut="/zuanjie" order="135" describe="钻戒" />
+		<face name=":/qqsys/135.png" pathname="135.png" shortcut="/shf" order="136" describe="沙发" />
+		<face name=":/qqsys/136.png" pathname="136.png" shortcut="/zhj" order="137" describe="纸巾" />
+		<face name=":/qqsys/137.png" pathname="137.png" shortcut="/yao" order="138" describe="药" />
+		<face name=":/qqsys/138.png" pathname="138.png" shortcut="/shq" order="139" describe="手枪" />
+		<face name=":/qqsys/139.png" pathname="139.png" shortcut="/qw" order="140" describe="青蛙" />
+	</faces>
+</library>

@@ -9,6 +9,16 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Styles from '../../style/component/top_bar';
 import ghistory from '../../utils/ghistory';
 
+const RightMenu = {
+  chat: [
+    { key: 'chat_clear_all', value: '清空会话' }
+  ],
+  dialogue: [
+    { key: 'dialogue_delete', value: '删除会话' },
+    { key: 'dialogue_detail', value: '详细信息' },
+  ],
+}
+
 class LeftElement extends Component {
   onBackClick = () => {
     if (this.props.pageName === 'dialogue') {
@@ -36,6 +46,7 @@ class LeftElement extends Component {
 
 class RightElement extends Component {
   render() {
+    const {pageName} = this.props;
     return (
         <IconMenu
           iconButtonElement={
@@ -44,9 +55,9 @@ class RightElement extends Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
-          <MenuItem primaryText="详细资料" />
-          <MenuItem primaryText="删除" />
-          <MenuItem primaryText="退出" />
+          {RightMenu[pageName] && RightMenu[pageName].map((menu, index) => {
+            return <MenuItem key={index} primaryText={menu.value} key={menu.key} />  
+          })}
         </IconMenu>
       )
     }

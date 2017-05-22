@@ -65,13 +65,13 @@ Styles.groupItem = {
     flexShrink: 0,
     background: '#19191B',
     borderBottom: Color.itemUnderline,
-  }
+}
 
 Styles.userList = {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-  },
+}
 
 Styles.group = {
   display: 'flex',

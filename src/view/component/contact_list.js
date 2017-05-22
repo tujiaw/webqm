@@ -56,8 +56,7 @@ class UserItem extends Component {
       }
     })();
 
-    return (
-      <div style={itemStyle}
+    return <div style={itemStyle}
         onMouseEnter={this.onMouseEnter} 
         onMouseLeave={this.onMouseLeave} 
         onClick={this.onClick} >
@@ -67,7 +66,6 @@ class UserItem extends Component {
           <div style={Styles.company}>{companyname || ''}</div>
         </div>
       </div>
-    )
   }
 }
 

@@ -8,7 +8,6 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar';
-import RaisedButton from 'material-ui/RaisedButton';
 import UserCreators from '../creators/user_creators';
 import Util from '../utils/util';
 import Styles from '../style/about';

@@ -9,6 +9,15 @@ const Styles = {
     paddingTop: '4px',
     paddingBottom: '4px',
   },
+  messageBody: {
+    display: 'flex', 
+    flexDirection: 'column'
+  },
+  rowContent: {
+    display: 'flex', 
+    flexDirection: 'row', 
+    alignItems: 'flex-end'
+  },
   date: {
     display: 'flex',
     flex: 1,
@@ -49,6 +58,9 @@ const Styles = {
     textAlign: 'right',
     color: '#b4b4c1',
     fontSize: '12px',
+  },
+  img: {
+    marginTop: '3px',
   }
 }
 

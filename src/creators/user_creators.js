@@ -2,8 +2,9 @@ import {DialogueCurrentIdStore} from '../store/dialogue_store';
 import ContactStore from '../store/contact_store';
 import UsersStore from '../store/users_store';
 import CompanyStore from '../store/company_store';
-import ConfigStore from '../store/config_store';
+// import ConfigStore from '../store/config_store';
 import ChatStore from '../store/chat_store';
+import GlobalConfigStore from '../store/global_config';
 import Actions from '../actions/actions';
 import ActionCommon from '../actions/action_common';
 import WebApi from '../web/web_api';
@@ -69,6 +70,7 @@ const UserCreators = {
         })
     },
     initUIData: function() {
+        console.log('*开始初始化信息*' + (new Date()).toLocaleString());
         return UserCreators.asyncGetUserGroup()
         .then(() => {
             let usersId = [Util.myid];
@@ -76,18 +78,23 @@ const UserCreators = {
             groups.forEach((group) => {
                 usersId = usersId.concat(group.users);
             })
+            console.log('*获取用户组信息*' + (new Date()).toLocaleString());
             return Promise.resolve(usersId);
         })
         .then((usersId) => {
+            console.log('*获取用户详细信息*' + (new Date()).toLocaleString());
             return UserCreators.asyncGetDetailUsersInfo(usersId);
         })
         .then(() => {
+            console.log('*获取会话列表*' + (new Date()).toLocaleString());
             return UserCreators.asyncGetChatList();
         })
         .then((usersId) => {
+            console.log('*获取会话列表用户详细信息*' + (new Date()).toLocaleString());
             return UserCreators.asyncGetDetailUsersInfo(usersId);
         })
         .then(() => {
+            console.log('*获取公司信息*' + (new Date()).toLocaleString());
             let companiesId = Set();
             const users = UsersStore.getState();
             users.forEach((user) => {
@@ -96,6 +103,10 @@ const UserCreators = {
                 }
             })
             return UserCreators.asyncGetCompaniesInfo(companiesId.toArray());
+        })
+        .then(() => {
+            console.log('*获取全局配置*' + (new Date()).toLocaleString());
+            return UserCreators.asyncGetAllGlobalConfig();
         })
     },
     asyncGetChatList: function() {
@@ -306,6 +317,55 @@ const UserCreators = {
             }
         })
     },
+    getGlobalConfig: function(keyList) {
+        if (typeof keyList === 'string') {
+            keyList = [keyList];
+        }
+
+        const result = {};
+        if (keyList && keyList.length) {
+            const globalConfig = GlobalConfigStore.getState();
+            for (let i = 0, count = keyList.length; i < count; i++) {
+                if (globalConfig.has(keyList[i])) {
+                    result[keyList[i]] = globalConfig.get(keyList[i]);
+                }
+            }
+        }
+        return result;
+    },
+    asyncGetAllGlobalConfig: function() {
+        return new Promise((resolve, reject) => {
+            const keyList = [
+                'NEWS_URL', 
+                'NEWS_WINDOW_WIDTH', 
+                'NEWS_WINDOW_HEIGHT', 
+                'QM_INVITE_URL', 
+                'CUSTOM_SERVICE_ID',
+                'FILESERVER_URL', 
+                'ROOMFILESPACE',
+                'REC_UNDERWRITER_IDLIST',
+                'QQ_RIGHT_IDLIST',
+                'QQMSG_MERGE_TIME',
+            ]
+            WebApi.globalconfig(keyList, (res) => {
+                const resHeader = ActionCommon.checkResCommonHeader(res);
+                if (resHeader.code !== 0 || res.body.errorCode !== 0) {
+                    console.error('get global config error:' + JSON.stringify(res));
+                    return resolve();
+                }
+
+                const result = {};
+                const count = Math.min(res.body.value.length, keyList.length);
+                for (let i = 0; i < count; i++) {
+                    const key = keyList[i];
+                    const value = res.body.value[i];
+                    Actions.globalconfig.set(key, value);
+                    result[key] = value;
+                }
+                return resolve(result);
+            });
+        })
+    }
 }
 
 export default UserCreators;

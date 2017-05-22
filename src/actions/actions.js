@@ -60,6 +60,11 @@ const Actions = {
     set: function(key, value) {
       Dispatcher.dispatch({ type: ActionTypes.CONFIG_SET, key, value });
     }
+  },
+  globalconfig: {
+    set: function(key, value) {
+      Dispatcher.dispatch({ type: ActionTypes.GLOBAL_CONFIG_SET, key, value });
+    }
   }
 }
 

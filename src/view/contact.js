@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ContactList from './component/contact_list.js';
 import Styles from '../style/contact.js';
-import UserCreators from '../creators/user_creators';
+// import UserCreators from '../creators/user_creators';
 import ghistory from '../utils/ghistory';
 
 class Contact extends Component {

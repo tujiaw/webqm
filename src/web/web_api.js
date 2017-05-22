@@ -31,7 +31,7 @@ const WebApi = {
    */
   friend: function(auth, cb) {
     const data = {
-      userId: auth.userid,
+      userId: auth.userid || 0,
       version: 0
     };
     WebClient.request(Config.restful.friend, data, cb);
@@ -42,7 +42,7 @@ const WebApi = {
    */
   usergroup: function(auth, cb) {
     const data = {
-      userId: auth.userid,
+      userId: auth.userid || 0,
       version: 0
     };
     WebClient.request(Config.restful.usergroup, data, cb);
@@ -53,7 +53,7 @@ const WebApi = {
    */
   userdetail: function(auth, usersId, cb) {
     const data = {
-      "ownerId": auth.userid,
+      "ownerId": auth.userid || 0,
       "userId": [],
       "version": [],
       "detail": true
@@ -98,7 +98,7 @@ const WebApi = {
    */
   setcustomconfig: function(auth, keyList, valueList, cb) {
     const data = {
-      "userId": auth.userid,
+      "userId": auth.userid || 0,
       "key": [],
       "value": []
     }
@@ -119,7 +119,7 @@ const WebApi = {
    */
   customconfig: function(auth, keyList, cb) {
     const data = {
-      "userId": auth.userid,
+      "userId": auth.userid || 0,
       "key": [],
       "version": []
     }
@@ -135,12 +135,23 @@ const WebApi = {
   },
 
   /**
+   * 获取全局配置
+   */
+  globalconfig: function(keyList, cb) {
+    const data = {
+      "key": []
+    }
+    data['key'] = keyList;
+    WebClient.request(Config.restful.globalconfig, data, cb);
+  },
+
+  /**
    * 发送消息
    */
   sendMsg: function(auth, id, msg, cb) {
     const data = {
       "header": {
-        "from": auth.userid,
+        "from": auth.userid || 0,
         "sourceNo": 0,
         "serialNo": 0,
         "errorCode": 0
@@ -183,7 +194,7 @@ const WebApi = {
           resMsg.to.push(toUserMsgInfo[0].user);
           resMsg.time = toUserMsgInfo.time;
           resMsg.newMsgId = resMsg.id;
-          resMsg.header.from = auth.userid;
+          resMsg.header.from = auth.userid || 0;
         }
       }
       res.resMsg = resMsg;

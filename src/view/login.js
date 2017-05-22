@@ -27,17 +27,31 @@ class Login extends Component {
   onLogin = () => {
     const username = this.state.username;
     const password = this.state.password;
+    let timeout = {
+      start: 0, maxCount: 10
+    }
     console.log('login, username:' + username + ', password:' + password);
     if (username.length && password.length) {
       const self = this;
-      const timer = setTimeout(() => {
+      const timer = setInterval(() => {
+        timeout.start++;
         const connectStatus = UserCreators.getConnectStatus();
         if (connectStatus.code === 3 && self.state.loadding) {
+          clearInterval(timer);
           self.setState({
             showTip: true,
             tipMsg: connectStatus.desc,
             loadding: false
           })
+        } else {
+          if (timeout.start > timeout.maxCount) {
+            clearInterval(timer);
+            self.setState({
+              showTip: true,
+              tipMsg: '登录超时！',
+              loadding: false
+            })
+          }
         }
       }, 1000);
 
@@ -115,7 +129,7 @@ class Login extends Component {
         <Snackbar
           open={this.state.showTip}
           message={this.state.tipMsg}
-          autoHideDuration={4000}
+          autoHideDuration={6000}
           onRequestClose={this.onRequestClose}
           bodyStyle={Styles.snackbarBody}
         />

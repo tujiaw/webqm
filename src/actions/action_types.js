@@ -27,6 +27,9 @@ const Actions = {
 
   // config
   CONFIG_SET: 'CONFIG_SET',
+
+  // global config
+  GLOBAL_CONFIG_SET: 'GLOBAL_CONFIG_SET',
 }
 
 export default Actions;
