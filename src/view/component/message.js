@@ -86,7 +86,8 @@ class MessageBody extends Component {
               style={Styles.img}
               key={++index}
               src={thumbUrl} 
-              wrapper={React.DOM.div} 
+              srcUrl={srcUrl}
+              wrapper={React.DOM.div}
               preloader={self.onOrigImagePreloader.bind(self, {srcUrl})}>原图加载失败</ImageLoader>);
           } else {
             console.error('image url error:' + body.msg.uuid);

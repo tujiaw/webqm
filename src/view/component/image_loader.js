@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 const {span} = React.DOM;
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 const Status = {
   PENDING: 'pending',
@@ -9,6 +11,20 @@ const Status = {
   FAILED: 'failed',
 };
 
+const Styles = {
+  mouseEnter: {
+    background:'#fff',
+    filter: 'alpha(opacity=60)',
+    opacity: 0.6,
+    cursor: 'pointer',
+    borderRadius: '5px',
+  },
+  mouseLeave: {
+    background: 'transparent',
+    cursor: 'pointer',
+    borderRadius: '5px',
+  }
+}
 export default class ImageLoader extends React.Component {
   static defaultProps = {
     wrapper: span,
@@ -16,7 +32,12 @@ export default class ImageLoader extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {status: props.src ? Status.LOADING : Status.PENDING};
+    this.state = {
+      status: props.src ? Status.LOADING : Status.PENDING,
+      open: false,
+      isMouseEnter: false,
+      previewImgUrl: ''
+    };
   }
 
   componentDidMount() {
@@ -69,7 +90,7 @@ export default class ImageLoader extends React.Component {
   handleLoad = (event) => {
     this.destroyLoader();
     this.setState({status: Status.LOADED});
-    
+
     if (this.props.onLoad) this.props.onLoad(event);
   }
 
@@ -78,6 +99,25 @@ export default class ImageLoader extends React.Component {
     this.setState({status: Status.FAILED});
 
     if (this.props.onError) this.props.onError(error);
+  }
+
+  onImageClick = () => {
+    this.setState({
+      previewImgUrl: this.props.srcUrl,
+      open: true
+    });
+  }
+
+  onMouseEnter = () => {
+    this.setState({isMouseEnter: true});
+  }
+
+  onMouseLeave = () => {
+    this.setState({isMouseEnter: false});
+  }
+
+  handleClose = () => {
+    this.setState({open: false});
   }
 
   renderImg = () => {
@@ -90,7 +130,12 @@ export default class ImageLoader extends React.Component {
       }
     }
 
-    return <img {...props} />;
+    return <img {...props} 
+        onClick={this.onImageClick} 
+        style={this.state.isMouseEnter ? Styles.mouseEnter : Styles.mouseLeave} 
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+      />;
   }
 
   render() {
@@ -118,7 +163,29 @@ export default class ImageLoader extends React.Component {
         break;
     }
 
-    return this.props.wrapper(...wrapperArgs);
+     const actions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
+
+    return this.props.wrapper(...wrapperArgs,
+        <Dialog
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+          autoScrollBodyContent={true}
+          autoDetectWindowHeight={true}
+          repositionOnUpdate={false}
+          style={{margin: '0px', padding: '0px'}}
+        >
+          <img src={this.state.previewImgUrl} alt='图片'></img>
+        </Dialog>
+    );
   }
 }
 

@@ -61,6 +61,7 @@ const Styles = {
   },
   img: {
     marginTop: '3px',
+    borderRadius: '5px'
   }
 }
 
