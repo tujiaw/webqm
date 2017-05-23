@@ -29,8 +29,24 @@ class Dialogue extends React.Component {
 
   onInputKeyDown = (event) => {
     if (event.keyCode === 13) {
+      const insertText = '\n';
       if (event.ctrlKey) {
-        this.refs.inputMessage.value += '\n';
+        const $this = this.refs.inputMessage;
+        // 处理插入回车换行符
+        if (document.selection) {
+          $this.focus();
+          let sel = document.selection.createRange();
+          sel.text = insertText;
+        } else if ($this.selectionStart || $this.selectionStart === 0) {
+          const startPos = $this.selectionStart;
+          const endPos = $this.selectionEnd;
+          $this.value = $this.value.substring(0, startPos) + insertText +
+            $this.value.substring(endPos, $this.value.length);
+          $this.selectionStart = startPos + insertText.length;
+          $this.selectionEnd = startPos + insertText.length;
+        } else {
+          this.refs.inputMessage.value += insertText;
+        }
       } else {
         this.sendMsg();
       }
@@ -48,6 +64,7 @@ class Dialogue extends React.Component {
     .then((res) => {
       if (res.code === 0) {
         MsgCreators.addMsg(res.resMsg);
+        UserCreators.setChatLastReadMsgId(this.props.currentId, res.resMsg.id);
       }
     })
     .catch((code, error) => {
@@ -121,7 +138,7 @@ class Dialogue extends React.Component {
 
           <div style={Styles.sendButtonBox}>
               <span style={Styles.newlineSpan}>按下Ctrl+Enter换行</span>
-              <RaisedButton label="发送" primary={true} onClick={this.onMessageSend} style={Styles.sendButton}/>
+              <RaisedButton label="发送" primary={true} onClick={this.onMessageSend} buttonStyle={Styles.sendButton} overlayStyle={Styles.overlayButton}/>
           </div>
         </div>
       </div>

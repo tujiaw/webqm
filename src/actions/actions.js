@@ -9,8 +9,8 @@ const Actions = {
     add: function(chatid) {
       Dispatcher.dispatch({ type: ActionTypes.CHAT_ADD, chatid });
     },
-    increaseUnreadMsg: function(chatid, lastMsg) {
-      Dispatcher.dispatch({ type: ActionTypes.CHAT_INCREASE_UNREAD_MSG, chatid, lastMsg });
+    setLastReadMsgId: function(chatid, msgid) {
+      Dispatcher.dispatch({ type: ActionTypes.CHAT_SET_LASTREADMSGID, chatid, msgid });
     },
     remove: function(chatid) {
       Dispatcher.dispatch({ type: ActionTypes.CHAT_REMOVE, chatid });

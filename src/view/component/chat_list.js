@@ -3,6 +3,7 @@ import Styles from '../../style/component/chat_list'
 import Util from '../../utils/util';
 import ghistory from '../../utils/ghistory';
 import UserCreators from '../../creators/user_creators';
+import moment from 'moment';
 
 const ItemAction = {
   normal: 'normal',
@@ -30,13 +31,11 @@ class ChatItem extends Component {
     });
   }
 
-  onClick = () => {
+  onClick = (data) => {
     this.setState({
       action: ItemAction.selected
     });
-    if (this.props.onItemClick) {
-      this.props.onItemClick(this.props.chatid);
-    }
+    this.props.onItemClick && this.props.onItemClick(data.chatid, data.lastMsgId);
   }
 
   render() {
@@ -56,33 +55,54 @@ class ChatItem extends Component {
         style={getItemStyle()}
         onMouseEnter={this.onMouseEnter} 
         onMouseLeave={this.onMouseLeave} 
-        onClick={this.onClick}
+        onClick={this.onClick.bind(this, {chatid: this.props.chatid, lastMsgId: this.props.lastMsgId})}
       >
         <img style={Styles.avatar} src={this.props.avatar} alt='avatar'/>
         <div style={Styles.content}>
           <div style={Styles.username}>{this.props.name}</div>
           <div style={Styles.lastMsg}>{this.props.lastMsg}</div>
         </div>
+        <div style={Styles.right}>
+          <div style={Styles.time}>{this.props.time || ''}</div>
+          <div style={this.props.unreadCount ? Styles.unreadCountVisible : Styles.unreadCountHidden}>{this.props.unreadCount}</div>
+        </div>
+
       </div>
       )
   }
 }
 
 class ChatList extends Component {
-  getLastMsg = (chatid) => {
+  getLastMsg = (chat) => {
+    const {chatid, lastReadMsgId} = chat;
     const {msgs} = this.props;
     const chatMsgs = msgs.get(chatid);
     if (chatMsgs) {
       const lastMsg = chatMsgs.last();
       if (lastMsg) {
-        return Util.getLastMsgContent(lastMsg);
+        const time = moment(lastMsg.time).format('HH:mm');
+        let unreadCount = chatMsgs.size;
+        // 计算未读消息个数，总数减去已读消息数
+        if (lastReadMsgId > 0) {
+          const index = chatMsgs.findIndex((chat, index) => chat.id === lastReadMsgId);
+          if (index >= 0) {
+            unreadCount = unreadCount - index - 1;
+          }
+        }
+        return {
+          time: time,
+          content: Util.getLastMsgContent(lastMsg),
+          unreadCount: unreadCount,
+          lastMsgId: lastMsg.id,
+        }
       }
     }
-    return '';
+    return undefined;
   }
 
-  onItemClick = (chatid) => {
+  onItemClick = (chatid, lastMsgId) => {
     UserCreators.setCurrentId(chatid);
+    UserCreators.setChatLastReadMsgId(chatid, lastMsgId);
     ghistory.push('/dialogue');
   }
 
@@ -98,14 +118,15 @@ class ChatList extends Component {
             if (user) {
               const avatar = Util.getUserAvatar(user.userInfo);
               const name = Util.getShowName(user.userInfo);
-              const unreadCount = chat.unreadCount;
-              const lastMsg = self.getLastMsg(chat.chatid);
+              const lastMsg = self.getLastMsg(chat);
               return <ChatItem key={index} 
                         chatid={chat.chatid} 
                         avatar={avatar}
                         name={name} 
-                        unreadCount={unreadCount} 
-                        lastMsg={lastMsg} 
+                        unreadCount={lastMsg ? lastMsg.unreadCount : 0}
+                        lastMsg={lastMsg ? lastMsg.content : ''}
+                        lastMsgId={lastMsg ? lastMsg.lastMsgId : 0}
+                        time={lastMsg ? lastMsg.time : ''}
                         onItemClick={this.onItemClick}
                       />
             }

@@ -1,11 +1,13 @@
 const { Map, List } = require('immutable');
 
-let totalArr = [], curArr = [];
-curArr.push(1);
-curArr.push(2);
-curArr.push(3);
-totalArr.push(curArr);
-curArr = [];
-curArr.push(4);
-totalArr.push(curArr);
-console.log(totalArr);
+let list = List([
+  {'a': 1}, {'b': 2}, {'c': 3}
+]);
+
+list = list.update(2, val => {
+  val.c = 4;
+  return val;
+});
+list.map(item => {
+  console.log(item);
+})

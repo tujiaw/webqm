@@ -59,6 +59,7 @@ class Login extends Component {
       UserCreators.asyncLogin(username, password)
       .then(UserCreators.initUIData)
       .then(() => {
+        clearInterval(this.state.timer);
         self.setState({ isLogin: true, loadding: false });
         self.props.history.push('main');
       })

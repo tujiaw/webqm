@@ -3,12 +3,6 @@ import {List} from 'immutable';
 import ActionTypes from '../actions/action_types';
 import Dispatcher from '../dispatcher/dispatcher';
 
-// const record = {
-//   chatid: 0,
-//   unreadCount: 0,
-//   lastMsg: {}
-// }
-
 class ChatStore extends ReduceStore {
   constructor() {
     super(Dispatcher);
@@ -16,14 +10,6 @@ class ChatStore extends ReduceStore {
 
   getInitialState() {
     return List();
-  }
-
-  createRecord(chatid, unreadCount, lastMsg) {
-    return {
-      chatid: chatid,
-      unreadCount: unreadCount || 0,
-      lastMsg: lastMsg || {}
-    }
   }
 
   reduce(state, action) {
@@ -35,7 +21,16 @@ class ChatStore extends ReduceStore {
         return state;
       case ActionTypes.CHAT_ADD:
         return this.add(state, action);
-      case ActionTypes.CHAT_INCREASE_UNREAD_MSG:
+      case ActionTypes.CHAT_SET_LASTREADMSGID:
+        if (action.chatid && action.msgid) {
+          const index = state.findIndex(item => item.chatid === action.chatid);
+          if (index >= 0) {
+            return state.update(index, item => {
+              item.lastReadMsgId = action.msgid;
+              return item;
+            });
+          }
+        }
         return state;
       case ActionTypes.CHAT_REMOVE:
         if (action.chatid) {
@@ -53,8 +48,7 @@ class ChatStore extends ReduceStore {
       if (index < 0) {
         const record = {
           chatid: action.chatid,
-          unreadCount: 0,
-          lastMsg: {}
+          lastReadMsgId: 0,
         }
         state = state.push(record);
       }

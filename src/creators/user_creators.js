@@ -30,6 +30,9 @@ const UserCreators = {
         const lastList = ChatStore.getState();
         UserCreators.syncChatList(UserCreators.getUpdateChatList(prevList, lastList));
     },
+    setChatLastReadMsgId: function(chatid, lastReadMsgId) {
+        Actions.chat.setLastReadMsgId(chatid, lastReadMsgId);
+    },
     getConnectStatus: function() {
         const status = WebApi.connectStatus();
         const desc = {

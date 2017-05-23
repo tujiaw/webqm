@@ -16,12 +16,13 @@ const Styles = {
     display: 'flex',
     flex: 1,
     marginLeft: '6px',
-    marginBottom: '10px',
+    marginBottom: '6px',
     background: 'transparent',
     border: '0px',
     outline: 'none',
     color: '#fff',
     fontSize: '14px',
+    padding: '0px', 
     resize: 'none',
   },
   sendButtonBox: {
@@ -31,11 +32,16 @@ const Styles = {
     alignItems: 'center'
   },
   newlineSpan: {
-    color: '#BDBDBD'
+    color: '#BDBDBD',
+    marginRight: '15px',
   },
   sendButton: {
-    marginLeft: '20px',
-    width: '90px',
+    lineHeight: '25px',
+    height: '25px'
+  },
+  overlayButton: {
+    lineHeight: '25px',
+    height: '25px'
   },
   inputPanel: {
     display: 'flex',
@@ -43,12 +49,6 @@ const Styles = {
     marginLeft: '10px',
     marginRight: '15px',
     marginBottom: '10px',
-  },
-  inputMsg: {
-    display: 'flex',
-    flex: 1,
-    margin: '0px',
-    padding: '0px',
   },
   faceButton: {
     margin: '0px',

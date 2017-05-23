@@ -45,6 +45,15 @@ const MsgCreators = {
             WebApi.sendMsg(ActionCommon.auth, id, msg, (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
                 if (resHeader.code === 0) {
+                    // 更新发送消息的时间
+                    if (res.resMsg && res.body.toUserMsgInfo && res.body.toUserMsgInfo.length) {
+                        const toUserMsgInfo = res.body.toUserMsgInfo;
+                        for (let i = 0; i < toUserMsgInfo.length; i++) {
+                            if (toUserMsgInfo[i].msgid === res.resMsg.id) {
+                                res.resMsg.time = toUserMsgInfo[i].time;
+                            }
+                        }
+                    }
                     return resolve(res);
                 }
                 return reject(res.code);

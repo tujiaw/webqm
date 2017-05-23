@@ -46,11 +46,9 @@ const Styles = {
   },
   sendContent: {
     color: '#fff',
-    marginRight: '15px',
   },
   receiveContent: {
     color: '#ffdea6',
-    marginRight: '15px',
   },
   time: {
     width: '80px',
@@ -58,6 +56,7 @@ const Styles = {
     textAlign: 'right',
     color: '#b4b4c1',
     fontSize: '12px',
+    marginLeft: '20px',
   },
   img: {
     marginTop: '3px',

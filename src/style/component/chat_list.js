@@ -16,8 +16,9 @@ const Styles = {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
+    justifyContent: 'space-between',
     paddingLeft: '15px',
-    paddingRight: '15px',
+    height: '40px',
   },
   username: {
     display: 'flex',
@@ -44,7 +45,6 @@ Styles.item = {
   minHeight: '60px',
   alignItems: 'center',
   paddingLeft: '10px',
-  paddingRight: '10px',
   background: Color.itemBackground,
   borderBottom: Color.itemUnderline,
 }
@@ -57,6 +57,37 @@ Styles.itemHover = {
 Styles.itemSelected = {
   ...Styles.item,
   background: Color.itemHover
+}
+
+Styles.right = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  height: '40px',
+  width: '50px',
+}
+
+Styles.time = {
+  color: '#c5c5c5',
+}
+
+Styles.unreadCount = {
+  background: '#D83232',
+  borderRadius: '20px',
+  width: '27px',
+  height: '18px',
+  textAlign: 'center',
+}
+
+Styles.unreadCountVisible = {
+  ...Styles.unreadCount,
+  visibility: 'visible'
+}
+
+Styles.unreadCountHidden = {
+  ...Styles.unreadCount,
+  visibility: 'hidden'
 }
 
 export default Styles;
