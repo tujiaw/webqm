@@ -40,7 +40,9 @@ class FaceDialog extends Component {
     Styles.gridList.width = faceDialogSize.width;
     Styles.gridList.height = faceDialogSize.height;
     Styles.root.left = faceButtonPos.left;
-    Styles.root.top = faceButtonPos.top - faceDialogSize.height - 10;
+    Styles.root.top = faceButtonPos.top - faceDialogSize.height - 20;
+    Styles.root.width = faceDialogSize.width;
+    Styles.root.height = faceDialogSize.height + 10;
     return (
       <div ref="root" style={Styles.root}>
         <GridList
