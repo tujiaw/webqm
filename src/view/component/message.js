@@ -50,7 +50,7 @@ class MessageBody extends Component {
           if (newPos >= 0) {
             const sectionText = body.msg.content.slice(pos, newPos);
             if (sectionText.length) {
-              rowArr.push(<span key={++index} style={textStyle}></span>);
+              rowArr.push(<span key={++index} style={textStyle}>{sectionText}</span>);
             } else {
               rowArr.push(<br key={++index}/>);
             }
@@ -105,7 +105,7 @@ class MessageBody extends Component {
 
     return (
       <div style={Styles.messageBody}>{
-        colArr.map((arr, index) => {
+        colArr.map((arr) => {
           return <div style={Styles.rowContent} key={++index}>{arr}</div>
         })
       }</div>
