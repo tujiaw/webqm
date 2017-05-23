@@ -5,10 +5,6 @@ import Styles from '../style/contact.js';
 import ghistory from '../utils/ghistory';
 
 class Contact extends Component {
-  componentWillMount() {
-
-  }
-
   onItemClick = (userid) => {
     console.log('on item click:' + userid);
     ghistory.push('/user', {userid: userid});

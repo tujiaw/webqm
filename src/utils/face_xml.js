@@ -1,5 +1,5 @@
-const { Map, List } = require('immutable');
 const parseString = require('xml2js').parseString;
+const EMOTICON_DIR = '/imgs/emoticon';
 
 const faceXml = `
 <?xml version="1.0" encoding="utf-8"?>
@@ -80,9 +80,15 @@ const faceXml = `
 </library>
 `
 
-parseString(faceXml, {trim: true}, function(err, result) {
-  const faceList = result.library.faces[0].face;
-  for (let i = 0; i < faceList.length; i++) {
-    console.log(faceList[i].$.pathname);
-  }
-})
+export default function getFaceList() {
+  const faceList = [];
+  parseString(faceXml, {trim: true}, function(err, result) {
+    const face = result.library.faces[0].face;
+    for (let i = 0; i < face.length; i++) {
+      const name = EMOTICON_DIR + face[i].$.name.slice(1);
+      const desc = face[i].$.describe;
+      faceList.push({name: name, desc: desc});
+    }
+  })
+  return faceList;
+}

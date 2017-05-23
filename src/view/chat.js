@@ -3,10 +3,6 @@ import Styles from '../style/chat';
 import ChatList from './component/chat_list';
 
 class Chat extends React.Component {
-  componentWillMount() {
-    console.log('componentWillMount, chats:' + this.props.chats);
-  }
-
   componentWillUnMount() {
     //console.log('chat unmount:' + this.state.chats);
     console.log('componentWillUnMount, chats:' + this.props.chats);
