@@ -40,9 +40,9 @@ const MsgCreators = {
     handleRoomMsg(msg) {
         console.log('handle room msg');
     },
-    asyncSendMsg: function (id, msg) {
+    asyncSendMsg: function (id, msgBody) {
         return new Promise((resolve, reject) => {
-            WebApi.sendMsg(ActionCommon.auth, id, msg, (res) => {
+            WebApi.sendMsg(ActionCommon.auth, id, msgBody, (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
                 if (resHeader.code === 0) {
                     // 更新发送消息的时间

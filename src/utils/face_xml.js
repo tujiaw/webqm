@@ -1,5 +1,5 @@
-const parseString = require('xml2js').parseString;
-const EMOTICON_DIR = '/imgs/emoticon';
+import Config from '../config/config';
+import {parseString} from 'xml2js';
 
 const faceXml = `
 <?xml version="1.0" encoding="utf-8"?>
@@ -85,7 +85,7 @@ export default function getFaceList() {
   parseString(faceXml, {trim: true}, function(err, result) {
     const face = result.library.faces[0].face;
     for (let i = 0; i < face.length; i++) {
-      const name = EMOTICON_DIR + face[i].$.name.slice(1);
+      const name = Config.emoticondir + face[i].$.name.slice(1);
       const desc = face[i].$.describe;
       faceList.push({name: name, desc: desc});
     }

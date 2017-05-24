@@ -1,4 +1,5 @@
 import {EMessageBodyType, QMMsgParser} from './qmmsg';
+import Config from '../config/config';
 
 const ID_RANGE = {
   ID_RANGE_START: 10000000,
@@ -31,7 +32,6 @@ const TOPIC_CLIENT_MSG = ((APPID<<20) | 0x00002);
 const TOPIC_CLIENT_ROOM_MSG = ((APPID<<20) | 0x00004);
 
 const SYS_AVATAR_COUNT = 35; // 系统头像数目
-const IMGS_DIR = '/imgs';
 
 const Util = {
   myid: 0,
@@ -91,22 +91,22 @@ const Util = {
   getUserAvatar(userInfo) {
     const avatarId = userInfo.avatarId;
     if (avatarId === 0) {
-      return IMGS_DIR + '/avatar/default.png';
+      return Config.imgsdir + '/avatar/default.png';
     }
     if (this.isSysAvatar(avatarId)) {
       const IMAGES_MAIN_COUNT = 15;
       const womanNumber = avatarId - IMAGES_MAIN_COUNT;
       if (womanNumber > 0) {
         const temp = this.padZero(womanNumber + '', 2);
-        return `${IMGS_DIR}/avatar/images_woman_${temp}.png`;
+        return `${Config.imgsdir}/avatar/images_woman_${temp}.png`;
       } else {
         const temp = this.padZero(avatarId + '', 2);
-        return `${IMGS_DIR}/avatar/images_man_${temp}.png`;
+        return `${Config.imgsdir}/avatar/images_man_${temp}.png`;
       }
     } else if (userInfo.avatar && userInfo.avatar.length) {
       return 'data:image/png;base64,' + userInfo.avatar;
     } else {
-      return IMGS_DIR + '/avatar/default.png';
+      return Config.imgsdir + '/avatar/default.png';
     }
   },
   getEmoticonPath(emoticon) {
@@ -116,7 +116,7 @@ const Util = {
       if (arr.length > 1) {
         const type = arr[1].toLowerCase();
         if (types.indexOf(type) >= 0) {
-          arr[0] = IMGS_DIR + '/emoticon';
+          arr[0] = Config.imgsdir + '/emoticon';
           return arr.join('/');
         }
       }

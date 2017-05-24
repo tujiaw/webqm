@@ -2,8 +2,6 @@ const Styles = {
   root: {
     position: 'fixed',
     zIndex: 1000,
-    width: '350px',
-    height: '220px',
     background: '#28282C',
     display: 'flex',
     flexWrap: 'wrap',
@@ -13,6 +11,8 @@ const Styles = {
     cursor: 'pointer',
   },
   gridList: {
+    marginTop: '5px',
+    marginBottom: '5px',
     width: 350,
     height: 220,
     overflowY: 'auto',

@@ -1,7 +1,6 @@
 import { WebClient } from './web_socket.js';
 import Config from '../config/config.js';
 import md5 from 'md5';
-import { QMMsgBuilder } from '../utils/qmmsg.js';
 
 const WebApi = {
   /**
@@ -148,7 +147,7 @@ const WebApi = {
   /**
    * 发送消息
    */
-  sendMsg: function(auth, id, msg, cb) {
+  sendMsg: function(auth, id, msgBody, cb) {
     const data = {
       "header": {
         "from": auth.userid || 0,
@@ -167,8 +166,7 @@ const WebApi = {
       "ServerSent": false
     }
 
-    const builder = new QMMsgBuilder();
-    data.body = JSON.stringify(builder.pushText(msg).getMsg());
+    data.body = JSON.stringify(msgBody);
     const resMsg = {
       id: 0,
       to: [],

@@ -18,7 +18,9 @@ const Config = {
     setcustomconfig: BaseInfo.restful_host + 'setcustomconfig',
     customconfig: BaseInfo.restful_host + 'customconfig',
     globalconfig: BaseInfo.restful_host + 'globalconfig',
-  }
+  },
+  imgsdir: '/imgs',
+  emoticondir: '/imgs/emoticon',
 }
 
 export default Config;

@@ -10,6 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Message from './component/message';
 import FaceDialog from './component/face_dialog';
+import { QMMsgBuilder } from '../utils/qmmsg';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -100,9 +101,20 @@ class Dialogue extends React.Component {
     }
   }
 
-  sendMsg = () => {
+  getMsgFromInput = () => {
     const msg = this.refs.inputMessage.value.trim();
     if (msg.length === 0) {
+      return undefined;
+    }
+
+    
+    const builder = new QMMsgBuilder();
+    return builder.pushText(msg).getMsg();
+  }
+
+  sendMsg = () => {
+    const msg = this.getMsgFromInput();
+    if (msg === undefined) {
       return;
     }
     this.refs.inputMessage.value = '';
