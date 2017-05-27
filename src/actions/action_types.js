@@ -30,6 +30,10 @@ const Actions = {
 
   // global config
   GLOBAL_CONFIG_SET: 'GLOBAL_CONFIG_SET',
+
+  // room
+  ROOM_ADD: 'ROOM_ADD',
+  ROOM_REMOVE: 'ROOM_REMOVE',
 }
 
 export default Actions;

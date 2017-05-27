@@ -4,7 +4,6 @@ import ChatList from './component/chat_list';
 
 class Chat extends React.Component {
   componentWillUnMount() {
-    //console.log('chat unmount:' + this.state.chats);
     console.log('componentWillUnMount, chats:' + this.props.chats);
   }
 

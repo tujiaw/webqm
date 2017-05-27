@@ -14,6 +14,7 @@ import TopBar from './component/top_bar';
 import Util from '../utils/util';
 import Styles from '../style/user_info';
 import ghistory from '../utils/ghistory';
+import Config from '../config/config';
 
 class UserInfo extends React.Component {
   constructor(props) {
@@ -83,13 +84,13 @@ class UserInfo extends React.Component {
     const userid = location.state.userid;
     UserCreators.setCurrentId(userid);
     UserCreators.addChat(userid);
-    ghistory.push('/dialogue', {userid: userid});
+    ghistory.push(`${Config.prefix}/dialogue`, {chatid: userid});
   }
 
   render() {
     return (
       <div>
-        <TopBar pageName='user' title='详细资料'/>
+        <TopBar pageName='userdetail' title='详细资料' id={this.state.userid}/>
         <Card>
           <CardHeader
             titleStyle={Styles.cardHeaderTitle}

@@ -30,9 +30,6 @@ class MessageBody extends Component {
     return '';
   }
 
-  onOrigImagePreloader = (srcUrl) => {
-    return <img src={srcUrl} alt='图片' style={Styles.img}/>;
-  }
   render() {
     const self = this;
     const {isSend, msgBody} = this.props;
@@ -76,22 +73,23 @@ class MessageBody extends Component {
         // 图片
         let imgwidth = `${body.msg.widthThumbnail || 100 }px`;
         let imgheight = `${body.msg.heightThumbnail || 100}px`;
+        let thumbUrl = '', srcUrl = '';
         if (body.msg.origUrl && body.msg.origUrl.length) {
-          rowArr.push(<img key={++index} src={body.msg.origUrl} alt='图片' style={[Styles.img, {width: imgwidth, height: imgheight}]}/>);
+          thumbUrl = body.msg.origUrl;
+          srcUrl = body.msg.origUrl;
         } else if (body.msg.uuid && body.msg.uuid.length) {
-          const thumbUrl = self.getImageUrl(body.msg.uuidThumbnail);
-          const srcUrl = self.getImageUrl(body.msg.uuid);
-          if (thumbUrl.length) {
-            rowArr.push(<ImageLoader 
-              style={Styles.img}
-              key={++index}
-              src={thumbUrl} 
-              srcUrl={srcUrl}
-              wrapper={React.DOM.div}
-              preloader={self.onOrigImagePreloader.bind(self, {srcUrl})}>原图加载失败</ImageLoader>);
-          } else {
-            console.error('image url error:' + body.msg.uuid);
-          }
+          thumbUrl = self.getImageUrl(body.msg.uuidThumbnail);
+          srcUrl = self.getImageUrl(body.msg.uuid);
+        }
+        if (thumbUrl.length) {
+          rowArr.push(<ImageLoader 
+            style={Styles.imageLoader}
+            key={++index}
+            src={thumbUrl} 
+            srcUrl={srcUrl}
+            imgwidth={imgwidth}
+            imgheight={imgheight}
+            wrapper={React.DOM.div} />)
         } else {
           rowArr.push(<span key={++index} style={textStyle}>[图片]</span>);
         }
@@ -114,20 +112,23 @@ class MessageBody extends Component {
 
 class Message extends Component {
   render() {
-    const {msg, users, isShowName, showDate} = this.props;
+    const {chatid, msg, isShowName, showDate} = this.props;
     const fromId = msg.header.from;
     const isSend = (fromId === Util.myid);
     const time = moment(msg.time).format('HH:mm:ss');
-    const user = users.get(fromId);
-    let name = '';
-    if (user) {
-      name = Util.getShowName(user.userInfo);
+    const baseInfo = UserCreators.getBaseInfo(fromId);
+    let name = baseInfo.name || '';
+    if (Util.isQmRoomId(chatid)) {
+      const companyName = UserCreators.getCompanyName(fromId);
+      if (companyName.length) {
+        name += ' - ' + companyName;
+      }
     }
 
     return (
       <div style={isSend ? Styles.sendMsg : Styles.receiveMsg}>
         {showDate && showDate.length && <div><span style={Styles.date}>{showDate}</span></div>}
-        {isShowName && <div><span style={isSend ? Styles.sendName : Styles.receiveName}>{name + ':'}</span></div>}
+        {isShowName && <div style={isSend ? Styles.sendName : Styles.receiveName}><span>{name + ':'}</span></div>}
         <div style={Styles.contentBox}>
           <MessageBody isSend={isSend} msgBody={msg.body}/>
           <div style={Styles.time}>

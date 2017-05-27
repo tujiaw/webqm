@@ -37,4 +37,24 @@ Styles.hide = {
   display: 'none'
 }
 
+Styles.badge = {
+  position: 'absolute', 
+  background:'#D83232', 
+  left:25, 
+  bottom: 20, 
+  width: 10,
+  height: 10, 
+  borderRadius:10
+}
+
+Styles.badgeVisible = {
+  ...Styles.badge,
+  visibility: 'visible'
+}
+
+Styles.badgeHidden = {
+  ...Styles.badge,
+  visibility: 'hidden'
+}
+
 export default Styles;

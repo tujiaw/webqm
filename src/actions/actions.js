@@ -56,6 +56,14 @@ const Actions = {
       Dispatcher.dispatch({ type: ActionTypes.USERS_UPDATE_AVATAR_LIST, userIdList, avatarIdList, avatarList });
     }
   },
+  room: {
+    add: function(room) {
+      Dispatcher.dispatch({ type: ActionTypes.ROOM_ADD, room });
+    },
+    remove: function(roomid) {
+      Dispatcher.dispatch({ type: ActionTypes.ROOM_REMOVE, roomid });
+    }
+  },
   config: {
     set: function(key, value) {
       Dispatcher.dispatch({ type: ActionTypes.CONFIG_SET, key, value });

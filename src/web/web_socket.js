@@ -1,4 +1,5 @@
 import Config from '../config/config.js';
+import ReconnectingWebSocket from './reconnecting_websocket';
 
 /**
  * 组装消息
@@ -9,13 +10,12 @@ import Config from '../config/config.js';
  * data: 具体数据
  */
 function packMessage(sn, type, url, token, data) {
-  console.log(typeof data);
   if (data && (typeof data === 'object')) {
     data = JSON.stringify(data);
   }
   
   const result = {
-    sn: sn || 0,
+    sn: sn || 1,
     type: type || '',
     url: url || '',
     token: token,
@@ -35,7 +35,7 @@ var WebClient = function(wspath) {
   if (WebSocket) {
     console.log('new web socket:' + wspath);
     const self = this;
-    this.socket = new WebSocket(wspath);
+    this.socket = new ReconnectingWebSocket(wspath);
     this.socket.onopen = function() {
       console.log('on open');
     };
@@ -57,6 +57,7 @@ var WebClient = function(wspath) {
         if (res.type === 'subscribe') {
 
         } else if (res.type === 'response') {
+          console.log('on response:' + JSON.stringify(res).slice(0, 100));
           if (self.caller[res.sn] !== 'undefined') {
             self.caller[res.sn].response(res.data);
             delete self.caller[res.sn];
@@ -94,11 +95,10 @@ var WebClient = function(wspath) {
   };
 
   this.request = function(url, data, cb) {
-    console.log('111111 request:' + url);
+    console.log('111111111:' + url, 'data:' + JSON.stringify(data));
     const self = this;
     this.callerExec(function(sn) {
       const msg = packMessage(sn, 'request', url, JSON.stringify(self.auth), data);
-      console.log('send:' + msg);
       self.socket.send(msg);
     }, cb);
   };

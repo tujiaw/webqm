@@ -4,6 +4,7 @@ import Util from '../../utils/util';
 import ghistory from '../../utils/ghistory';
 import UserCreators from '../../creators/user_creators';
 import moment from 'moment';
+import Config from '../../config/config';
 
 const ItemAction = {
   normal: 'normal',
@@ -49,22 +50,23 @@ class ChatItem extends Component {
         return Styles.item;
       }
     }
+    const {data} = this.props;
 
     return (
       <div 
         style={getItemStyle()}
         onMouseEnter={this.onMouseEnter} 
         onMouseLeave={this.onMouseLeave} 
-        onClick={this.onClick.bind(this, {chatid: this.props.chatid, lastMsgId: this.props.lastMsgId})}
+        onClick={this.onClick.bind(this, data)}
       >
-        <img style={Styles.avatar} src={this.props.avatar} alt='avatar'/>
+        <img style={Styles.avatar} src={data.avatar} alt='avatar'/>
         <div style={Styles.content}>
-          <div style={Styles.username}>{this.props.name}</div>
-          <div style={Styles.lastMsg}>{this.props.lastMsg}</div>
+          <div style={Styles.username}>{data.name}</div>
+          <div style={Styles.lastMsg}>{data.lastMsg}</div>
         </div>
         <div style={Styles.right}>
-          <div style={Styles.time}>{this.props.time || ''}</div>
-          <div style={this.props.unreadCount ? Styles.unreadCountVisible : Styles.unreadCountHidden}>{this.props.unreadCount}</div>
+          <div style={Styles.time}>{data.time || ''}</div>
+          <div style={data.unreadCount ? Styles.unreadCountVisible : Styles.unreadCountHidden}>{data.unreadCount}</div>
         </div>
 
       </div>
@@ -90,6 +92,7 @@ class ChatList extends Component {
           }
         }
         return {
+          millisecond: lastMsg.time,
           time: time,
           content: Util.getLastMsgContent(lastMsg),
           unreadCount: unreadCount,
@@ -103,35 +106,49 @@ class ChatList extends Component {
   onItemClick = (chatid, lastMsgId) => {
     UserCreators.setCurrentId(chatid);
     UserCreators.setChatLastReadMsgId(chatid, lastMsgId);
-    ghistory.push('/dialogue');
+    ghistory.push(`${Config.prefix}/dialogue`);
   }
 
   render() {
     const self = this;
-    const {chats, users} = this.props;
+    const {chats, users, rooms} = this.props;
+    const data = [];
+    chats.map((chat, index) => {
+      if (chat && chat.chatid) {
+        const result = UserCreators.getBaseInfo(chat.chatid)
+        if (result.avatar && result.name) {
+          const lastMsg = self.getLastMsg(chat);
+          data.push({
+            millisecond: lastMsg ? lastMsg.millisecond : 0,
+            chatid: chat.chatid,
+            avatar: result.avatar,
+            name: result.name,
+            unreadCount: lastMsg ? lastMsg.unreadCount : 0,
+            lastMsg: lastMsg ? lastMsg.content : '',
+            lastMsgId: lastMsg ? lastMsg.lastMsgId : 0,
+            time: lastMsg ? lastMsg.time : '',
+          })
+        }
+      }
+    })
+
+    data.sort((a, b) => {
+      if (a.millisecond !== 0 && b.millisecond !== 0) {
+        return parseInt(b.millisecond) - parseInt(a.millisecond);
+      } else if (a.millisecond === 0 && b.millisecond === 0) {
+        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+      } else {
+        return parseInt(b.millisecond) - parseInt(a.millisecond);
+      }
+    })
 
     return (
       <div style={Styles.list}>
-        {chats.map((chat, index) => {
-          if (chat && chat.chatid) {
-            const user = users.get(chat.chatid);
-            if (user) {
-              const avatar = Util.getUserAvatar(user.userInfo);
-              const name = Util.getShowName(user.userInfo);
-              const lastMsg = self.getLastMsg(chat);
-              return <ChatItem key={index} 
-                        chatid={chat.chatid} 
-                        avatar={avatar}
-                        name={name} 
-                        unreadCount={lastMsg ? lastMsg.unreadCount : 0}
-                        lastMsg={lastMsg ? lastMsg.content : ''}
-                        lastMsgId={lastMsg ? lastMsg.lastMsgId : 0}
-                        time={lastMsg ? lastMsg.time : ''}
-                        onItemClick={this.onItemClick}
-                      />
-            }
-          }
-          return '';
+        {data.map((item, index) => {
+            return <ChatItem key={index} 
+              data={item}
+              onItemClick={this.onItemClick}
+            />
         })}
       </div>
     )

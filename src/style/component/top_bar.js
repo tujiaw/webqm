@@ -26,4 +26,18 @@ const Styles = {
   }
 }
 
+Styles.backButtonVisible = {
+  visibility: 'visible'
+}
+
+Styles.backButtonHidden = {
+  visibility: 'hidden'
+}
+
+Styles.searchButton = {
+  padding: 0, 
+  marginBottom: 8,
+  paddingBottom: 8
+}
+
 export default Styles;

@@ -36,16 +36,16 @@ const SYS_AVATAR_COUNT = 35; // 系统头像数目
 const Util = {
   myid: 0,
   isQmUserId: function(id) {
-    return id >= ID_RANGE.ID_USER_RESERVE && id < ID_RANGE.ID_Virtual_USER;
+    return id && id >= ID_RANGE.ID_USER_RESERVE && id < ID_RANGE.ID_Virtual_USER;
   },
   isQmRoomId: function(id) {
-    return id >= ID_RANGE.ID_ROOM_RESERVE && id < ID_RANGE.ID_RANGE_END;
+    return id && id >= ID_RANGE.ID_ROOM_RESERVE && id < ID_RANGE.ID_RANGE_END;
   },
   isQmOrgId: function(id) {
-    return id >= ID_RANGE.ID_ORG && id < ID_RANGE.ID_ORG_MAX;
+    return id && id >= ID_RANGE.ID_ORG && id < ID_RANGE.ID_ORG_MAX;
   },
   isQmRobotId: function(id) {
-    return id === ID_RANGE.ID_ROBOT;
+    return id && id === ID_RANGE.ID_ROBOT;
   },
   getChatId(fromId, toId) {
     if (this.myid === 0) {
@@ -91,7 +91,7 @@ const Util = {
   getUserAvatar(userInfo) {
     const avatarId = userInfo.avatarId;
     if (avatarId === 0) {
-      return Config.imgsdir + '/avatar/default.png';
+      return this.getDefaultAvatar(userInfo.ID);
     }
     if (this.isSysAvatar(avatarId)) {
       const IMAGES_MAIN_COUNT = 15;
@@ -106,8 +106,42 @@ const Util = {
     } else if (userInfo.avatar && userInfo.avatar.length) {
       return 'data:image/png;base64,' + userInfo.avatar;
     } else {
-      return Config.imgsdir + '/avatar/default.png';
+      return this.getDefaultAvatar(userInfo.ID);
     }
+  },
+  isRoomOwner(roomInfo) {
+    if (roomInfo.memberInfo) {
+      for (let member of roomInfo.memberInfo) {
+        if (member.role === 'ROLE_OWNER' && member.id === this.myid) {
+          return true;
+        }
+      }
+    }
+    return false;
+  },
+  getRoomAvatar(roomInfo) {
+    const avatarId = roomInfo.avatarId;
+    if (avatarId === 0) {
+      if (this.isRoomOwner(roomInfo)) {
+        return Config.imgsdir + '/avatar/room_head_80_1.png';
+      } else {
+        return Config.imgsdir + '/avatar/room_head_80.png';
+      }
+    } else if (roomInfo.avatar && roomInfo.avatar.length){
+      return 'data:image/png;base64,' + roomInfo.avatar;
+    } else {
+      return this.getDefaultAvatar(roomInfo.ID);
+    }
+  },
+  getDefaultAvatar(id) {
+    if (this.isQmUserId(id)) {
+      return Config.imgsdir + '/avatar/default.png';  
+    } else if (this.isQmOrgId(id)) {
+      return Config.imgsdir + '/avatar/org_head80.png';  
+    } else if (this.isQmRoomId(id)) {
+      return Config.imgsdir + '/avatar/room_head_80.png';  
+    }
+    return Config.imgsdir + '/avatar/default.png';
   },
   getEmoticonPath(emoticon) {
     if (emoticon && emoticon.length) {
@@ -142,7 +176,7 @@ const Util = {
       }
     }
     return msgContent.length ? msgContent : '  ';
-  }
+  },
 }
 
 export default Util;

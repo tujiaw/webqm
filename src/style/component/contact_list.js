@@ -14,11 +14,9 @@ const Styles = {
   content: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
     paddingLeft: '15px',
     overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    alignItems: 'space-between',
+    alignItems: 'space-around',
   },
   username: {
     display: 'flex',
@@ -27,7 +25,8 @@ const Styles = {
     fontSize: '14px',
     fontWeight: 'bold',
   },
-  company: {
+  subtitle: {
+    marginTop: 8,
     display: 'flex',
     alignSelf: 'flex-start',
     color: '#c5c5c5',

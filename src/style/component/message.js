@@ -27,15 +27,10 @@ const Styles = {
     height: '30px',
     lineHeight: '30px'
   },
-  sendName: {
+  name: {
     fontSize: '13px',
-    color: '#b8b3af',
     paddingTop: '6px',
-    paddingBottom: '12px',
-  },
-  receiveName: {
-    color: '#ba9d76',
-    fontSize: '13px',
+    paddingBottom: '8px',
   },
   contentBox: {
     display: 'flex',
@@ -58,7 +53,7 @@ const Styles = {
     fontSize: '12px',
     marginLeft: '20px',
   },
-  img: {
+  imageLoader: {
     marginTop: '3px',
     borderRadius: '5px'
   }
@@ -71,6 +66,16 @@ Styles.sendMsg = {
 Styles.receiveMsg = {
   ...Styles.message,
   background: '#141415',
+}
+
+Styles.sendName = {
+  ...Styles.name,
+  color: '#b8b3af'
+}
+
+Styles.receiveName = {
+  ...Styles.name,
+  color: '#ba9d76'
 }
 
 export default Styles;

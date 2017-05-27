@@ -31,5 +31,4 @@ class Signals {
   }
 }
 
-const SignalController = new Signals();
-export default SignalController;
+export default new Signals();

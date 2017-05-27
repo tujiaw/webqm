@@ -7,7 +7,7 @@ const Styles = {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    backgroundImage: "url('./imgs/bg_login_body.png')",
+    backgroundImage: "url('/imgs/bg_login_body.png')",
     backgroundColor: '#0C868F',
     paddingBottom: '100px',
   },

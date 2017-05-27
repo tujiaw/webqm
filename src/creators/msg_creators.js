@@ -1,5 +1,6 @@
 import WebApi from '../web/web_api';
 import UserCreators from './user_creators';
+import RoomCreators from './room_creators';
 import MsgStore from '../store/msg_store';
 import Util from '../utils/util';
 import Actions from '../actions/actions';
@@ -25,7 +26,8 @@ const MsgCreators = {
             console.error('on message, code:' + JSON.stringify(msg));
         }
     },
-    handleUserMsg(msg) {
+    parsePublishMsg(msg) {
+        const result = [];
         const items = msg.data.body.item;
         for (let i = 0, count = items.length; i < count; i++) {
             if (!items[i].value.length) {
@@ -33,12 +35,25 @@ const MsgCreators = {
             }
             const values = items[i].value;
             for (let j = 0, bodyCount = values.length; j < bodyCount; j++) {
-                this.addMsg(values[j])
+                result.push(values[j]);
             }
         }
+        return result;
     },
-    handleRoomMsg(msg) {
-        console.log('handle room msg');
+    handleUserMsg(publishMsg) {
+        const msgs = this.parsePublishMsg(publishMsg);
+        for (let msg of msgs) {
+            this.addMsg(msg);
+        }
+    },
+    handleRoomMsg(publishMsg) {
+        const msgs = this.parsePublishMsg(publishMsg);
+        for (let msg of msgs) {
+            if (msg.header.from === Util.myid) {
+                continue;
+            }
+            this.addMsg(msg)
+        }
     },
     asyncSendMsg: function (id, msgBody) {
         return new Promise((resolve, reject) => {
@@ -62,7 +77,19 @@ const MsgCreators = {
     },
     addMsg: function(msg) {
         const chatId = Util.getMsgChatId(msg);
-        if (chatId) {
+        if (chatId === 0) {
+            console.error('add msg error, header:', JSON.stringify(msg.header));
+            return;
+        }
+
+        function addMsg() {
+            if (chatId === UserCreators.getCurrentId()) {
+                Actions.dialogue.addMsg(msg);
+            }
+            Actions.msg.add(msg);
+        }
+
+        if (Util.isQmUserId(chatId)) {
             UserCreators.asyncGetDetailUsersInfo([chatId]).then((res) => {
                 if (res && res[chatId]) {
                     Actions.chat.add(chatId);
@@ -70,11 +97,16 @@ const MsgCreators = {
             }).catch(() => {
                 console.error('get detail user info failed, userid:' + chatId);
             });
-
-            if (chatId === UserCreators.getCurrentId()) {
-                Actions.dialogue.addMsg(msg);
-            }
-            Actions.msg.add(msg);
+            addMsg();
+        } else if (Util.isQmRoomId(chatId)) {
+            RoomCreators.asyncGetRoomInfoList([chatId]).then((res) => {
+                if (res && res[chatId]) {
+                    Actions.chat.add(chatId);
+                }
+            }).catch(() => {
+                console.error('get detail room info failed, roomid:' + chatId);
+            })
+            addMsg();
         } else {
             console.error('chat id is error!');
         }

@@ -6,6 +6,7 @@ import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import CircularProgress from 'material-ui/CircularProgress';
+import Config from '../config/config';
 
 class Login extends Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class Login extends Component {
       .then(() => {
         clearInterval(this.state.timer);
         self.setState({ isLogin: true, loadding: false });
-        self.props.history.push('main');
+        self.props.history.push(`${Config.prefix}/main`);
       })
       .catch((res) => {
         let tipMsg = '未知错误';

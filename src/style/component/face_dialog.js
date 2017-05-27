@@ -5,7 +5,6 @@ const Styles = {
     background: '#28282C',
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
     padding: '5px',
     borderRadius: '5px',
     cursor: 'pointer',

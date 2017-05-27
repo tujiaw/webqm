@@ -1,7 +1,9 @@
 import { WebClient } from './web_socket.js';
 import Config from '../config/config.js';
+import Util from '../utils/util';
 import md5 from 'md5';
 
+let serialNo = 0;
 const WebApi = {
   /**
    * 登录
@@ -15,6 +17,62 @@ const WebApi = {
       comment: ''
     };
     WebClient.request(Config.restful.login, data, cb);
+  },
+
+  gatewayLogin: function(auth, cb) {
+    const data = {
+      "token": auth.token
+    }
+    WebClient.request(Config.restful.gatewayLogin, data, cb);
+  },
+
+  smlogin: function(auth, cb) {
+    ++serialNo;
+    const data = {
+      "header": {
+        "from": auth.userid,
+        "sourceNo": serialNo,
+        "serialNo": serialNo,
+        "errorCode": 0
+      },
+      "res": 0
+    }
+    WebClient.request(Config.restful.smlogin, data, cb);
+  },
+
+  presence: function(auth, cb) {
+    ++serialNo;
+    const data = {
+      "header": {
+        "from": auth.userid,
+        "sourceNo": serialNo,
+        "serialNo": serialNo,
+        "errorCode": 0
+      },
+      "presence": {
+        "id": auth.userid,
+        "serialNo": serialNo,
+        "show": 2,
+        "res": 0,
+        "token": auth.token
+      }
+    }
+    WebClient.request(Config.restful.presence, data, cb);
+  },
+
+  session: function(auth, cb) {
+    ++serialNo;
+    const data = {
+      "header": {
+        "from": auth.userid,
+        "sourceNo": serialNo,
+        "serialNo": serialNo,
+        "errorCode": 0
+      },
+      "action": 1,
+      "res": 0
+    }
+    WebClient.request(Config.restful.session, data, cb);
   },
 
   regMessageCallback:function(auth, onMessageFunc, cb) {
@@ -34,6 +92,36 @@ const WebApi = {
       version: 0
     };
     WebClient.request(Config.restful.friend, data, cb);
+  },
+
+  /**
+   * 获取群列表
+   */
+  room: function(auth, cb) {
+    const data = {
+      "userId": auth.userid || 0,
+      "version": 0
+    }
+    WebClient.request(Config.restful.room, data, cb);
+  },
+
+  /**
+   * 获取群列表信息
+   */
+  roomInfoList: function(auth, roomIdList, cb) {
+    const data = {
+      "userId": auth.userid || 0,
+      "roomId": [],
+      "version": [],
+      "reqMember": false,
+      "reqOwner": false,
+      "removeAvatar": false
+    }
+    for (let id of roomIdList) {
+      data.roomId.push(id);
+      data.version.push(0);
+    }
+    WebClient.request(Config.restful.ISReqUserRoomInfo, data, cb);
   },
 
   /**
@@ -148,17 +236,21 @@ const WebApi = {
    * 发送消息
    */
   sendMsg: function(auth, id, msgBody, cb) {
+    let type = 1;
+    if (Util.isQmRoomId(id)) {
+      type = 2;
+    }
     const data = {
       "header": {
         "from": auth.userid || 0,
-        "sourceNo": 0,
-        "serialNo": 0,
+        "sourceNo": ++serialNo,
+        "serialNo": serialNo,
         "errorCode": 0
       },
       "to": [
         id
       ],
-      "type": 1,
+      "type": type,
       "body": "{\"bodyList\":[{\"type\":10,\"msg\":{\"content\":\"hello, world!\",\"type\":0,\"color\":0,\"size\":0,\"fontstyle\":0},\"basiccontent\":\"hello, world!\"}],\"bodyListType\":0,\"ExtendContent\":\"\",\"ServerSent\":false,\"notify\":0,\"isQQMsg\":false}",
       "keyServer": 0,
       "keyId": 0,
@@ -184,7 +276,6 @@ const WebApi = {
     }
 
     WebClient.request(Config.restful.sendmsg, data, (res) => {
-      console.log('send msg responase:' + JSON.stringify(res))
       if (res.code === 0) {
         if (res.body.toUserMsgInfo) {
           const toUserMsgInfo = res.body.toUserMsgInfo;
@@ -198,6 +289,21 @@ const WebApi = {
       res.resMsg = resMsg;
       cb(res);
     });
+  },
+  search(auth, key, maxUser, maxRoom, cb) {
+    const data = {
+      "userId": auth.userid || 0,
+      "key": key,
+      "orgType": "",
+      "province": "",
+      "city": "",
+      "limitUser": maxUser,
+      "limitRoom": maxRoom,
+      "onlyStranger": false,
+      "onlyOnline": false
+    };
+
+    WebClient.request(Config.restful.search, data, cb);
   }
 }
 

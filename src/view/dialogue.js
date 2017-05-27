@@ -10,9 +10,123 @@ import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Message from './component/message';
 import FaceDialog from './component/face_dialog';
+import ImageDialog from './component/image_dialog';
 import { QMMsgBuilder } from '../utils/qmmsg';
+import Util from '../utils/util';
 import moment from 'moment';
 import $ from 'jquery';
+import Emoticon from '../utils/emoticon_xml';
+
+/**
+ * 节点构造
+ * @param {*原文本} text 
+ * @param {*开始位置} start 
+ * @param {*结束位置} end 
+ * @param {*类型} type 
+ */
+function getPoint(text, start, end, type) {
+  return {
+    start: start,
+    end: end,
+    data: text.slice(start, end),
+    type: type
+  }
+}
+
+/**
+ * 获取所有匹配到的位置
+ * @param {*原文本} src 
+ * @param {*目前文本} dst 
+ */
+function matchAll(src, dst) {
+  const result = [];
+  const dstLength = dst.length;
+  let start = 0;
+  const end = src.length;
+  while (start < end) {
+    const index = src.indexOf(dst, start);
+    if (index >= 0) {
+      result.push({
+        start: index,
+        end: index + dstLength,
+      })
+      start = index + dstLength;
+    } else {
+      break;
+    }
+  }
+  return result;
+}
+
+/**
+ * 获取表情在输入框中的文本
+ * @param {*face对象} face 
+ */
+function getFaceShowText(face) {
+    let result = '';
+    if (face.name.indexOf('face') >= 0) {
+      result = `[/${face.desc}]`
+    } else if (face.name.indexOf('smartQ') >= 0) {
+      result = `[//${face.desc}]`
+    } else {
+      console.error('getFaceShowText error:' + face);
+    }
+    return result;
+}
+/**
+ * 获取所有系统表情节点位置
+ * @param {*原文本} text 
+ */
+function getEmoticonPointList(text, faceList) {
+  let result = [];
+  for (let face of faceList) {
+    const dst = getFaceShowText(face);
+    let arr = matchAll(text, dst);
+    arr.map((item) => {
+      item.data = face;
+      item.type = 'face';
+      return item;
+    })
+    result = result.concat(arr);
+  }
+  return result;
+}
+
+/**
+ * 获取所有文本节点位置
+ * @param {*原文本} text 
+ * @param {*系统表情节点位置列表} facePointList 
+ */
+function getTextPointList(text, facePointList) {
+  let result = [];
+  let index = 0;
+  facePointList.sort((a, b) => a.start - b.start);
+  for (let i = 0, count = facePointList.length; i < count; i++) {
+    const point = facePointList[i];
+    if (point.start > index) {
+      result.push(getPoint(text, index, point.start, 'text'));
+    }
+    index = point.end;
+  }
+  if (index < text.length) {
+    result.push(getPoint(text, index, text.length, 'text'));
+  }
+  return result;
+}
+
+/**
+ * 获取所有节点信息
+ * @param {*原文本} text 
+ */
+function getAllSection(text) {
+  let result = [];
+  const facePointList = getEmoticonPointList(text, Emoticon.faceList);
+  const smartQPointList = getEmoticonPointList(text, Emoticon.smartQList);
+  const textPointList = getTextPointList(text, facePointList.concat(smartQPointList));
+  result = result.concat(facePointList).concat(smartQPointList).concat(textPointList);
+  result.sort((a, b) => a.start - b.start);
+  return result;
+}
 
 class Dialogue extends React.Component {
   constructor(props) {
@@ -21,6 +135,7 @@ class Dialogue extends React.Component {
       inputValue: '',
       isFaceDialog: false,
       isFaceButtonClicked: false,
+      isImageDialog: false,
       faceButtonPos: {
         left: 0, top: 0
       },
@@ -28,18 +143,6 @@ class Dialogue extends React.Component {
         width: 350, height: 220,
       }
     }
-  }
-
-  getRect = (target) => {
-    if (target) {
-      return {
-        left: target.offsetLeft,
-        top: target.offsetTop,
-        right: target.offsetLeft + target.offsetWidth,
-        bottom: target.offsetTop + target.offsetHeight
-      }
-    }
-    return undefined;
   }
 
   componentDidMount() {
@@ -107,9 +210,18 @@ class Dialogue extends React.Component {
       return undefined;
     }
 
-    
     const builder = new QMMsgBuilder();
-    return builder.pushText(msg).getMsg();
+    const allSection = getAllSection(msg);
+    for (let section of allSection) {
+      if (section.type === 'text') {
+        builder.pushText(section.data);
+      } else if (section.type === 'face') {
+        builder.pushSysEmotion(section.data.name);
+      } else {
+        console.error('input message type error:' + JSON.stringify(section));
+      }
+    }
+    return builder.getMsg();
   }
 
   sendMsg = () => {
@@ -117,12 +229,27 @@ class Dialogue extends React.Component {
     if (msg === undefined) {
       return;
     }
+
+    this.sendMsgObj(msg);
     this.refs.inputMessage.value = '';
-    MsgCreators.asyncSendMsg(this.props.currentId, msg)
+  }
+
+  sendMsgObj = (msgObj) => {
+    if (msgObj === undefined) {
+      return;
+    }
+
+    const self = this;
+    MsgCreators.asyncSendMsg(this.props.currentId, msgObj)
     .then((res) => {
       if (res.code === 0) {
-        MsgCreators.addMsg(res.resMsg);
-        UserCreators.setChatLastReadMsgId(this.props.currentId, res.resMsg.id);
+        if (res.body.header.errorCode && res.body.header.errorCode !== 0) {
+          console.error(res.body.header.errorCode);
+        }
+        if (res.resMsg) {
+          MsgCreators.addMsg(res.resMsg);
+          UserCreators.setChatLastReadMsgId(self.props.currentId, res.resMsg.id);
+        }
       }
     })
     .catch((code, error) => {
@@ -161,21 +288,37 @@ class Dialogue extends React.Component {
     this.refs.inputMessage.focus();
   }
 
+  onImageButtonClick = (event) => {
+    this.setState({
+      isImageDialog: true
+    })
+  }
+
   onFaceSelected = (data) => {
     console.log(data);
-    this.insertInputText(`[/${data.desc}]`);
+    this.insertInputText(getFaceShowText(data));
     this.refs.inputMessage.focus();
   }
 
+  onImageDialogClose = (data) => {
+    this.setState({isImageDialog: false})
+    data = data ? data.trim() : '';
+    if (data.length) {
+      const builder = new QMMsgBuilder();
+      const msgObj = builder.pushImage(data, 150, 100).getMsg();
+      this.sendMsgObj(msgObj);
+    }
+  }
+
   render() {
-    const {currentId, messages, users} = this.props;
-    const info = users.get(currentId);
-    const showName = (info !== undefined ? info.userInfo.name : 'unkown');
+    const {currentId, messages, users, rooms} = this.props;
+    const baseInfo = UserCreators.getBaseInfo(currentId);
+    const title = baseInfo.name || 'unkown';
     let prevDate = '', showDate = '';
 
     return (
       <div style={Styles.main}>
-        <TopBar pageName='dialogue' title={showName} userid={currentId}/>
+        <TopBar pageName='dialogue' title={title} id={currentId}/>
         <div style={Styles.messagePanel}
              ref={(div) => {this.messagePanel = div;}}>
           {messages.map((msg, index) => {
@@ -200,24 +343,37 @@ class Dialogue extends React.Component {
             } else {
               showDate = '';
             }
-            return <Message key={index} msg={msg} users={users} isShowName={isShowName} showDate={showDate}/>
+
+            return <Message key={index} chatid={currentId} msg={msg} isShowName={isShowName} showDate={showDate}/>
           })}
         </div>
         <div style={Styles.inputPanel}>
           <Divider />
-          <IconButton 
-            ref="faceButton"
-            tooltip="表情" 
-            tooltipPosition="top-right" 
-            iconClassName="material-icons"
-            onTouchTap={this.onFaceButtonClick}
-            style={Styles.faceButton}>
-            insert_emoticon
-          </IconButton>
+          <div>
+            <IconButton 
+              ref="faceButton"
+              tooltip="表情" 
+              tooltipPosition="top-right" 
+              iconClassName="material-icons"
+              onTouchTap={this.onFaceButtonClick}
+              style={Styles.faceButton}>
+              insert_emoticon
+            </IconButton>
+            <IconButton 
+              ref="faceButton"
+              tooltip="图片" 
+              tooltipPosition="top-right" 
+              iconClassName="material-icons"
+              onTouchTap={this.onImageButtonClick}
+              style={Styles.faceButton}>
+              image
+            </IconButton>
+          </div>
           {this.state.isFaceDialog && <FaceDialog ref="faceDialog" 
                   faceButtonPos={this.state.faceButtonPos} 
                   faceDialogSize={this.state.faceDialogSize}
                   onSelected={this.onFaceSelected}/>}
+          <ImageDialog open={this.state.isImageDialog} onClose={this.onImageDialogClose}/>
           <textarea 
             style={Styles.inputMessage}
             rows="3" 
