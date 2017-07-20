@@ -47,6 +47,9 @@ const Util = {
   isQmRobotId: function(id) {
     return id && id === ID_RANGE.ID_ROBOT;
   },
+  favoriteGroupId: function() {
+    return 7;
+  },
   getChatId(fromId, toId) {
     if (this.myid === 0) {
       console.error('my id is 0');
@@ -60,7 +63,7 @@ const Util = {
     }
   },
   getMsgChatId(msg) {
-    if (msg && msg.to.length && msg.header && msg.header.from) {
+    if (msg && msg.to && msg.to.length && msg.header && msg.header.from) {
       return this.getChatId(msg.header.from, msg.to[0]);
     }
     return 0;
@@ -177,6 +180,16 @@ const Util = {
     }
     return msgContent.length ? msgContent : '  ';
   },
+  getMsgId(msg) {
+    if (msg) {
+      if (msg.newMsgId && msg.newMsgId > 0) {
+        return msg.newMsgId;
+      } else if (msg.id && msg.id > 0) {
+        return msg.id;
+      }
+    }
+    return 0;
+  }
 }
 
 export default Util;

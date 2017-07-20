@@ -5,6 +5,7 @@ import MsgStore from '../store/msg_store';
 import Util from '../utils/util';
 import Actions from '../actions/actions';
 import ActionCommon from '../actions/action_common';
+import Config from '../config/config';
 
 const MsgCreators = {
     onMessageCallback: function (msg) {
@@ -75,7 +76,7 @@ const MsgCreators = {
             })
         })
     },
-    addMsg: function(msg) {
+    addMsg: function (msg) {
         const chatId = Util.getMsgChatId(msg);
         if (chatId === 0) {
             console.error('add msg error, header:', JSON.stringify(msg.header));
@@ -89,7 +90,7 @@ const MsgCreators = {
             Actions.msg.add(msg);
         }
 
-        if (Util.isQmUserId(chatId)) {
+        if (Util.isQmUserId(chatId) || Util.isQmOrgId(chatId)) {
             UserCreators.asyncGetDetailUsersInfo([chatId]).then((res) => {
                 if (res && res[chatId]) {
                     Actions.chat.add(chatId);
@@ -111,9 +112,31 @@ const MsgCreators = {
             console.error('chat id is error!');
         }
     },
-    getMsg: function(chatId) {
+    getMsg: function (chatId) {
         const chatMsgs = MsgStore.getState();
         return chatMsgs.get(chatId);
+    },
+    asyncGetUnreadMsg: function() {
+        return new Promise((resolve, reject) => {
+            WebApi.unreadmsg(ActionCommon.auth, Config.unreadMsgMaxCount, (res) => {
+                const resHeader = ActionCommon.checkResCommonHeader(res);
+                if (!(resHeader.code === 0 && res.body.conversationInfo)) {
+                    return reject();
+                }
+
+                for (const info of res.body.conversationInfo) {
+                    if (!(info.msg && info.msg.length)) {
+                        continue;
+                    }
+                    for (const msg of info.msg) {
+                        if (msg && msg.body) {
+                            MsgCreators.addMsg(msg);
+                        }
+                    }
+                }
+                return resolve();
+            })
+        })
     }
 }
 

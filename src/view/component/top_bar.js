@@ -9,7 +9,6 @@ import Dialog from 'material-ui/Dialog';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Styles from '../../style/component/top_bar';
 import ghistory from '../../utils/ghistory';
-import Config from '../../config/config';
 import UserCreators from '../../creators/user_creators';
 import Util from '../../utils/util';
 
@@ -29,7 +28,7 @@ const RightMenu = {
 class LeftElement extends Component {
   onBackClick = () => {
     if (this.props.pageName === 'dialogue') {
-      ghistory.push(`${Config.prefix}/main`);
+      ghistory.goMain();
     } else {
       ghistory.goBack();
     }
@@ -76,7 +75,9 @@ class RightElement extends Component {
     } else if (key === 'dialogue_detail') {
       const {id} = this.props;
       if (Util.isQmUserId(id) || Util.isQmOrgId(id)) {
-        ghistory.push(`${Config.prefix}/user`, {userid: id});
+        ghistory.goUserInfo(id);
+      } else if (Util.isQmRoomId(id)) {
+        ghistory.goRoomInfo(id);
       }
     }
   }
@@ -89,14 +90,14 @@ class RightElement extends Component {
     this.setState({popup: false});
     if (this.state.key === 'dialogue_delete') {
       UserCreators.removeChat(this.props.id);
-      ghistory.push(`${Config.prefix}/main`);
+      ghistory.goMain();
     } else if (this.state.key === 'chat_clear_all') {
       UserCreators.clearChat();
     }
   }
 
   onSearchClick = () => {
-    ghistory.push(`${Config.prefix}/search`);
+    ghistory.goSearch();
   }
 
   render() {

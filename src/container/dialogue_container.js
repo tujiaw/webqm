@@ -22,8 +22,6 @@ function getState() {
     users: UsersStore.getState(),
     rooms: RoomStore.getState(),
     companies: CompanyStore.getState(),
-
-    onAddMessage: Actions.dialogue.addMsg,
   };
 }
 

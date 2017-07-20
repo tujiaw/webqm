@@ -10,12 +10,18 @@ import {
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
 import UserCreators from '../creators/user_creators';
+import FavoriteCreators from '../creators/favorite_creators';
 import TopBar from './component/top_bar';
 import Util from '../utils/util';
 import Styles from '../style/user_info';
 import ghistory from '../utils/ghistory';
-import Config from '../config/config';
 
+const g_text = {
+  set_favorite: '设为常用联系人',
+  remove_favorite: '移除常用联系人',
+  add_follow: '添加关注',
+  cancel_follow: '取消关注'
+}
 class UserInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -66,7 +72,7 @@ class UserInfo extends React.Component {
         UserCreators.asyncGetCompaniesInfo([companyId]).then((res) => {
           if (res[companyId]) {
             const companyName = res[companyId].companyShortName;
-            if (companyName.length) {
+            if (companyName && companyName.length) {
               self.setState({
                 company: companyName
               })
@@ -79,15 +85,53 @@ class UserInfo extends React.Component {
     });
   }
 
-  onSendMsg = () => {
+  onFirstButtonClick = () => {
     const {location} = this.props;
     const userid = location.state.userid;
     UserCreators.setCurrentId(userid);
     UserCreators.addChat(userid);
-    ghistory.push(`${Config.prefix}/dialogue`, {chatid: userid});
+    ghistory.goDialogue();
+  }
+
+  onSecondButtonClick = (text) => {
+    if (!this.state.userid) {
+      return;
+    }
+    if (text === g_text.set_favorite) {
+      FavoriteCreators.asyncAddFavorite(this.state.userid).catch(() => {
+        // 失败提醒
+      })
+    } else if (text === g_text.remove_favorite) {
+      FavoriteCreators.asyncRemoveFavorite(this.state.userid).catch(() => {
+        // 失败提醒
+      })
+    }
+    ghistory.goBack();
   }
 
   render() {
+    const {userid} = this.state;
+    const getFirstButtonLabel = function() {
+      if (Util.isQmUserId(userid)) {
+        return "发消息";
+      } else if (Util.isQmOrgId(userid)) {
+        return "反馈留言";
+      }
+      return "";
+    }
+
+    const getSecondButtonLabel = function() {
+      if (Util.isQmUserId(userid)) {
+        return FavoriteCreators.isFavorite(userid) ? g_text.remove_favorite : g_text.set_favorite;
+      } else if (Util.isQmOrgId(userid)) {
+        return g_text.add_follow;
+      }
+      return "";
+    }
+
+    const firstButtonLabel = getFirstButtonLabel();
+    const secondButtonLabel = getSecondButtonLabel();
+
     return (
       <div>
         <TopBar pageName='userdetail' title='详细资料' id={this.state.userid}/>
@@ -125,9 +169,9 @@ class UserInfo extends React.Component {
         </TableBody>
       </Table>
       <div style={Styles.footer}>
-        <RaisedButton label="发消息" primary={true} onTouchTap={this.onSendMsg}/>
-        <br/>
-        <RaisedButton label="设为常用联系人"/>
+        {firstButtonLabel.length && <RaisedButton label={firstButtonLabel} primary={true} onTouchTap={this.onFirstButtonClick}/>}
+        {firstButtonLabel.length && <br/>}
+        {secondButtonLabel.length && <RaisedButton label={secondButtonLabel} onTouchTap={this.onSecondButtonClick.bind(this, secondButtonLabel)} />}
       </div>
       </div>
     )

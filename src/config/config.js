@@ -7,8 +7,8 @@ const BaseInfo = {
 
 const Config = {
   prefix: BaseInfo.prefix,
-  websocket: 'ws://172.16.66.34:8090/api/websocket',
-  // websocket: 'ws://172.16.16.91:8080/api/websocket',
+  // websocket: 'ws://172.16.66.34:8090/api/websocket',
+  websocket: 'ws://172.16.16.91:8080/api/websocket',
   restful: {
     login: BaseInfo.restful_host + 'login',
     gatewayLogin: BaseInfo.restful_host + 'Login',
@@ -28,10 +28,13 @@ const Config = {
     customconfig: BaseInfo.restful_host + 'customconfig',
     globalconfig: BaseInfo.restful_host + 'globalconfig',
     ISReqUserRoomInfo: BaseInfo.restful_host + 'ISReqUserRoomInfo',
-    search: BaseInfo.restful_host + 'search'
+    ISReqUpdateRoom: BaseInfo.restful_host + 'ISReqUpdateRoom',
+    search: BaseInfo.restful_host + 'search',
+    unreadmsg: BaseInfo.restful_host + 'unreadmsg',
   },
   imgsdir: '/imgs',
   emoticondir: '/imgs/emoticon',
+  unreadMsgMaxCount: 20,
 }
 
 export default Config;

@@ -10,6 +10,7 @@ const Actions = {
 
   // contact
   CONTACT_INIT: 'CONTACT_INIT',
+  CONTACT_ADD: 'CONTACT_ADD',
   CONTACT_SET_GROUP_EXPAND: 'CONTACT_SET_GROUP_EXPAND',
 
   // dialogue
@@ -34,6 +35,11 @@ const Actions = {
   // room
   ROOM_ADD: 'ROOM_ADD',
   ROOM_REMOVE: 'ROOM_REMOVE',
+  ROOM_SETROOMOPENSEARCH: 'ROOM_SETROOMOPENSEARCH',
+
+  // room members
+  ROOMMEMBERS_INIT: 'ROOMMEMBERS_INIT',
+  ROOMMEMBERS_UPDATE: 'ROOMMEMBERS_UPDATE',
 }
 
 export default Actions;

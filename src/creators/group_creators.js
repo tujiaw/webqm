@@ -2,7 +2,7 @@ import Actions from '../actions/actions';
 import ContactStore from '../store/contact_store';
 
 const GroupCreators = {
-  isGroupExpand: function(groupid) {
+  isGroupExpand: function (groupid) {
     const groups = ContactStore.getState();
     const res = groups.findEntry(group => group.ID === groupid);
     if (res !== undefined && res.length > 1) {
@@ -12,7 +12,7 @@ const GroupCreators = {
     }
     return false;
   },
-  setGroupExpand: function(groupid, isExpand) {
+  setGroupExpand: function (groupid, isExpand) {
     Actions.contact.setGroupExpand(groupid, isExpand);
   }
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import GroupList from './component/group_list.js';
 import Styles from '../style/contact.js';
-import Config from '../config/config';
 import ghistory from '../utils/ghistory';
 import GroupCreators from '../creators/group_creators';
 import Util from '../utils/util';
@@ -10,7 +9,7 @@ import UserCreators from '../creators/user_creators';
 class Contact extends Component {
   onItemClick = (userid) => {
     console.log('on item click:' + userid);
-    ghistory.push(`${Config.prefix}/user`, {userid: userid});
+    ghistory.goUserInfo(userid);
   }
 
   onGroupExpand = (groupid, isExpand) => {
@@ -18,33 +17,16 @@ class Contact extends Component {
   }
 
   componentDidMount() {
-    this.props.contacts.map((group) => {
+    this.props.contacts.forEach((group) => {
       let groupUsers = group.users;
-      function task(users) {
-        if (!users || !users.length) {
-          return;
-        }
-        UserCreators.asyncGetDetailUsersInfo(users).catch((res) => {
-          // 数据包太大分批请求
-          if (res && res === 100663357) {
-            while (1) {
-              const subUsers = groupUsers.splice(0, 20);
-              if (subUsers.length === 0) {
-                break;
-              }
-              task(subUsers);
-            }
-          }
-        })
-      }
-      task(groupUsers);
+      UserCreators.asyncBatchUpdateUserInfo(groupUsers);
     })
   }
 
   render() {
     const {contacts, users, companies} = this.props;
     const groups = [];
-    contacts.map((group, index) => {
+    contacts.forEach((group, index) => {
       if (group.name && group.users) {
         const groupItem = {
           id: group.ID,

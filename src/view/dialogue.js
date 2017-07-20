@@ -12,10 +12,12 @@ import Message from './component/message';
 import FaceDialog from './component/face_dialog';
 import ImageDialog from './component/image_dialog';
 import { QMMsgBuilder } from '../utils/qmmsg';
-import Util from '../utils/util';
 import moment from 'moment';
 import $ from 'jquery';
 import Emoticon from '../utils/emoticon_xml';
+import ErrorDef from '../utils/errordef';
+import Snackbar from 'material-ui/Snackbar';
+import Util from '../utils/util';
 
 /**
  * 节点构造
@@ -141,17 +143,28 @@ class Dialogue extends React.Component {
       },
       faceDialogSize: {
         width: 350, height: 220,
-      }
+      },
+      showTip: false,
+      tipMsg: '',
+    }
+  }
+
+  updateLastMsgId = () => {
+    const {currentId, messages} = this.props;
+    const lastMsg = messages.last();
+    if (lastMsg) {
+      UserCreators.setChatLastReadMsgId(currentId, Util.getMsgId(lastMsg));
     }
   }
 
   componentDidMount() {
-    const self = this;
+    this.updateLastMsgId();
     this.refs.inputMessage.focus();
     document.addEventListener('mouseup', this.onMouseUpListener)
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
+    this.updateLastMsgId();
     document.removeEventListener('mouseup', this.onMouseUpListener);
   }
 
@@ -244,7 +257,11 @@ class Dialogue extends React.Component {
     .then((res) => {
       if (res.code === 0) {
         if (res.body.header.errorCode && res.body.header.errorCode !== 0) {
-          console.error(res.body.header.errorCode);
+          if (ErrorDef.sm[res.body.header.errorCode]) {
+            this.setState({
+              showTip: true, tipMsg: ErrorDef.sm[res.body.header.errorCode]
+            })
+          }
         }
         if (res.resMsg) {
           MsgCreators.addMsg(res.resMsg);
@@ -310,8 +327,14 @@ class Dialogue extends React.Component {
     }
   }
 
+  onRequestClose = () => {
+    this.setState({
+      showTip: false, tipMsg: '',
+    })
+  }
+
   render() {
-    const {currentId, messages, users, rooms} = this.props;
+    const {currentId, messages} = this.props;
     const baseInfo = UserCreators.getBaseInfo(currentId);
     const title = baseInfo.name || 'unkown';
     let prevDate = '', showDate = '';
@@ -321,6 +344,7 @@ class Dialogue extends React.Component {
         <TopBar pageName='dialogue' title={title} id={currentId}/>
         <div style={Styles.messagePanel}
              ref={(div) => {this.messagePanel = div;}}>
+          {/*<div style={{background: '#2C2D31', width: '100%', height: 30, position: 'fixed'}}></div>*/}
           {messages.map((msg, index) => {
             let isShowName = false;
             if (index > 0) {
@@ -385,6 +409,12 @@ class Dialogue extends React.Component {
               <RaisedButton label="发送" primary={true} onClick={this.onMessageSend} buttonStyle={Styles.sendButton} overlayStyle={Styles.overlayButton}/>
           </div>
         </div>
+        <Snackbar
+          open={this.state.showTip}
+          message={this.state.tipMsg}
+          autoHideDuration={6000}
+          onRequestClose={this.onRequestClose}
+        />
       </div>
     )
   }

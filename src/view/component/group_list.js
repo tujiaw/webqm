@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Styles from '../../style/component/contact_list'
-import PropTypes from 'prop-types';
-import Util from '../../utils/util';
 
 const ItemAction = {
   normal: 'normal',

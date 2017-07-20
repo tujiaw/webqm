@@ -76,6 +76,7 @@ export default class ImageLoader extends React.Component {
     }
 
     return <img {...props} 
+        alt="[图片]"
         onClick={this.onImageClick} 
         style={this.state.isMouseEnter ? Styles.mouseEnter : Styles.mouseLeave} 
         onMouseEnter={this.onMouseEnter}

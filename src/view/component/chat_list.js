@@ -4,7 +4,6 @@ import Util from '../../utils/util';
 import ghistory from '../../utils/ghistory';
 import UserCreators from '../../creators/user_creators';
 import moment from 'moment';
-import Config from '../../config/config';
 
 const ItemAction = {
   normal: 'normal',
@@ -86,7 +85,7 @@ class ChatList extends Component {
         let unreadCount = chatMsgs.size;
         // 计算未读消息个数，总数减去已读消息数
         if (lastReadMsgId > 0) {
-          const index = chatMsgs.findIndex((chat, index) => chat.id === lastReadMsgId);
+          const index = chatMsgs.findIndex((chat, index) => Util.getMsgId(chat) === lastReadMsgId);
           if (index >= 0) {
             unreadCount = unreadCount - index - 1;
           }
@@ -96,7 +95,7 @@ class ChatList extends Component {
           time: time,
           content: Util.getLastMsgContent(lastMsg),
           unreadCount: unreadCount,
-          lastMsgId: lastMsg.id,
+          lastMsgId: Util.getMsgId(lastMsg),
         }
       }
     }
@@ -105,15 +104,14 @@ class ChatList extends Component {
 
   onItemClick = (chatid, lastMsgId) => {
     UserCreators.setCurrentId(chatid);
-    UserCreators.setChatLastReadMsgId(chatid, lastMsgId);
-    ghistory.push(`${Config.prefix}/dialogue`);
+    ghistory.goDialogue();
   }
 
   render() {
     const self = this;
-    const {chats, users, rooms} = this.props;
+    const {chats} = this.props;
     const data = [];
-    chats.map((chat, index) => {
+    chats.forEach((chat, index) => {
       if (chat && chat.chatid) {
         const result = UserCreators.getBaseInfo(chat.chatid)
         if (result.avatar && result.name) {
@@ -134,11 +132,11 @@ class ChatList extends Component {
 
     data.sort((a, b) => {
       if (a.millisecond !== 0 && b.millisecond !== 0) {
-        return parseInt(b.millisecond) - parseInt(a.millisecond);
+        return parseInt(b.millisecond, 10) - parseInt(a.millisecond, 10);
       } else if (a.millisecond === 0 && b.millisecond === 0) {
         return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
       } else {
-        return parseInt(b.millisecond) - parseInt(a.millisecond);
+        return parseInt(b.millisecond, 10) - parseInt(a.millisecond, 10);
       }
     })
 

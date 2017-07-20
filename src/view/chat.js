@@ -3,8 +3,8 @@ import Styles from '../style/chat';
 import ChatList from './component/chat_list';
 
 class Chat extends React.Component {
-  componentWillUnMount() {
-    console.log('componentWillUnMount, chats:' + this.props.chats);
+  componentWillUnmount() {
+    console.log('componentWillUnmount, chats:' + this.props.chats);
   }
 
   onItemClick = () => {

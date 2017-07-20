@@ -25,6 +25,9 @@ const Actions = {
     init: function(contacts) {
       Dispatcher.dispatch({ type: ActionTypes.CONTACT_INIT, contacts });
     },
+    add: function(group) {
+      Dispatcher.dispatch({ type: ActionTypes.CONTACT_ADD, group });
+    },
     setGroupExpand: function(groupid, isExpand) {
       Dispatcher.dispatch({ type: ActionTypes.CONTACT_SET_GROUP_EXPAND, groupid, isExpand});
     }
@@ -62,6 +65,17 @@ const Actions = {
     },
     remove: function(roomid) {
       Dispatcher.dispatch({ type: ActionTypes.ROOM_REMOVE, roomid });
+    },
+    setRoomOpenSearch: function(roomid, isOpenSearch) {
+      Dispatcher.dispatch({ type: ActionTypes.ROOM_SETROOMOPENSEARCH, roomid, isOpenSearch });
+    }
+  },
+  roommembers: {
+    init: function(members) {
+      Dispatcher.dispatch({ type: ActionTypes.ROOMMEMBERS_INIT, members });
+    },
+    update: function(id, name) {
+      Dispatcher.dispatch({ type: ActionTypes.ROOMMEMBERS_UPDATE, id, name });
     }
   },
   config: {

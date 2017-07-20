@@ -179,11 +179,15 @@ const QMMsgBuilder = function(bodyListType, extendContent, serverSent, notify, i
  * @param {Object} msg
  */
 const QMMsgParser = function(msg) {
+    if (msg === undefined) {
+        return;
+    }
     if (typeof msg === "string") {
         msg = JSON.parse(msg);
     }
     this.bodyList = [];
-    this.bodyListType = msg.bodyListType || MessageBodyListType.MSG_Basic;
+    
+    this.bodyListType = MessageBodyListType.MSG_Basic;
     this.extendContent = msg.ExtendContent || '';
     this.serverSent = msg.ServerSent || false;
     this.notify = msg.notify || 0;

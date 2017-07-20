@@ -6,18 +6,50 @@ import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import CircularProgress from 'material-ui/CircularProgress';
-import Config from '../config/config';
+import Cookies from 'universal-cookie';
+import ghistory from '../utils/ghistory';
 
 class Login extends Component {
+  static defaultProps = {
+    cookies: new Cookies()
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       timer: 0,
       showTip: false,
       tipMsg: '登录失败！',
-      username: 'jiawei01',
-      password: '123456',
+      username: '',
+      password: '',
       loadding: false,
+      rememberMe: false,
+    }
+  }
+
+  componentWillMount() {
+    this.initCookie();
+  }
+
+  initCookie = () => {
+    const { cookies } = this.props;
+    this.setState({
+      username: cookies.get('username') || '',
+      password: cookies.get('password') || '',
+      rememberMe: cookies.get('rememberMe') === "true" ? true: false
+    })
+  }
+
+  updateCookie = () => {
+    const { cookies } = this.props;
+    if (this.state.rememberMe) {
+      cookies.set('username', this.state.username);
+      cookies.set('password', this.state.password);
+      cookies.set('rememberMe', this.state.rememberMe);
+    } else {
+      cookies.remove('username');
+      cookies.remove('password');
+      cookies.remove('rememberMe');
     }
   }
 
@@ -60,11 +92,13 @@ class Login extends Component {
       UserCreators.asyncLogin(username, password)
       .then(UserCreators.initUIData)
       .then(() => {
+        self.updateCookie();
         clearInterval(this.state.timer);
         self.setState({ isLogin: true, loadding: false });
-        self.props.history.push(`${Config.prefix}/main`);
+        ghistory.goMain();
       })
       .catch((res) => {
+        clearInterval(this.state.timer);
         let tipMsg = '未知错误';
         if (res) {
           if (res.error) {
@@ -101,6 +135,10 @@ class Login extends Component {
     this.setState({ password: event.target.value });
   }
 
+  onChecked = (event, isChecked) => {
+    this.setState({ rememberMe: isChecked });
+  }
+
   render() {
     return (
       <div style={Styles.main}>
@@ -121,7 +159,7 @@ class Login extends Component {
             underlineFocusStyle={Styles.underlineStyle}
             onChange={this.onPasswordInput}
           />
-          <Checkbox label="记住密码" style={Styles.checkbox}/>
+          <Checkbox label="记住密码" style={Styles.checkbox} onCheck={this.onChecked} checked={this.state.rememberMe}/>
           <br/>
           <RaisedButton label="登录" primary={true} onClick={this.onLogin} fullWidth={true}/>
         </div>

@@ -1,4 +1,4 @@
-import {DialogueCurrentIdStore} from '../store/dialogue_store';
+import { DialogueCurrentIdStore } from '../store/dialogue_store';
 import ContactStore from '../store/contact_store';
 import UsersStore from '../store/users_store';
 import CompanyStore from '../store/company_store';
@@ -13,6 +13,8 @@ import Util from '../utils/util';
 import { Set } from 'immutable';
 import { Base64 } from 'js-base64';
 import RoomCreators from './room_creators';
+import ghistory from '../utils/ghistory';
+import FavoriteCreators from './favorite_creators';
 
 const UserCreators = {
     setCurrentId: function (id) {
@@ -25,26 +27,28 @@ const UserCreators = {
     getCurrentId: function () {
         return DialogueCurrentIdStore.getState();
     },
-    addChat: function(chatid) {
+    addChat: function (chatid) {
         const prevList = ChatStore.getState();
         Actions.chat.add(chatid);
         const lastList = ChatStore.getState();
-        UserCreators.syncChatList(UserCreators.getUpdateChatList(prevList, lastList));
+        UserCreators.asyncSetChatList(UserCreators.getUpdateChatList(prevList, lastList));
     },
-    removeChat: function(chatid) {
+    removeChat: function (chatid) {
         const prevList = ChatStore.getState();
         Actions.chat.remove(chatid);
         const lastList = ChatStore.getState();
-        UserCreators.syncChatList(UserCreators.getUpdateChatList(prevList, lastList));
+        UserCreators.asyncSetChatList(UserCreators.getUpdateChatList(prevList, lastList));
     },
-    clearChat: function() {
+    clearChat: function () {
         Actions.chat.init([]);
-        UserCreators.syncChatList([]);
+        UserCreators.asyncSetChatList([]);
     },
-    setChatLastReadMsgId: function(chatid, lastReadMsgId) {
-        Actions.chat.setLastReadMsgId(chatid, lastReadMsgId);
+    setChatLastReadMsgId: function (chatid, lastReadMsgId) {
+        if (chatid && lastReadMsgId) {
+            Actions.chat.setLastReadMsgId(chatid, lastReadMsgId);
+        }
     },
-    getConnectStatus: function() {
+    getConnectStatus: function () {
         const status = WebApi.connectStatus();
         const desc = {
             0: '正在连接',
@@ -62,13 +66,19 @@ const UserCreators = {
         const isEmpty = !(username.length && password.length);
         return new Promise((resolve, reject) => {
             if (isEmpty) {
-                return reject({code: 1, error: '用户名或密码为空!'});
+                return reject({
+                    code: 1,
+                    error: '用户名或密码为空!'
+                });
             }
             WebApi.login(username, password, (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
                 if (resHeader.code !== 0 || res.body.result !== 0) {
                     console.error(JSON.stringify(res));
-                    return reject({code: 1, error: '登录Account Server失败'});
+                    return reject({
+                        code: 1,
+                        error: '登录Account Server失败'
+                    });
                 }
 
                 ActionCommon.auth.token = (res.body.token === undefined) ? '' : res.body.token;
@@ -77,70 +87,54 @@ const UserCreators = {
                 WebApi.regMessageCallback(ActionCommon.auth, MsgCreators.onMessageCallback.bind(MsgCreators), (res) => {
                     console.log('subscribe res:' + res);
                 });
-
-                WebApi.gatewayLogin(ActionCommon.auth, (res) => {
-                    if (res.code !== 0 || res.body.retcode !== 0) {
+                WebApi.smlogin(ActionCommon.auth, (res) => {
+                    if (res.code !== 0 || (res.body.header && res.body.header.errorCode !== 0)) {
                         console.error(JSON.stringify(res));
-                        return reject({code: 1, error: '登录网关失败'});
-                    }
-                    WebApi.smlogin(ActionCommon.auth, (res3) => {
-                        if (res.code !== 0 || (res.body.header && res.body.header.errorCode !== 0)) {
-                            console.error(JSON.stringify(res));
-                            return reject({code: 1, error: 'SM登录失败'});
-                        }
-                        console.log('登录成功');
-                        WebApi.presence(ActionCommon.auth, (res) => {
-                            console.log('presence:' + JSON.stringify(res));
+                        return reject({
+                            code: 1,
+                            error: 'SM登录失败'
                         });
-                        WebApi.session(ActionCommon.auth, (res) => {
-                            console.log('session:' + JSON.stringify(res));
-                        })
-                        return resolve();
-                    })
+                    }
+                    console.log('登录成功');
+                    WebApi.presence(ActionCommon.auth, (res) => {
+                        console.log('presence:' + JSON.stringify(res));
+                    });
+                    return resolve();
                 })
             })
         })
     },
-    initUIData: function() {
+    initUIData: function () {
         console.log('*开始初始化信息*' + (new Date()).toLocaleString());
-        return UserCreators.asyncGetUserGroup()
-        .then(() => {
-            let usersId = [];
-            const groups = ContactStore.getState();
-            groups.forEach((group) => {
-                usersId = usersId.concat(group.users);
-            })
-            console.log('*获取用户组信息*' + (new Date()).toLocaleString());
-            return Promise.resolve(usersId);
-        })
-        .then(() => {
-            console.log('*获取会话列表*' + (new Date()).toLocaleString());
-            return UserCreators.asyncGetChatList();
-        })
-        .then((chatidList) => {
+        return UserCreators.asyncGetChatList().then((chatidList) => {
             console.log('*获取会话列表用户详细信息*' + (new Date()).toLocaleString());
             const useridList = [Util.myid];
             const roomidList = [];
-            for (let chatid of chatidList) {
-                if (Util.isQmUserId(chatid) || Util.isQmOrgId(chatid)) {
-                    useridList.push(chatid);
-                } else if (Util.isQmRoomId(chatid)) {
-                    roomidList.push(chatid);
-                } else {
-                    console.error('get chat list error id:' + chatid);
+            if (chatidList) {
+                for (let chatid of chatidList) {
+                    if (Util.isQmUserId(chatid) || Util.isQmOrgId(chatid)) {
+                        useridList.push(chatid);
+                    } else if (Util.isQmRoomId(chatid)) {
+                        roomidList.push(chatid);
+                    } else {
+                        console.error('get chat list error id:' + chatid);
+                    }
                 }
             }
-            Promise.all([
+
+            UserCreators.asyncGetUserGroup();
+            UserCreators.asyncGetAllGlobalConfig();
+            MsgCreators.asyncGetUnreadMsg();
+            RoomCreators.asyncGetRoomIdList().then((roomIdList) => {
+                RoomCreators.asyncGetRoomInfoList(roomIdList);
+            });
+            return Promise.all([
                 UserCreators.asyncGetDetailUsersInfo(useridList),
                 RoomCreators.asyncGetRoomInfoList(roomidList),
             ])
         })
-        .then(() => {
-            console.log('*获取全局配置*' + (new Date()).toLocaleString());
-            return UserCreators.asyncGetAllGlobalConfig();
-        })
     },
-    asyncGetChatList: function() {
+    asyncGetChatList: function () {
         return new Promise((resolve, reject) => {
             WebApi.customconfig(ActionCommon.auth, ['webqmconfig'], (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
@@ -158,10 +152,11 @@ const UserCreators = {
                         }
                     }
                 }
-                return resolve();
+                return resolve([]);
             })
-        })    
+        })
     },
+
     asyncGetFriends: function () {
         return new Promise((resolve, reject) => {
             const friends = ContactStore.getState();
@@ -180,24 +175,29 @@ const UserCreators = {
             })
         })
     },
-    asyncGetUserGroup: function() {
+
+    asyncGetUserGroup: function () {
         return new Promise((resolve, reject) => {
             const usergroup = ContactStore.getState();
             if (usergroup.size > 0) {
                 return resolve();
             }
-            
+
             WebApi.usergroup(ActionCommon.auth, (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
                 if (resHeader.code === 0) {
                     Actions.contact.init(res.body.groupInfo);
+                    FavoriteCreators.asyncGetFavorites().then((favorites) => {
+                        const newGroup = FavoriteCreators.createFavoritesGroup(favorites);
+                        Actions.contact.add(newGroup);
+                    });
                     return resolve();
                 }
                 return reject(resHeader.code);
             })
         })
     },
-    asyncGetDetailUsersInfo: function(usersId) {
+    asyncGetDetailUsersInfo: function (usersId) {
         if (usersId === undefined) {
             return Promise.resolve();
         }
@@ -228,14 +228,14 @@ const UserCreators = {
                         let companyIdList = [];
                         for (let i = 0, count = res.body.userInfo.length; i < count; i++) {
                             const item = res.body.userInfo[i];
-                            result[item.userInfo.userID]= item;
+                            result[item.userInfo.userID] = item;
                             Actions.users.add(item);
                             if (Util.isQmUserId(item.userInfo.userID)) {
                                 companyIdList.push(item.userInfo.companyId);
                             }
                         }
                         UserCreators.asyncGetCompaniesInfo(companyIdList);
-                    } else if (res.body.retcode && res.body.retcode) { // 应答的数据包太大
+                    } else if (res.body && res.body.retcode) {
                         reject(res.body.retcode);
                     }
                     return resolve(result);
@@ -245,7 +245,31 @@ const UserCreators = {
             }
         })
     },
-    asyncGetCompaniesInfo: function(companiesId) {
+    asyncBatchUpdateUserInfo: function (usersId, updateNotify) {
+        function task(users) {
+            if (!users || !users.length) {
+                return;
+            }
+            UserCreators.asyncGetDetailUsersInfo(users).then((result) => {
+                if (updateNotify) {
+                    updateNotify(result);
+                }
+            }).catch((res) => {
+                // 数据包太大分批请求
+                if (res && res === 100663357) {
+                    while (1) {
+                        const subUsers = usersId.splice(0, 20);
+                        if (subUsers.length === 0) {
+                            break;
+                        }
+                        task(subUsers);
+                    }
+                }
+            })
+        }
+        task(usersId);
+    },
+    asyncGetCompaniesInfo: function (companiesId) {
         let result = {};
         let requestCompaniesId = Set();
         const companies = CompanyStore.getState();
@@ -279,12 +303,12 @@ const UserCreators = {
             }
         })
     },
-    asyncUpdateUsersAvatar: function(usersId) {
+    asyncUpdateUsersAvatar: function (usersId) {
         const users = UsersStore.getState();
         if (usersId === undefined || users.isEmpty()) {
             return Promise.resolve();
         }
-        
+
         let requestUsersId = [];
         for (let i = 0, count = usersId.length; i < count; i++) {
             const userid = usersId[i];
@@ -298,7 +322,7 @@ const UserCreators = {
                 requestUsersId.push(userid);
             }
         }
-        
+
         return new Promise((resolve, reject) => {
             if (requestUsersId.length) {
                 WebApi.useravatar(requestUsersId, (res) => {
@@ -321,7 +345,7 @@ const UserCreators = {
             }
         })
     },
-    getUpdateChatList: function(prevChatList, lastChatList) {
+    getUpdateChatList: function (prevChatList, lastChatList) {
         // 如果相等则不更新
         if (!prevChatList.equals(lastChatList)) {
             let res = [];
@@ -332,7 +356,7 @@ const UserCreators = {
         }
         return undefined;
     },
-    syncChatList: function(chatList) {
+    asyncSetChatList: function (chatList) {
         if (chatList === undefined) {
             return;
         }
@@ -354,7 +378,7 @@ const UserCreators = {
             }
         })
     },
-    getGlobalConfig: function(keyList) {
+    getGlobalConfig: function (keyList) {
         if (typeof keyList === 'string') {
             keyList = [keyList];
         }
@@ -370,15 +394,15 @@ const UserCreators = {
         }
         return result;
     },
-    asyncGetAllGlobalConfig: function() {
+    asyncGetAllGlobalConfig: function () {
         return new Promise((resolve, reject) => {
             const keyList = [
-                'NEWS_URL', 
-                'NEWS_WINDOW_WIDTH', 
-                'NEWS_WINDOW_HEIGHT', 
-                'QM_INVITE_URL', 
+                'NEWS_URL',
+                'NEWS_WINDOW_WIDTH',
+                'NEWS_WINDOW_HEIGHT',
+                'QM_INVITE_URL',
                 'CUSTOM_SERVICE_ID',
-                'FILESERVER_URL', 
+                'FILESERVER_URL',
                 'ROOMFILESPACE',
                 'REC_UNDERWRITER_IDLIST',
                 'QQ_RIGHT_IDLIST',
@@ -403,7 +427,7 @@ const UserCreators = {
             });
         })
     },
-    getBaseInfo: function(id) {
+    getBaseInfo: function (id) {
         const result = {};
         if (Util.isQmUserId(id) || Util.isQmOrgId(id)) {
             const users = UsersStore.getState();
@@ -424,21 +448,21 @@ const UserCreators = {
         }
         return result;
     },
-    getCompanyName: function(id) {
+    getCompanyName: function (id, enableRemoteRequest) {
         if (Util.isQmUserId(id)) {
             const user = UsersStore.getState().get(id);
             if (user) {
                 const companyInfo = CompanyStore.getState().get(user.userInfo.companyId);
                 if (companyInfo) {
                     return companyInfo.companyShortName;
-                } else {
+                } else if (user.userInfo.companyId && enableRemoteRequest) {
                     UserCreators.asyncGetCompaniesInfo([user.userInfo.companyId]);
                 }
             }
         }
         return '';
     },
-    asyncSearch: function(text) {
+    asyncSearch: function (text) {
         const result = {
             users: [],
             rooms: []
@@ -452,29 +476,6 @@ const UserCreators = {
         const MAX_USER = 100;
         const MAX_ROOM = 40;
         text = text.toLowerCase();
-        // const users = UsersStore.getState();
-        // const rooms = RoomStore.getState();
-        // users.forEach(user => {
-        //     if (result.users.length >= MAX_USER) {
-        //         return false;
-        //     }
-        //     if (user.name.toLowerCase().indexOf(text) >= 0 ||
-        //     user.loginName.toLowerCase().indexOf(text) >= 0 ||
-        //     (user.pinyin && user.pinyin.toLowerCase().indexOf(text) >= 0) ||
-        //     (user.pinyinShort && user.pinyinShort.toLowerCase().indexOf(text) >= 0)) {
-        //         result.users.push(user);
-        //     }
-        // })
-
-        // rooms.forEach(room => {
-        //     if (result.rooms.length >= MAX_ROOM) {
-        //         return false;
-        //     }
-        //     if (room.name.toLowerCase().indexOf(text) >= 0) {
-        //         result.rooms.push(room);
-        //     }
-        // })
-        
         return new Promise((resolve, reject) => {
             WebApi.search(ActionCommon.auth, text, MAX_USER, MAX_ROOM, (res) => {
                 const resHeader = ActionCommon.checkResCommonHeader(res);
@@ -484,6 +485,7 @@ const UserCreators = {
                     if (res.body.user) {
                         for (let user of res.body.user) {
                             result.users.push({
+                                id: user.userId,
                                 title: user.Name,
                                 subtitle: user.companyName
                             })
@@ -492,6 +494,7 @@ const UserCreators = {
                     if (res.body.room) {
                         for (let room of res.body.room) {
                             result.rooms.push({
+                                id: room.ID,
                                 title: room.roomName,
                                 subtitle: room.alias
                             })
@@ -501,6 +504,19 @@ const UserCreators = {
                 return resolve(result);
             })
         });
+    },
+    asyncGoDialogue: function (id) {
+        if (Util.isQmUserId(id) || Util.isQmOrgId(id)) {
+            UserCreators.asyncGetDetailUsersInfo([id]).then((res) => {
+                if (res[id]) {
+                    UserCreators.setCurrentId(id);
+                    UserCreators.addChat(id);
+                    ghistory.goDialogue();
+                }
+            })
+        } else if (Util.isQmRoomId(id)) {
+            //RoomCreators.asyncGetRoomInfoList([id])
+        }
     }
 }
 

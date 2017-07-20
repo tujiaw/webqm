@@ -55,7 +55,7 @@ const Styles = {
     padding: '0px',
     width: '36px',
     height: '36px'
-  }
+  },
 }
 
 export default Styles;

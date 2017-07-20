@@ -7,8 +7,11 @@ let serialNo = 0;
 const WebApi = {
   /**
    * 登录
+   * @param {*string} username
+   * @param {*string} password
+   * @param {*function}
    */
-  login: function(username, password, cb) {
+  login(username, password, cb) {
     const data = {
       loginName: username,
       password: md5(password),
@@ -19,14 +22,24 @@ const WebApi = {
     WebClient.request(Config.restful.login, data, cb);
   },
 
-  gatewayLogin: function(auth, cb) {
+  /**
+   * 网关登录
+   * @param {*object} auth 
+   * @param {*function} cb 
+   */
+  gatewayLogin(auth, cb) {
     const data = {
       "token": auth.token
     }
     WebClient.request(Config.restful.gatewayLogin, data, cb);
   },
 
-  smlogin: function(auth, cb) {
+  /**
+   * SM登录
+   * @param {*object} auth 
+   * @param {*function} cb 
+   */
+  smlogin(auth, cb) {
     ++serialNo;
     const data = {
       "header": {
@@ -35,12 +48,21 @@ const WebApi = {
         "serialNo": serialNo,
         "errorCode": 0
       },
-      "res": 0
+      "res": 0,
+      "tokenInfo": {
+        "token": auth.token,
+        "userid": auth.userid,
+      }
     }
     WebClient.request(Config.restful.smlogin, data, cb);
   },
 
-  presence: function(auth, cb) {
+  /**
+   * 设置在线状态
+   * @param {*object} auth 
+   * @param {*function} cb 
+   */
+  presence(auth, cb) {
     ++serialNo;
     const data = {
       "header": {
@@ -60,7 +82,12 @@ const WebApi = {
     WebClient.request(Config.restful.presence, data, cb);
   },
 
-  session: function(auth, cb) {
+  /**
+   * 认证
+   * @param {*object} auth 
+   * @param {*function} cb 
+   */
+  session(auth, cb) {
     ++serialNo;
     const data = {
       "header": {
@@ -75,18 +102,29 @@ const WebApi = {
     WebClient.request(Config.restful.session, data, cb);
   },
 
-  regMessageCallback:function(auth, onMessageFunc, cb) {
+  /**
+   * 注册消息回调
+   * @param {*object} auth 
+   * @param {*function} onMessageFunc 
+   * @param {*function} cb 
+   */
+  regMessageCallback(auth, onMessageFunc, cb) {
     WebClient.init(auth, onMessageFunc, cb);
   },
 
-  connectStatus: function() {
+  /**
+   * 获取连接状态
+   */
+  connectStatus() {
     return WebClient.connectStatus();
   },
 
   /**
-   * 获取好友列表
+   * 请求好友列表
+   * @param {*object} auth 
+   * @param {*function} cb 
    */
-  friend: function(auth, cb) {
+  friend(auth, cb) {
     const data = {
       userId: auth.userid || 0,
       version: 0
@@ -96,8 +134,10 @@ const WebApi = {
 
   /**
    * 获取群列表
+   * @param {*object} auth 
+   * @param {*function} cb 
    */
-  room: function(auth, cb) {
+  room(auth, cb) {
     const data = {
       "userId": auth.userid || 0,
       "version": 0
@@ -106,9 +146,12 @@ const WebApi = {
   },
 
   /**
-   * 获取群列表信息
+   * 获取群信息列表
+   * @param {*object} auth 
+   * @param {*number[]} roomIdList 
+   * @param {*function} cb 
    */
-  roomInfoList: function(auth, roomIdList, cb) {
+  roomInfoList(auth, roomIdList, cb) {
     const data = {
       "userId": auth.userid || 0,
       "roomId": [],
@@ -117,7 +160,51 @@ const WebApi = {
       "reqOwner": false,
       "removeAvatar": false
     }
-    for (let id of roomIdList) {
+    for (const id of roomIdList) {
+      data.roomId.push(id);
+      data.version.push(0);
+    }
+    WebClient.request(Config.restful.ISReqUserRoomInfo, data, cb);
+  },
+
+  /**
+   * 设置群信息
+   * @param {*object} auth 
+   * @param {*number} roomid 
+   * @param {*string} key 
+   * @param {*string | object} value 
+   * @param {*function} cb 
+   */
+  setRoomInfo(auth, roomid, key, value, cb) {
+    const keyList = ['roomName', 'description', 'notice', 'openSearch', 'avatarId', 'avatar'];
+    if (keyList.indexOf(key) < 0) {
+      console.error('set room info not this key:' + key);
+      return;
+    }
+    const data = {
+      "userId": auth.userid || 0,
+      "roomId": roomid,
+    }
+    data[key] = value;
+    WebClient.request(Config.restful.ISReqUpdateRoom, data, cb);
+  },
+
+  /**
+   * 获取群成员列表
+   * @param {*object} auth 
+   * @param {*number[]} roomIdList 
+   * @param {*function} cb 
+   */
+  roomMemberList(auth, roomIdList, cb) {
+    const data = {
+      "userId": auth.userid || 0,
+      "roomId": [],
+      "version": [],
+      "reqMember": true,
+      "reqOwner": true,
+      "removeAvatar": true
+    }
+    for (const id of roomIdList) {
       data.roomId.push(id);
       data.version.push(0);
     }
@@ -126,8 +213,10 @@ const WebApi = {
 
   /**
    * 获取用户组
+   * @param {*object} auth 
+   * @param {*function} cb 
    */
-  usergroup: function(auth, cb) {
+  usergroup(auth, cb) {
     const data = {
       userId: auth.userid || 0,
       version: 0
@@ -136,9 +225,12 @@ const WebApi = {
   },
 
   /**
-   * 用户基本信息
+   * 获取用户详细信息列表
+   * @param {*object} auth 
+   * @param {*number[]} usersId 
+   * @param {*function} cb 
    */
-  userdetail: function(auth, usersId, cb) {
+  userdetail(auth, usersId, cb) {
     const data = {
       "ownerId": auth.userid || 0,
       "userId": [],
@@ -155,9 +247,11 @@ const WebApi = {
   },
 
   /**
-   * 公司信息
+   * 获取公司信息列表
+   * @param {*string[]} companiesId 
+   * @param {*function} cb 
    */
-  companies: function(companiesId, cb) {
+  companies(companiesId, cb) {
     const data = {
       companyId: []
     }
@@ -166,9 +260,11 @@ const WebApi = {
   },
 
   /**
-   * 用户头像
+   * 获取用户头像列表
+   * @param {*number[]} usersId 
+   * @param {*function} cb 
    */
-  useravatar: function(usersId, cb) {
+  useravatar(usersId, cb) {
     const data = {
       userIdList: [],
       avatarIdList: []
@@ -182,8 +278,12 @@ const WebApi = {
 
   /**
    * 设置自定义配置
+   * @param {*object} auth 
+   * @param {*string[]} keyList 
+   * @param {*string[]} valueList 
+   * @param {*function} cb 
    */
-  setcustomconfig: function(auth, keyList, valueList, cb) {
+  setcustomconfig(auth, keyList, valueList, cb) {
     const data = {
       "userId": auth.userid || 0,
       "key": [],
@@ -203,8 +303,11 @@ const WebApi = {
 
   /**
    * 获取自定义配置
+   * @param {*object} auth 
+   * @param {*string[]} keyList 
+   * @param {*function} cb 
    */
-  customconfig: function(auth, keyList, cb) {
+  customconfig(auth, keyList, cb) {
     const data = {
       "userId": auth.userid || 0,
       "key": [],
@@ -223,8 +326,10 @@ const WebApi = {
 
   /**
    * 获取全局配置
+   * @param {*string[]} keyList 
+   * @param {*function} cb 
    */
-  globalconfig: function(keyList, cb) {
+  globalconfig(keyList, cb) {
     const data = {
       "key": []
     }
@@ -234,8 +339,12 @@ const WebApi = {
 
   /**
    * 发送消息
+   * @param {*object} auth 
+   * @param {*number} id - 对方ID
+   * @param {*object} msgBody - 消息体
+   * @param {*function} cb 
    */
-  sendMsg: function(auth, id, msgBody, cb) {
+  sendMsg(auth, id, msgBody, cb) {
     let type = 1;
     if (Util.isQmRoomId(id)) {
       type = 2;
@@ -290,6 +399,14 @@ const WebApi = {
       cb(res);
     });
   },
+  /**
+   * 搜索
+   * @param {*object} auth 
+   * @param {*string} key 
+   * @param {*number} maxUser 
+   * @param {*number} maxRoom 
+   * @param {*function} cb 
+   */
   search(auth, key, maxUser, maxRoom, cb) {
     const data = {
       "userId": auth.userid || 0,
@@ -304,6 +421,26 @@ const WebApi = {
     };
 
     WebClient.request(Config.restful.search, data, cb);
+  },
+
+  /**
+   * 获取未读消息，只在登录后调用一次
+   * @param {*object} auth 
+   * @param {*number} maxCount 
+   * @param {*function} cb 
+   */
+  unreadmsg(auth, maxCount, cb) {
+    const data = {
+      "header": {
+        "from": auth.userid,
+        "sourceNo": ++serialNo,
+        "serialNo": serialNo,
+        "errorCode": 0
+      },
+      "timeStamp": 0,
+      "lastCount": maxCount
+    }
+    WebClient.request(Config.restful.unreadmsg, data, cb);
   }
 }
 

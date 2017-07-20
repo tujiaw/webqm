@@ -2,16 +2,16 @@ const { Map, List } = require('immutable');
 const parseString = require('xml2js').parseString;
 
 const a = [
-  'Q测5',
-  'xinxin01、小七',
-  'tujiaw',
-  'QMqbtest1',
-  'aaaa',
-  'jiawei02'
+  1, 2, 324, 3, 4
 ]
 
-a.sort((a, b) => {
-  return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
-})
+a.splice(a.indexOf(32224), 1);
+
+function xx() {
+  const aa = 100;
+  return aa > 10;
+}
+
+console.log(xx())
 
 console.log(a);

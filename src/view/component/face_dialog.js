@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import Styles from '../../style/component/face_dialog.js';
 
-import {GridList, GridTile} from 'material-ui/GridList';
+import {GridList} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import Emoticon from '../../utils/emoticon_xml';
 
 class FaceDialog extends Component {
@@ -69,14 +67,14 @@ class FaceDialog extends Component {
             style={{width: 40, height: 24, margin: 0, padding:0}}
             tooltip="默认表情"
             tooltipPosition="top-right">
-            <img src="/imgs/tab_emoticon.png" alt="image" />
+            <img src="/imgs/tab_emoticon.png" alt="[图片]" />
           </IconButton>
           <IconButton
             onTouchTap={this.onSmartQClick}
             style={{width: 40, height: 24, margin: 0, padding:0}}
             tooltip="小Q表情包"
             tooltipPosition="top-right">
-            <img src="/imgs/tab_bao.png" alt="image" />
+            <img src="/imgs/tab_bao.png" alt="[图片]" />
           </IconButton>
         </div>
       </div>

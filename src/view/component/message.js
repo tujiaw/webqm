@@ -119,7 +119,7 @@ class Message extends Component {
     const baseInfo = UserCreators.getBaseInfo(fromId);
     let name = baseInfo.name || '';
     if (Util.isQmRoomId(chatid)) {
-      const companyName = UserCreators.getCompanyName(fromId);
+      const companyName = UserCreators.getCompanyName(fromId, true);
       if (companyName.length) {
         name += ' - ' + companyName;
       }

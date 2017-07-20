@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Styles from '../style/contact.js';
-import Config from '../config/config';
 import ghistory from '../utils/ghistory';
 import RoomCreators from '../creators/room_creators';
-import UserCreators from '../creators/user_creators';
 import GroupList from './component/group_list';
 import Util from '../utils/util';
 
@@ -16,15 +14,10 @@ class Room extends Component {
   }
 
   onItemClick = (id) => {
-    console.log('on item click:' + id);
-    //ghistory.push(`${Config.prefix}/user`, {userid: userid});
-    UserCreators.setCurrentId(id);
-    UserCreators.addChat(id);
-    ghistory.push(`${Config.prefix}/dialogue`, {chatid: id});
+    ghistory.goRoomInfo(id);
   }
 
   onGroupExpand = (groupid, isExpand) => {
-    //GroupCreators.setGroupExpand(groupid, isExpand);
   }
 
   componentDidMount() {
